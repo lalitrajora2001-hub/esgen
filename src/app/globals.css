@@ -1,0 +1,178 @@
+@import "tailwindcss";
+
+/* ============================================================
+   ESGen design tokens (dark, GitHub-inspired, brand blue)
+   ============================================================ */
+@theme {
+  --color-canvas: #060608;
+  --color-surface: #101012;
+  --color-surface-2: #17171a;
+  --color-border: #262629;
+  --color-text: #f4f4f5;
+  --color-text-muted: #9aa0a6;
+  --color-accent: #4d8bf5;
+  --color-accent-2: #2f6fe0;
+  --color-accent-3: #8fbaff;
+
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-sora);
+  --font-logo: var(--font-michroma);
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 20px;
+
+  --shadow-glow: 0 0 0 1px rgba(77, 139, 245, 0.18),
+    0 24px 60px -22px rgba(77, 139, 245, 0.5);
+  --shadow-card: 0 20px 50px -28px rgba(0, 0, 0, 0.85);
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Cursor-reactive hero glow position (updated in JS) */
+  --mx: 50%;
+  --my: 30%;
+}
+
+/* ============================================================
+   Base
+   ============================================================ */
+@layer base {
+
+* {
+  border-color: var(--color-border);
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--color-canvas);
+  color: var(--color-text);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: var(--font-display), var(--font-sans), sans-serif;
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+}
+
+::selection {
+  background: rgba(77, 139, 245, 0.32);
+  color: #fff;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Focus visibility for keyboard users */
+:where(a, button, input, textarea, select, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-accent-3);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 11px; height: 11px; }
+::-webkit-scrollbar-track { background: var(--color-canvas); }
+::-webkit-scrollbar-thumb {
+  background: #263241;
+  border-radius: 99px;
+  border: 3px solid var(--color-canvas);
+}
+::-webkit-scrollbar-thumb:hover { background: #33445a; }
+
+/* Lenis */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: clip; }
+
+} /* end @layer base */
+
+/* ============================================================
+   Reusable brand utilities
+   ============================================================ */
+
+/* Monospace technical label */
+.mono-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-accent-3);
+}
+
+/* Gradient text */
+.text-gradient {
+  background: linear-gradient(100deg, #ffffff 10%, var(--color-accent-3) 60%, var(--color-accent) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Large soft radial glow used to blend sections */
+.glow {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(90px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Section blend: overlapping vertical gradient so sections melt together */
+.section-blend {
+  background:
+    radial-gradient(60% 40% at 50% 0%, rgba(77, 139, 245, 0.05), transparent 70%),
+    linear-gradient(180deg, transparent, rgba(11, 15, 23, 0) 100%);
+}
+
+/* Dotted / grid texture overlay */
+.grid-texture {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  -webkit-mask-image: radial-gradient(70% 60% at 50% 30%, #000, transparent 78%);
+  mask-image: radial-gradient(70% 60% at 50% 30%, #000, transparent 78%);
+}
+
+/* Card hover-glow surface */
+.card-surface {
+  background: linear-gradient(180deg, var(--color-surface), rgba(16, 16, 18, 0.6));
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  transition: transform 0.4s var(--ease-out), border-color 0.4s var(--ease-out),
+    box-shadow 0.4s var(--ease-out), background 0.4s var(--ease-out);
+}
+.card-surface:hover {
+  transform: translateY(-4px);
+  border-color: rgba(77, 139, 245, 0.4);
+  box-shadow: var(--shadow-glow);
+}
+
+/* Hairline top border with accent fade (GitHub-style dividers) */
+.hairline {
+  border-top: 1px solid transparent;
+  border-image: linear-gradient(90deg, transparent, var(--color-border) 20%, var(--color-border) 80%, transparent) 1;
+}
+
+/* Reduced motion: neutralise transforms/animations */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
