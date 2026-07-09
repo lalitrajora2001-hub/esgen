@@ -1,24 +1,21 @@
 import type { MetadataRoute } from "next";
-import { collections, site } from "@/lib/nav";
+import { site, resources } from "@/lib/nav";
+import { ALL_PAGES } from "@/lib/content";
+import { legalDocs } from "@/lib/legal";
 
 export const dynamic = "force-static";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = site.url.replace(/\/$/, "");
-  const staticRoutes = ["", "/pricing", "/contact", "/demo", "/login"];
-
-  const entries: MetadataRoute.Sitemap = staticRoutes.map((r) => ({
-    url: `${base}${r}/`,
+  const routes: string[] = [
+    "/", "/pricing", "/contact", "/demo", "/login", "/partner-program",
+    ...ALL_PAGES.map((p) => `/${p.collection}/${p.slug}`),
+    ...resources.map((r) => r.href),
+    ...legalDocs.map((d) => `/legal/${d.slug}`),
+  ];
+  return Array.from(new Set(routes)).map((r) => ({
+    url: `${base}${r}/`.replace(/\/\/$/, "/"),
     changeFrequency: "monthly",
-    priority: r === "" ? 1 : 0.7,
+    priority: r === "/" ? 1 : 0.6,
   }));
-
-  for (const c of collections) {
-    entries.push({ url: `${base}${c.base}/`, changeFrequency: "monthly", priority: 0.6 });
-    for (const it of c.items) {
-      entries.push({ url: `${base}${c.base}/${it.slug}/`, changeFrequency: "monthly", priority: 0.5 });
-    }
-  }
-
-  return entries;
 }

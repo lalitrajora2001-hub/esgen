@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Sora, Inter, Michroma } from "next/font/google";
+import { Sora, Inter } from "next/font/google";
 import "./globals.css";
 import { site } from "@/lib/nav";
 import { SmoothScroll } from "@/components/layout/SmoothScroll";
@@ -8,43 +8,45 @@ import { Footer } from "@/components/layout/Footer";
 
 const sora = Sora({ subsets: ["latin"], variable: "--font-sora", weight: ["400", "500", "600", "700"], display: "swap" });
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
-const michroma = Michroma({ subsets: ["latin"], variable: "--font-michroma", weight: "400", display: "swap" });
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: "ESGen | Carbon accounting and ESG software",
+    default: "Carbon Accounting and ESG Reporting Software | ESGen",
     template: "%s | ESGen",
   },
-  description: site.description,
+  description:
+    "ESGen helps businesses collect sustainability data, calculate emissions, prepare reporting evidence, and turn ESG information into practical decisions.",
   applicationName: "ESGen",
-  keywords: ["carbon accounting", "ESG software", "CSRD", "GHG Protocol", "emissions reporting", "Scope 3", "net zero"],
-  icons: {
-    icon: [{ url: "/brand/esgen-symbol.svg", type: "image/svg+xml" }],
-    shortcut: "/brand/esgen-symbol.svg",
-    apple: "/brand/esgen-symbol.svg",
-  },
+  keywords: [
+    "carbon accounting software",
+    "ESG reporting software",
+    "GHG accounting",
+    "ESG data management",
+    "CSRD",
+    "CBAM",
+    "BRSR",
+    "supplier assessment",
+    "double materiality",
+  ],
   openGraph: {
     type: "website",
     siteName: "ESGen",
-    title: "ESGen | Carbon accounting and ESG software",
-    description: site.description,
+    title: "Carbon Accounting and ESG Reporting Software | ESGen",
+    description:
+      "Collect sustainability data, calculate emissions, and prepare reporting evidence in one guided ESG workspace.",
     url: site.url,
-    images: [{ url: "/brand/og-image.svg", width: 1200, height: 630, alt: "ESGen" }],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "ESGen | Carbon accounting and ESG software",
-    description: site.description,
-    images: ["/brand/og-image.svg"],
   },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en-GB" className={`${sora.variable} ${inter.variable} ${michroma.variable} antialiased`}>
+    <html lang="en-GB" className={`${sora.variable} ${inter.variable} antialiased`}>
       <body className="min-h-screen">
-        <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[200] focus:rounded-lg focus:bg-accent focus:px-4 focus:py-3 focus:text-white">
+        <a
+          href="#main"
+          className="sr-only rounded-lg bg-accent px-4 py-3 text-white focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[300]"
+        >
           Skip to content
         </a>
         <SmoothScroll>

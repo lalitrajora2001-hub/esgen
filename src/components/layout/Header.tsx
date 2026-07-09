@@ -1,39 +1,44 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
-import { mainNav, type NavEntry } from "@/lib/nav";
+import { mainNav, hasItems, hasGroups } from "@/lib/nav";
 import { LogoMorph } from "@/components/logo/LogoMorph";
-import { Button, ArrowRight } from "@/components/ui/Button";
-import { MobileDrawer } from "@/components/layout/MobileDrawer";
+import { SearchOverlay } from "@/components/layout/SearchOverlay";
+import { MobileMenu } from "@/components/layout/MobileMenu";
+import { ArrowRight } from "@/components/ui/Button";
 import { cn } from "@/lib/cn";
 
-function hasColumns(e: NavEntry): e is Extract<NavEntry, { columns: unknown }> {
-  return "columns" in e;
+function Chevron({ open }: { open?: boolean }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={cn("h-3.5 w-3.5 transition-transform", open && "rotate-180")}>
+      <path d="M6 9l6 6 6-6" />
+    </svg>
+  );
+}
+
+const GROUP_COLOR: Record<string, string> = {
+  "Carbon management": "#43c6b7",
+  "LCA": "#8b5cf6",
+  "ESG Management": "#4d8bf5",
+};
+
+function Hex({ color }: { color: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className="mt-0.5 h-4 w-4 shrink-0" aria-hidden>
+      <path d="M12 2.2l8.5 4.9v9.8L12 21.8l-8.5-4.9V7.1z" fill={color} fillOpacity="0.22" stroke={color} strokeWidth="1.4" />
+    </svg>
+  );
 }
 
 export function Header() {
-  const [scrolled, setScrolled] = useState(false);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
-  const [drawer, setDrawer] = useState(false);
+  const [search, setSearch] = useState(false);
+  const [mobile, setMobile] = useState(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  useEffect(() => {
-    const update = (y: number) => setScrolled(y > 80);
-    const onApp = (e: Event) => update((e as CustomEvent<number>).detail);
-    const onNative = () => update(window.scrollY);
-    // Lenis broadcasts the real scroll offset via "app:scroll"; window scroll is a fallback.
-    window.addEventListener("app:scroll", onApp as EventListener);
-    window.addEventListener("scroll", onNative, { passive: true });
-    onNative();
-    return () => {
-      window.removeEventListener("app:scroll", onApp as EventListener);
-      window.removeEventListener("scroll", onNative);
-    };
-  }, []);
-
-  const openWith = (label: string) => {
+  const open = (label: string) => {
     if (closeTimer.current) clearTimeout(closeTimer.current);
     setOpenMenu(label);
   };
@@ -43,117 +48,142 @@ export function Header() {
   };
 
   return (
-    <header
-      className={cn(
-        "fixed inset-x-0 top-0 z-[120] transition-all duration-300",
-        scrolled ? "border-b border-border bg-canvas/80 backdrop-blur-xl" : "border-b border-transparent"
-      )}
-    >
-      <div className="mx-auto flex h-16 max-w-[1600px] items-center gap-4 px-5 sm:px-6">
-        {/* Large, legible ESGEN wordmark that morphs into the E as you scroll. */}
-        <Link href="/" aria-label="ESGen home" className="flex h-9 items-center text-white" onMouseEnter={scheduleClose}>
-          <span className="sr-only">ESGen</span>
-          <LogoMorph className="h-7" />
-        </Link>
-
-        {/* Desktop nav */}
-        <nav className="ml-3 hidden items-center gap-1 2xl:flex" aria-label="Primary">
-          {mainNav.map((entry) => {
-            if (!hasColumns(entry)) {
-              return (
-                <Link
-                  key={entry.label}
-                  href={entry.href}
-                  className="rounded-lg px-3 py-2 text-sm font-medium text-text-muted transition-colors hover:text-text"
-                  onMouseEnter={scheduleClose}
-                >
-                  {entry.label}
-                </Link>
-              );
-            }
-            const isOpen = openMenu === entry.label;
-            return (
-              <div key={entry.label} className="relative" onMouseEnter={() => openWith(entry.label)} onMouseLeave={scheduleClose}>
-                <button
-                  className={cn(
-                    "flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
-                    isOpen ? "text-text" : "text-text-muted hover:text-text"
-                  )}
-                  aria-expanded={isOpen}
-                  onClick={() => setOpenMenu(isOpen ? null : entry.label)}
-                >
-                  {entry.label}
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={cn("h-3.5 w-3.5 transition-transform", isOpen && "rotate-180")}>
-                    <path d="M6 9l6 6 6-6" />
-                  </svg>
-                </button>
-                <AnimatePresence>
-                  {isOpen && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 8 }}
-                      transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
-                      className="absolute left-0 top-full pt-3"
-                    >
-                      <div className="w-[min(680px,80vw)] overflow-hidden rounded-2xl border border-border bg-surface/95 p-2 shadow-2xl backdrop-blur-xl">
-                        <div className={cn("grid gap-1 p-2", entry.columns.length === 1 ? "grid-cols-1" : "grid-cols-3")}>
-                          {entry.columns.map((col) => (
-                            <div key={col.heading} className="p-2">
-                              <p className="mb-2 px-2 font-mono text-[0.68rem] uppercase tracking-[0.12em] text-text-muted/70">{col.heading}</p>
-                              <ul>
-                                {col.links.map((l) => (
-                                  <li key={l.href}>
-                                    <Link href={l.href} className="group block rounded-xl px-2 py-2 transition-colors hover:bg-surface-2" onClick={() => setOpenMenu(null)}>
-                                      <span className="block text-sm font-medium text-text group-hover:text-white">{l.title}</span>
-                                      {l.desc && <span className="mt-0.5 block text-xs text-text-muted">{l.desc}</span>}
-                                    </Link>
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                          ))}
-                        </div>
-                        {entry.featured && (
-                          <Link href={entry.featured.href} className="mt-1 flex items-center justify-between gap-3 rounded-xl border border-border bg-canvas/60 px-4 py-3 transition-colors hover:border-accent/50" onClick={() => setOpenMenu(null)}>
-                            <span>
-                              <span className="block text-sm font-medium text-text">{entry.featured.title}</span>
-                              <span className="block text-xs text-text-muted">{entry.featured.desc}</span>
-                            </span>
-                            <ArrowRight className="text-accent-3" />
-                          </Link>
-                        )}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            );
-          })}
-        </nav>
-
-        {/* Right actions */}
-        <div className="ml-auto flex h-16 items-center gap-2">
-          <Link href="/login" className="hidden h-9 items-center rounded-lg px-3 text-sm font-medium text-text-muted transition-colors hover:text-text sm:inline-flex">
-            Login
+    <>
+      <header className="fixed inset-x-0 top-0 z-[120] border-b border-border bg-canvas">
+        <div className="flex h-16 w-full items-center gap-6 px-4 sm:px-6">
+          <Link href="/" aria-label="ESGen home" onMouseEnter={scheduleClose} className="shrink-0">
+            <LogoMorph className="h-6" />
           </Link>
-          <Button href="/demo" size="md" className="hidden sm:inline-flex">
-            Book a demo
-          </Button>
-          <button
-            className="flex h-10 w-10 items-center justify-center rounded-lg text-text 2xl:hidden"
-            aria-label="Open menu"
-            aria-expanded={drawer}
-            onClick={() => setDrawer(true)}
-          >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="h-6 w-6">
-              <path d="M4 7h16M4 12h16M4 17h16" />
-            </svg>
-          </button>
-        </div>
-      </div>
 
-      <MobileDrawer open={drawer} onClose={() => setDrawer(false)} />
-    </header>
+          {/* Desktop nav — centered */}
+          <nav className="hidden flex-1 items-center justify-center gap-1 lg:flex" aria-label="Primary">
+            {mainNav.map((entry) => {
+              if (!hasItems(entry) && !hasGroups(entry)) {
+                return (
+                  <Link
+                    key={entry.label}
+                    href={entry.href}
+                    className="rounded-lg px-3 py-2 text-sm font-medium text-text-muted transition-colors hover:text-white"
+                    onMouseEnter={scheduleClose}
+                  >
+                    {entry.label}
+                  </Link>
+                );
+              }
+              const isOpen = openMenu === entry.label;
+              const mega = hasGroups(entry);
+              return (
+                <div key={entry.label} className="relative" onMouseEnter={() => open(entry.label)} onMouseLeave={scheduleClose}>
+                  <button
+                    className={cn("flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors", isOpen ? "text-white" : "text-text-muted hover:text-white")}
+                    aria-expanded={isOpen}
+                    aria-haspopup="true"
+                    onClick={() => setOpenMenu(isOpen ? null : entry.label)}
+                    onFocus={() => open(entry.label)}
+                  >
+                    {entry.label}
+                    <Chevron open={isOpen} />
+                  </button>
+                  <AnimatePresence>
+                    {isOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 8 }}
+                        transition={{ duration: 0.16, ease: [0.16, 1, 0.3, 1] }}
+                        className={cn("absolute top-full pt-3", mega ? "left-1/2 -translate-x-1/2" : "left-0")}
+                      >
+                        {mega ? (
+                          <div className="w-[860px] max-w-[94vw] overflow-hidden rounded-2xl border border-border bg-surface/95 p-5 shadow-2xl backdrop-blur-xl">
+                            <div className="flex gap-5">
+                              {entry.groups.map((g, gi) => (
+                                <div
+                                  key={g.heading}
+                                  className={cn(
+                                    "min-w-0",
+                                    gi < entry.groups.length - 1 && "border-r border-border pr-5",
+                                    g.heading === "ESG Management" ? "flex-1" : g.heading === "Carbon management" ? "w-56 shrink-0" : "w-48 shrink-0"
+                                  )}
+                                >
+                                  <p className="mb-2 px-2.5 font-mono text-[0.7rem] uppercase tracking-[0.12em] text-text-muted/70">{g.heading}</p>
+                                  <ul className={cn("grid gap-0.5", g.items.length > 4 && "sm:grid-cols-2")}>
+                                    {g.items.map((it) => (
+                                      <li key={it.href}>
+                                        <Link href={it.href} onClick={() => setOpenMenu(null)} className="flex items-start gap-2.5 rounded-xl px-2.5 py-2 transition-colors hover:bg-surface-2">
+                                          <Hex color={GROUP_COLOR[g.heading] ?? "#4d8bf5"} />
+                                          <span className="min-w-0">
+                                            <span className="block text-sm font-semibold text-white">{it.label}</span>
+                                            {it.desc && <span className="mt-0.5 block text-xs leading-snug text-text-muted">{it.desc}</span>}
+                                          </span>
+                                        </Link>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        ) : (
+                          <div className={cn("overflow-hidden rounded-2xl border border-border bg-surface/95 p-2 shadow-2xl backdrop-blur-xl", entry.columns === 2 ? "w-[560px]" : "w-[340px]")}>
+                            <ul className={cn("grid gap-0.5", entry.columns === 2 && "grid-cols-2")}>
+                              {entry.items.map((it) => (
+                                <li key={it.href}>
+                                  <Link href={it.href} className="group block rounded-xl px-3 py-2.5 transition-colors hover:bg-surface-2" onClick={() => setOpenMenu(null)}>
+                                    <span className="block text-sm font-medium text-white">{it.label}</span>
+                                    {it.desc && <span className="mt-0.5 block text-xs text-text-muted">{it.desc}</span>}
+                                  </Link>
+                                </li>
+                              ))}
+                            </ul>
+                            {entry.featured && (
+                              <Link href={entry.featured.href} onClick={() => setOpenMenu(null)} className="mt-1 flex items-center justify-between gap-3 rounded-xl border border-accent/25 bg-accent/10 px-4 py-3 transition-colors hover:border-accent/50">
+                                <span>
+                                  <span className="block text-sm font-medium text-white">{entry.featured.title}</span>
+                                  <span className="block text-xs text-text-muted">{entry.featured.desc}</span>
+                                </span>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="h-4 w-4 text-accent-3"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+                              </Link>
+                            )}
+                          </div>
+                        )}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            })}
+          </nav>
+
+          {/* Right actions */}
+          <div className="ml-auto flex items-center gap-3 lg:ml-0">
+            <button aria-label="Search" onClick={() => setSearch(true)} className="hidden h-9 w-9 items-center justify-center rounded-lg text-text-muted transition-colors hover:text-white lg:flex">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-5 w-5"><circle cx="11" cy="11" r="7" /><path d="M21 21l-4.3-4.3" /></svg>
+            </button>
+            <span className="hidden h-6 w-px bg-border lg:block" aria-hidden="true" />
+            <Link href="/login" className="hidden text-sm font-medium text-text-muted transition-colors hover:text-white lg:block">Sign in</Link>
+
+            {/* Book a demo — bold, chunky */}
+            <Link
+              href="/demo"
+              className="hidden items-center gap-2 rounded-xl bg-accent px-5 py-2.5 text-sm font-bold text-white shadow-[0_12px_30px_-12px_rgba(77,139,245,0.9)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-accent-2 hover:shadow-[0_16px_36px_-12px_rgba(77,139,245,1)] sm:inline-flex"
+            >
+              Book a demo <ArrowRight className="h-4 w-4" />
+            </Link>
+
+            <button
+              aria-label={mobile ? "Close menu" : "Open menu"}
+              aria-expanded={mobile}
+              onClick={() => setMobile(true)}
+              className="flex h-10 w-10 items-center justify-center rounded-lg text-white lg:hidden"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="h-6 w-6"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <SearchOverlay open={search} onClose={() => setSearch(false)} />
+      <MobileMenu open={mobile} onClose={() => setMobile(false)} onSearch={() => { setMobile(false); setSearch(true); }} />
+    </>
   );
 }

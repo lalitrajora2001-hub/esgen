@@ -1,12 +1,18 @@
 import type { Metadata } from "next";
-import { PageHero } from "@/components/templates/shared";
+import { PageHero, Check } from "@/components/sections/blocks";
 import { Section } from "@/components/ui/Section";
 import { DemoForm } from "@/components/forms/DemoForm";
 
 export const metadata: Metadata = {
-  title: "Book a demo",
-  description: "See ESGen in action. Book a short, no-pressure walkthrough tailored to your kind of business.",
+  title: "Book a Demo",
+  description: "See ESGen in action. Request a demo tailored to your carbon accounting and ESG reporting needs.",
 };
+
+const expect = [
+  ["A quick conversation", "We start by understanding your reporting needs, not by pitching."],
+  ["A tailored walkthrough", "We show the platform using a scenario that fits your business."],
+  ["Clear next steps", "Practical advice on where ESGen fits, with no obligation."],
+];
 
 export default function DemoPage() {
   return (
@@ -14,7 +20,7 @@ export default function DemoPage() {
       <PageHero
         kicker="Book a demo"
         title="See ESGen in action"
-        intro="A short, no-pressure walkthrough tailored to your kind of business. We will show you the platform and be honest about whether it is the right fit."
+        intro="Request a demo and we will tailor it to your carbon accounting and ESG reporting needs."
         trail={[{ label: "Home", href: "/" }, { label: "Book a demo" }]}
         primary={{ label: "Talk to us", href: "/contact" }}
         secondary={{ label: "See pricing", href: "/pricing" }}
@@ -24,26 +30,19 @@ export default function DemoPage() {
           <div>
             <h2 className="text-2xl font-semibold sm:text-3xl">What to expect</h2>
             <ul className="mt-6 space-y-4">
-              {[
-                ["A quick chat", "We start by understanding your situation, not by pitching."],
-                ["A live tour", "We walk through the platform using a scenario that fits your business."],
-                ["Honest advice", "We tell you plainly whether ESGen is right for you, and what it would take."],
-                ["Next steps", "No obligation. You decide if and when to go further."],
-              ].map(([t, d]) => (
+              {expect.map(([t, d]) => (
                 <li key={t} className="flex gap-4">
-                  <span className="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-full bg-[rgba(63,182,168,0.16)] text-[#3fb6a8]">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" className="h-4 w-4"><path d="M5 13l4 4L19 7" /></svg>
-                  </span>
+                  <Check />
                   <span>
-                    <span className="block font-display font-semibold text-text">{t}</span>
+                    <span className="block font-display font-semibold text-white">{t}</span>
                     <span className="block text-sm text-text-muted">{d}</span>
                   </span>
                 </li>
               ))}
             </ul>
           </div>
-          <div className="card-surface p-6 sm:p-8">
-            <h2 className="mb-6 font-display text-xl font-semibold">Choose a time</h2>
+          <div className="card p-6 sm:p-8">
+            <h2 className="mb-6 font-display text-xl font-semibold">Request a demo</h2>
             <DemoForm />
           </div>
         </div>

@@ -1,178 +1,155 @@
 @import "tailwindcss";
 
 /* ============================================================
-   ESGen design tokens (dark, GitHub-inspired, brand blue)
+   ESGen design system — premium dark, near-black + blue accent
    ============================================================ */
 @theme {
-  --color-canvas: #060608;
-  --color-surface: #101012;
-  --color-surface-2: #17171a;
-  --color-border: #262629;
-  --color-text: #f4f4f5;
-  --color-text-muted: #9aa0a6;
-  --color-accent: #4d8bf5;
-  --color-accent-2: #2f6fe0;
-  --color-accent-3: #8fbaff;
+  --color-canvas: #06070b;       /* pitch near-black, faint blue tint */
+  --color-surface: #0d0f16;      /* dark charcoal cards / panels */
+  --color-surface-2: #13161f;    /* nested panels */
+  --color-border: #212533;       /* fine borders */
+  --color-text: #eef1f7;         /* near-white text */
+  --color-text-muted: #94a0b5;   /* muted secondary text */
+  --color-accent: #4d8bf5;       /* ESGen brand blue */
+  --color-accent-2: #2f6fe0;     /* deeper blue for gradients */
+  --color-accent-3: #8fbaff;     /* light blue highlight */
+  --color-teal: #43c6b7;         /* rare secondary accent (success ticks) */
 
   --font-sans: var(--font-inter);
   --font-display: var(--font-sora);
-  --font-logo: var(--font-michroma);
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   --radius-lg: 12px;
   --radius-xl: 16px;
-  --radius-2xl: 20px;
+  --radius-2xl: 22px;
 
-  --shadow-glow: 0 0 0 1px rgba(77, 139, 245, 0.18),
-    0 24px 60px -22px rgba(77, 139, 245, 0.5);
-  --shadow-card: 0 20px 50px -28px rgba(0, 0, 0, 0.85);
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 20px 44px -22px rgba(0, 0, 0, 0.8);
+  --shadow-float: 0 32px 70px -28px rgba(0, 0, 0, 0.85);
+  --glow-blue: 0 0 0 1px rgba(77, 139, 245, 0.22), 0 22px 60px -22px rgba(77, 139, 245, 0.5);
 
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-
-  /* Cursor-reactive hero glow position (updated in JS) */
-  --mx: 50%;
-  --my: 30%;
 }
 
-/* ============================================================
-   Base
-   ============================================================ */
 @layer base {
+  * { border-color: var(--color-border); }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  body {
+    background: var(--color-canvas);
+    color: var(--color-text);
+    font-family: var(--font-sans), system-ui, sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+  h1, h2, h3, h4, h5 {
+    font-family: var(--font-display), var(--font-sans), sans-serif;
+    font-weight: 600;
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    color: var(--color-text);
+  }
+  a { color: inherit; text-decoration: none; }
+  ::selection { background: rgba(77, 139, 245, 0.32); color: #fff; }
 
-* {
-  border-color: var(--color-border);
+  :where(a, button, input, textarea, select, [tabindex]):focus-visible {
+    outline: 2px solid var(--color-accent-3);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+
+  ::-webkit-scrollbar { width: 11px; height: 11px; }
+  ::-webkit-scrollbar-track { background: var(--color-canvas); }
+  ::-webkit-scrollbar-thumb { background: #232838; border-radius: 99px; border: 3px solid var(--color-canvas); }
+  ::-webkit-scrollbar-thumb:hover { background: #303650; }
+
+  /* Lenis smooth scroll */
+  html.lenis, html.lenis body { height: auto; }
+  .lenis.lenis-smooth { scroll-behavior: auto !important; }
+  .lenis.lenis-stopped { overflow: clip; }
 }
-
-html {
-  scroll-behavior: smooth;
-  -webkit-text-size-adjust: 100%;
-}
-
-body {
-  background: var(--color-canvas);
-  color: var(--color-text);
-  font-family: var(--font-sans), system-ui, sans-serif;
-  line-height: 1.65;
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-  overflow-x: hidden;
-}
-
-h1, h2, h3, h4, h5 {
-  font-family: var(--font-display), var(--font-sans), sans-serif;
-  font-weight: 600;
-  line-height: 1.08;
-  letter-spacing: -0.02em;
-  color: var(--color-text);
-}
-
-::selection {
-  background: rgba(77, 139, 245, 0.32);
-  color: #fff;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-/* Focus visibility for keyboard users */
-:where(a, button, input, textarea, select, [tabindex]):focus-visible {
-  outline: 2px solid var(--color-accent-3);
-  outline-offset: 3px;
-  border-radius: 6px;
-}
-
-/* Custom scrollbar */
-::-webkit-scrollbar { width: 11px; height: 11px; }
-::-webkit-scrollbar-track { background: var(--color-canvas); }
-::-webkit-scrollbar-thumb {
-  background: #263241;
-  border-radius: 99px;
-  border: 3px solid var(--color-canvas);
-}
-::-webkit-scrollbar-thumb:hover { background: #33445a; }
-
-/* Lenis */
-html.lenis, html.lenis body { height: auto; }
-.lenis.lenis-smooth { scroll-behavior: auto !important; }
-.lenis.lenis-stopped { overflow: clip; }
-
-} /* end @layer base */
 
 /* ============================================================
-   Reusable brand utilities
+   Reusable utilities
    ============================================================ */
-
-/* Monospace technical label */
-.mono-label {
+.eyebrow {
   font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.14em;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--color-accent-3);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
 }
+.eyebrow::before { content: ""; width: 22px; height: 1px; background: var(--color-accent); }
+.eyebrow--plain::before { display: none; }
 
-/* Gradient text */
 .text-gradient {
   background: linear-gradient(100deg, #ffffff 10%, var(--color-accent-3) 60%, var(--color-accent) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  -webkit-background-clip: text; background-clip: text; color: transparent;
 }
 
-/* Large soft radial glow used to blend sections */
-.glow {
-  position: absolute;
-  border-radius: 9999px;
-  filter: blur(90px);
-  pointer-events: none;
-  z-index: 0;
+/* Card surface */
+.card {
+  background: linear-gradient(180deg, var(--color-surface), rgba(13, 15, 22, 0.6));
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  transition: transform 0.4s var(--ease-out), border-color 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out), background 0.4s var(--ease-out);
+}
+.card-hover:hover {
+  transform: translateY(-4px);
+  border-color: rgba(77, 139, 245, 0.4);
+  box-shadow: var(--glow-blue);
+  background: var(--color-surface-2);
 }
 
-/* Section blend: overlapping vertical gradient so sections melt together */
-.section-blend {
-  background:
-    radial-gradient(60% 40% at 50% 0%, rgba(77, 139, 245, 0.05), transparent 70%),
-    linear-gradient(180deg, transparent, rgba(11, 15, 23, 0) 100%);
+/* Product mockup window chrome (dark) */
+.window {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
 }
+.window__bar { display: flex; align-items: center; gap: 6px; padding: 11px 14px; background: rgba(255,255,255,0.02); border-bottom: 1px solid var(--color-border); }
+.window__dot { width: 9px; height: 9px; border-radius: 50%; background: #2b3040; }
+.panel { background: var(--color-surface-2); border: 1px solid var(--color-border); border-radius: var(--radius-lg); }
 
-/* Dotted / grid texture overlay */
+/* Large soft blue glow used behind heroes / CTAs */
+.glow { position: absolute; border-radius: 9999px; filter: blur(90px); pointer-events: none; z-index: 0; }
+
+.section-blend { background: radial-gradient(60% 40% at 50% 0%, rgba(77,139,245,0.05), transparent 70%); }
+
 .grid-texture {
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  background-size: 60px 60px;
+    linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size: 58px 58px;
   -webkit-mask-image: radial-gradient(70% 60% at 50% 30%, #000, transparent 78%);
   mask-image: radial-gradient(70% 60% at 50% 30%, #000, transparent 78%);
 }
 
-/* Card hover-glow surface */
-.card-surface {
-  background: linear-gradient(180deg, var(--color-surface), rgba(16, 16, 18, 0.6));
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-xl);
-  transition: transform 0.4s var(--ease-out), border-color 0.4s var(--ease-out),
-    box-shadow 0.4s var(--ease-out), background 0.4s var(--ease-out);
-}
-.card-surface:hover {
-  transform: translateY(-4px);
-  border-color: rgba(77, 139, 245, 0.4);
-  box-shadow: var(--shadow-glow);
-}
+/* Reveal (JS-gated) */
+.has-js [data-reveal] { opacity: 0; transform: translateY(22px); }
+.has-js [data-reveal].is-in { opacity: 1; transform: none; }
 
-/* Hairline top border with accent fade (GitHub-style dividers) */
-.hairline {
-  border-top: 1px solid transparent;
-  border-image: linear-gradient(90deg, transparent, var(--color-border) 20%, var(--color-border) 80%, transparent) 1;
+/* Ambient sheen for the interactive CTA panel */
+@keyframes cta-sheen {
+  0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.5; }
+  50% { transform: translateX(-50%) translateY(7%); opacity: 0.8; }
 }
+.animate-cta-sheen { animation: cta-sheen 7s ease-in-out infinite; }
 
-/* Reduced motion: neutralise transforms/animations */
+/* Live indicators / twinkling dots on the white product pages */
+@keyframes live-pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.25; transform: scale(0.8); } }
+.live-dot { animation: live-pulse 1.7s ease-in-out infinite; }
+@keyframes twinkle { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+.twinkle { animation: twinkle 2.6s ease-in-out infinite; }
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  *, *::before, *::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
-  }
+  *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+  .has-js [data-reveal] { opacity: 1 !important; transform: none !important; }
 }
