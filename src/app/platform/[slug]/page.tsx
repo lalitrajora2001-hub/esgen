@@ -4,8 +4,10 @@ import { pagesIn, getPage } from "@/lib/content";
 import { ContentPage } from "@/components/templates/ContentPage";
 
 export const dynamicParams = false;
+// Slugs with a bespoke page under /platform/<slug>/page.tsx take precedence.
+const CUSTOM = new Set(["carbon-assessment", "suppliers-engagement", "decarbonization-strategy", "emissions-factors", "lca"]);
 export function generateStaticParams() {
-  return pagesIn("platform").map((p) => ({ slug: p.slug }));
+  return pagesIn("platform").filter((p) => !CUSTOM.has(p.slug)).map((p) => ({ slug: p.slug }));
 }
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;

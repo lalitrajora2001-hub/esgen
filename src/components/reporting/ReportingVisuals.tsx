@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { CK, Count, EsgenMark, useReveal } from "@/components/whiteui/kit";
 
@@ -134,32 +135,44 @@ export function AnomaliesCard() {
 
 /* ===================== Framework + requirements mapping ===================== */
 const FW_TILES: [string, string][] = [["ISSB", CK.navy], ["CDP", "#c8102e"], ["TCFD", "#38a7db"], ["SECR", CK.navy], ["FCA", "#5b3f7a"], ["CSRD", "#0b3aa0"], ["GRI", "#12559c"], ["UK SRS", CK.navy]];
-const REQS: [string, string, boolean][] = [
-  ["GRI 2-1", "Organisational details", true],
-  ["IFRS S2", "Scope 1, 2 and 3 emissions", false],
-  ["ESRS E1", "Gross Scopes 1–3 and total", false],
-  ["Governance", "Board oversight of climate", false],
+const REQS: [string, string][] = [
+  ["GRI 2-1", "Organisational details"],
+  ["IFRS S2", "Scope 1, 2 and 3 emissions"],
+  ["ESRS E1", "Gross Scopes 1–3 and total"],
+  ["Governance", "Board oversight of climate"],
 ];
 export function FrameworkRequirements() {
   const { ref, inView } = useReveal();
+  const [on, setOn] = useState<boolean[]>(() => [true, false, false, false]);
+  const mapped = on.filter(Boolean).length;
+  const toggle = (i: number) => setOn((p) => p.map((x, k) => (k === i ? !x : x)));
+
   return (
-    <div ref={ref} className="relative overflow-hidden rounded-2xl border border-[#e2e8f4] p-5" style={{ background: "#eef3fc" }}>
-      <div className="grid grid-cols-3 gap-2.5">
+    <div ref={ref} className="rounded-2xl border border-[#e2e8f4] p-5" style={{ background: "#eef3fc" }}>
+      <div className="grid grid-cols-4 gap-2.5">
         {FW_TILES.map(([l, c]) => (
           <div key={l} className="flex h-14 items-center justify-center rounded-xl bg-white shadow-sm">
             <span className="font-display text-sm font-extrabold tracking-tight" style={{ color: c }}>{l}</span>
           </div>
         ))}
       </div>
-      <motion.div className="absolute bottom-5 right-5 w-[62%] max-w-[280px] rounded-xl border border-[#e7ebf3] bg-white p-3 shadow-2xl"
+
+      <motion.div className="mt-4 rounded-xl border border-[#e7ebf3] bg-white p-3 shadow-xl"
         initial={{ opacity: 0, y: 14 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.5, delay: 0.3 }}>
-        <div className="text-[0.66rem] font-semibold" style={{ color: CK.navy }}>Select which requirements to map</div>
-        <div className="mt-2 space-y-1.5">
-          {REQS.map(([code, desc, on], i) => (
-            <motion.div key={code} className="flex items-start gap-2 rounded-md px-1.5 py-1" initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}} transition={{ delay: 0.5 + i * 0.12 }}>
-              <span className="mt-0.5 grid h-4 w-4 shrink-0 place-items-center rounded" style={{ background: on ? CK.blue : "#fff", border: on ? "none" : "1.5px solid #cbd5ea" }}>{on && <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round"><path d="M5 13l4 4L19 7" /></svg>}</span>
-              <span><span className="text-[0.64rem] font-semibold" style={{ color: CK.navy }}>{code}</span><span className="ml-1 text-[0.58rem]" style={{ color: CK.muted }}>· {desc}</span></span>
-            </motion.div>
+        <div className="flex items-center justify-between gap-2">
+          <span className="text-[0.66rem] font-semibold" style={{ color: CK.navy }}>Select which requirements to map</span>
+          <span className="shrink-0 rounded-full px-2 py-0.5 text-[0.56rem] font-bold tabular-nums" style={{ background: "#eef3fc", color: CK.blue }}>{mapped}/{REQS.length}</span>
+        </div>
+        <div className="mt-2 space-y-1">
+          {REQS.map(([code, desc], i) => (
+            <motion.button key={code} onClick={() => toggle(i)} aria-pressed={on[i]}
+              className="flex w-full items-start gap-2 rounded-md px-1.5 py-1 text-left transition-colors hover:bg-[#f6f8fc] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[#2f6fe0]"
+              initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}} transition={{ delay: 0.5 + i * 0.12 }}>
+              <span className="mt-0.5 grid h-4 w-4 shrink-0 place-items-center rounded transition-colors" style={{ background: on[i] ? CK.blue : "#fff", border: on[i] ? "none" : "1.5px solid #cbd5ea" }}>
+                {on[i] && <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round"><path d="M5 13l4 4L19 7" /></svg>}
+              </span>
+              <span className="min-w-0"><span className="text-[0.64rem] font-semibold" style={{ color: CK.navy }}>{code}</span><span className="ml-1 text-[0.58rem]" style={{ color: CK.muted }}>· {desc}</span></span>
+            </motion.button>
           ))}
         </div>
       </motion.div>
