@@ -12,8 +12,10 @@ export const site = {
     operations: "janvi@esgen.co.uk",
   },
   url: "https://esgen.co.uk",
+  /* This is the description Google shows under the homepage result.
+     Edit here and it updates the meta description, OG, and JSON-LD together. */
   description:
-    "ESGen helps businesses collect sustainability data, calculate emissions, prepare reporting evidence, and turn ESG information into practical decisions.",
+    "ESGen is a UK carbon accounting and ESG reporting platform. Measure Scope 1, 2 and 3 emissions, engage suppliers, and prepare reporting evidence for UK SRS, CSRD and SECR.",
 };
 
 export type NavLink = { label: string; href: string; desc?: string };

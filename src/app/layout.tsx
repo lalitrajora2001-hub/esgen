@@ -12,11 +12,10 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "sw
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: "Carbon Accounting and ESG Reporting Software | ESGen",
+    default: "Next-Generation ESG Reporting Built for the Future",
     template: "%s | ESGen",
   },
-  description:
-    "ESGen helps businesses collect sustainability data, calculate emissions, prepare reporting evidence, and turn ESG information into practical decisions.",
+  description: site.description,
   applicationName: "ESGen",
   keywords: [
     "carbon accounting software",
@@ -25,24 +24,44 @@ export const metadata: Metadata = {
     "ESG data management",
     "CSRD",
     "CBAM",
-    "BRSR",
+    "UK SRS",
+    "SECR",
     "supplier assessment",
     "double materiality",
   ],
   openGraph: {
     type: "website",
     siteName: "ESGen",
-    title: "Carbon Accounting and ESG Reporting Software | ESGen",
-    description:
-      "Collect sustainability data, calculate emissions, and prepare reporting evidence in one guided ESG workspace.",
+    title: "Next-Generation ESG Reporting Built for the Future",
+    description: site.description,
     url: site.url,
+    images: [{ url: "/brand/og-image.png", width: 1200, height: 630, alt: "ESGen — next-generation ESG reporting" }],
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Next-Generation ESG Reporting Built for the Future",
+    description: site.description,
+    images: ["/brand/og-image.png"],
+  },
+};
+
+/* Organization structured data — what Google uses to associate a brand logo
+   with the site. Verifiable facts only: no invented address or socials. */
+const orgJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "ESGen",
+  url: site.url,
+  logo: `${site.url}/brand/esgen-logo-mark.png`,
+  email: site.emails.general,
+  description: site.description,
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en-GB" className={`${sora.variable} ${inter.variable} antialiased`}>
       <body className="min-h-screen">
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }} />
         <a
           href="#main"
           className="sr-only rounded-lg bg-accent px-4 py-3 text-white focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[300]"
