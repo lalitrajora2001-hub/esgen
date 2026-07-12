@@ -30,41 +30,43 @@ const WHY: { icon: string; t: string; d: string }[] = [
   { icon: "M6 3h12v18H6zM9 7h6M9 11h6M9 15h4", t: "Product footprints from the bill of materials", d: "A product carbon footprint request needs BOM data, the right factors, and a method that survives your customer's own review. ESGen builds the figure from the materials you already track and keeps the workings with it." },
 ];
 
-function Crumbs() {
-  return (
-    <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-2 font-mono text-xs" style={{ color: MUTED }}>
-      <Link href="/" className="hover:underline">Home</Link><span>/</span>
-      <span>Industries</span><span>/</span>
-      <span style={{ color: INK }}>Manufacturing</span>
-    </nav>
-  );
-}
-
 export default function ManufacturingPage() {
   const data = INDUSTRY_DATA.manufacturing;
 
   return (
     <div className="bg-white" style={{ color: INK }}>
-      {/* Hero: photo left, content right */}
-      <section className="grid min-h-[560px] lg:grid-cols-[1fr_1fr]">
-        <div className="relative min-h-[320px] lg:min-h-0">
-          <img src="/images/manufacturing-welder.jpg" alt="Welder working on a steel fabrication bench" className="absolute inset-0 h-full w-full object-cover" />
+      {/* Full-viewport grayscale hero, content held on the right; the page
+          content starts on scroll */}
+      <section className="relative flex min-h-[100svh] items-end overflow-hidden">
+        <img src="/images/manufacturing-welder.jpg" alt="Welder working on a steel fabrication bench"
+          className="absolute inset-0 h-full w-full object-cover" style={{ filter: "grayscale(1) contrast(1.05)" }} />
+        <div aria-hidden className="absolute inset-0" style={{ background: "linear-gradient(250deg, rgba(11,13,17,0.82) 0%, rgba(11,13,17,0.45) 45%, rgba(11,13,17,0.18) 100%)" }} />
+        <div aria-hidden className="absolute inset-x-0 bottom-0 h-40" style={{ background: "linear-gradient(180deg, transparent, rgba(11,13,17,0.6))" }} />
+        <div aria-hidden className="absolute bottom-6 left-1/2 z-10 -translate-x-1/2">
+          <span className="flex flex-col items-center gap-1.5 text-[0.6rem] font-bold uppercase tracking-[0.2em] text-white/60">
+            Scroll
+            <svg viewBox="0 0 24 24" className="h-4 w-4 motion-safe:animate-bounce" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6" /></svg>
+          </span>
         </div>
-        <div className="flex items-center px-6 py-14 sm:px-10 lg:px-14 lg:py-16">
-          <div className="max-w-xl">
-            <Crumbs />
-            <h1 className="mt-6 font-display text-4xl font-bold leading-[1.06] tracking-tight sm:text-5xl" style={{ color: INK }}>
+        <div className="relative mx-auto w-full max-w-6xl px-5 pb-20 pt-40 sm:px-6">
+          <div className="max-w-xl lg:ml-auto">
+            <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-2 font-mono text-xs text-white/60">
+              <Link href="/" className="hover:underline">Home</Link><span>/</span>
+              <span>Industries</span><span>/</span>
+              <span className="text-white">Manufacturing</span>
+            </nav>
+            <h1 className="mt-5 font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl">
               Carbon accounting for manufacturers. Audit-ready, tender-ready.
             </h1>
-            <p className="mt-6 text-lg leading-relaxed" style={{ color: MUTED }}>
+            <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/80">
               Most of a manufacturer&rsquo;s footprint is upstream, in the materials you buy, not on a meter you can read. ESGen measures the whole picture and turns it into the answers your customers now ask for.
             </p>
             <div className="mt-9 flex flex-wrap gap-3">
-              <Link href="/demo" className="inline-flex items-center gap-2 rounded-lg px-6 py-3.5 text-sm font-bold text-white transition-transform hover:-translate-y-0.5" style={{ background: INK }}>
+              <Link href="/demo" className="inline-flex items-center gap-2 bg-white px-6 py-3.5 text-sm font-bold transition-transform hover:-translate-y-0.5" style={{ color: INK }}>
                 Book a demo
                 <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
               </Link>
-              <Link href="/contact" className="inline-flex items-center rounded-lg border px-6 py-3.5 text-sm font-bold transition-colors hover:bg-[#f4f5f7]" style={{ borderColor: INK, color: INK }}>
+              <Link href="/contact" className="inline-flex items-center border border-white/50 px-6 py-3.5 text-sm font-bold text-white transition-colors hover:bg-white/10">
                 Talk to our team
               </Link>
             </div>
