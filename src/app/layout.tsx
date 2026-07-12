@@ -17,6 +17,7 @@ export const metadata: Metadata = {
   },
   description: site.description,
   applicationName: "ESGen",
+  verification: { google: "U2k5d5NZTTlDwlng7k7Yi22aASNzXkvx1_UVXIjTRWU" },
   keywords: [
     "carbon accounting software",
     "ESG reporting software",
