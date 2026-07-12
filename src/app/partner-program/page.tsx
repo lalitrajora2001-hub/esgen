@@ -1,121 +1,123 @@
 import type { Metadata } from "next";
 import { Section, SectionHead } from "@/components/ui/Section";
 import { Reveal } from "@/components/ui/Reveal";
-import { Breadcrumb, CTASection } from "@/components/sections/blocks";
+import { CTASection } from "@/components/sections/blocks";
 import { Button, ArrowRight } from "@/components/ui/Button";
-import { TierSelector, PracticeModel } from "@/components/partner/PartnerVisuals";
 
 export const metadata: Metadata = {
   title: "Partner Program",
-  description: "Build a sustainability practice on ESGen. Refer, deliver, or white-label, the program grows with you.",
+  description: "Join the ESGen partner ecosystem. Combine your client relationships with our ESG expertise and reporting software to deliver audit-ready sustainability outcomes.",
 };
 
-const FEATURES: [string, string][] = [
-  ["Consultant workspace", "Work across all your clients from one place, with each engagement kept separate and secure."],
-  ["White-labelled output", "At the top tier, deliver reporting under your own brand rather than ours."],
-  ["Deal registration", "Register opportunities and earn referral commission on the ones that close."],
-  ["Reusable templates", "Standardise your methodology once and apply it across every client you onboard."],
-  ["Priority support", "A faster line to our team when a client deadline is on the horizon."],
-  ["Partner directory", "Certified partners are listed where prospective clients look for delivery help."],
+type Benefit = { icon: React.ReactNode; title: string; desc: string };
+
+const BENEFITS: Benefit[] = [
+  {
+    icon: <path d="M13 2L4.5 12.5H11l-1 9.5 8.5-11H12z" />,
+    title: "Automate the heavy lifting",
+    desc: "Stop wrestling with manual data collection. Put our reporting software to work so you can offer clients an automated, single source of truth for their complex ESG metrics.",
+  },
+  {
+    icon: (
+      <>
+        <circle cx="9" cy="8" r="3" />
+        <path d="M15 11a3 3 0 100-6M3 20a6 6 0 0112 0M15.5 14a6 6 0 015 6" />
+      </>
+    ),
+    title: "Tap into deep expertise",
+    desc: "Co-sell and collaborate with a team fluent in GHG accounting and high-scrutiny frameworks like CSRD, BRSR, and CBAM.",
+  },
+  {
+    icon: <path d="M3 17l6-6 4 4 8-8M17 7h4v4" />,
+    title: "Drive new revenue streams",
+    desc: "Unlock referral agreements and co-branded growth opportunities that benefit your firm's bottom line.",
+  },
+  {
+    icon: <path d="M12 3l9 5-9 5-9-5 9-5zM3 13l9 5 9-5M3 17l9 5 9-5" />,
+    title: "Scale without adding headcount",
+    desc: "Multiply your team's output. Automation reduces the hours required per account, so your existing team can manage more complex clients without increasing operational overhead.",
+  },
 ];
 
-const STEPS: [string, string][] = [
-  ["Apply", "Tell us about your practice and the clients you serve. We will match you to the right entry tier."],
-  ["Get certified", "Your team completes product training and delivers a first engagement with our support."],
-  ["Grow your practice", "Add clients, deepen engagements, and move up the tiers as your book grows."],
-];
-
-const WHY: [string, string][] = [
-  ["Reporting is recurring, not one-off", "Frameworks report annually and obligations expand. A client measured once is a client you serve every year."],
-  ["Manual reporting caps your growth", "Spreadsheet-based delivery does not scale past a handful of clients. A platform is what lets a small team serve many."],
-  ["Your methodology, kept consistent", "Templates and a shared factor database mean every consultant delivers to the same standard, whoever picks up the work."],
+const PARTNERS: { name: string; img: string }[] = [
+  { name: "GPEC-X", img: "/images/partners/gpecx.png" },
+  { name: "TiiEC", img: "/images/partners/tiiec.png" },
 ];
 
 export default function PartnerProgramPage() {
   return (
     <>
-      {/* Hero */}
-      <section className="relative overflow-hidden pt-28 pb-10 sm:pt-36">
-        <div aria-hidden className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(900px 480px at 70% -10%, rgba(77,139,245,0.16), transparent 60%)" }} />
-        <div className="grid-texture pointer-events-none absolute inset-0 opacity-60" aria-hidden />
-        <div className="relative mx-auto max-w-6xl px-5 sm:px-6">
-          <Breadcrumb trail={[{ label: "Home", href: "/" }, { label: "Partner Program" }]} />
-          <div className="max-w-2xl">
-            <h1 className="text-balance text-4xl font-semibold leading-[1.05] sm:text-5xl">Build a sustainability practice on ESGen</h1>
-            <p className="mt-5 max-w-xl text-lg text-text-muted">Whether you refer clients, deliver engagements, or want to run your whole practice on the platform, the program grows with you.</p>
+      {/* Full-viewport photo hero */}
+      <section className="relative flex min-h-[100svh] items-center overflow-hidden">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/images/partnership.jpg" alt="Two professionals shaking hands to mark a new partnership" className="absolute inset-0 h-full w-full object-cover" />
+        <div aria-hidden className="absolute inset-0" style={{ background: "linear-gradient(100deg, rgba(4,5,9,0.94) 0%, rgba(4,5,9,0.8) 38%, rgba(4,5,9,0.42) 72%, rgba(4,5,9,0.25) 100%)" }} />
+        <div className="relative mx-auto w-full max-w-6xl px-5 sm:px-6">
+          <div className="max-w-xl">
+            <p className="font-mono text-[0.72rem] uppercase tracking-[0.18em] text-accent-3">Partner ecosystem</p>
+            <h1 className="mt-4 text-balance text-4xl font-semibold leading-[1.04] text-white sm:text-6xl">The ESGen Partner Ecosystem</h1>
+            <p className="mt-5 text-xl text-white/85">Powering the next generation of ESG execution.</p>
+            <p className="mt-5 max-w-lg text-base leading-relaxed text-white/70">
+              Combine your trusted client relationships with our ESG expertise and reporting software, and deliver audit-ready, financial-grade sustainability outcomes without building the infrastructure yourself.
+            </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Button href="/contact" size="lg">Become a partner <ArrowRight /></Button>
+              <Button href="/contact" size="lg">Join our partner network <ArrowRight /></Button>
               <Button href="/demo" variant="ghost" size="lg">See the platform</Button>
             </div>
           </div>
         </div>
+        {/* scroll cue */}
+        <div aria-hidden className="absolute inset-x-0 bottom-6 flex justify-center">
+          <svg viewBox="0 0 24 24" className="h-6 w-6 animate-bounce text-white/55" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6" /></svg>
+        </div>
       </section>
 
-      {/* Tier selector */}
-      <Section size="sm">
-        <SectionHead title="Three tiers, each building on the last" intro="Start by referring, grow into delivering, and, when you are ready, run your practice on ESGen under your own brand." />
-        <div className="mt-10"><Reveal><TierSelector /></Reveal></div>
+      {/* Intro */}
+      <Section>
+        <Reveal>
+          <div className="mx-auto max-w-3xl text-center">
+            <h2 className="text-balance font-display text-3xl font-bold sm:text-4xl">One ecosystem for scalable ESG delivery</h2>
+            <p className="mt-5 text-lg leading-relaxed text-text-muted">
+              The transition to sustainable business is too complex for any single firm to tackle alone. The ESGen Partner Ecosystem is built for forward-thinking agencies, consultancies, and systems integrators who want to elevate their client offerings, working with our team and platform rather than reinventing the reporting stack from scratch.
+            </p>
+          </div>
+        </Reveal>
       </Section>
 
       {/* Why partner */}
       <Section className="section-blend">
-        <SectionHead title="Why build on a platform at all" center />
-        <div className="mt-12 grid gap-5 lg:grid-cols-3">
-          {WHY.map(([t, d], i) => (
-            <Reveal key={t}>
-              <div className="card h-full p-6" style={{ transitionDelay: `${i * 40}ms` }}>
-                <h3 className="font-display text-lg font-semibold">{t}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-text-muted">{d}</p>
+        <SectionHead title="Why partner with ESGen" center />
+        <div className="mx-auto mt-12 grid max-w-4xl gap-5 sm:grid-cols-2">
+          {BENEFITS.map((b, i) => (
+            <Reveal key={b.title}>
+              <div className="card h-full p-7" style={{ transitionDelay: `${i * 40}ms` }}>
+                <span className="grid h-11 w-11 place-items-center rounded-xl border border-accent/25 bg-accent/10 text-accent-3">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">{b.icon}</svg>
+                </span>
+                <h3 className="mt-5 font-display text-lg font-semibold">{b.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-text-muted">{b.desc}</p>
               </div>
             </Reveal>
           ))}
         </div>
       </Section>
 
-      {/* Practice model */}
+      {/* Trusted partners */}
       <Section>
-        <div className="grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
-          <Reveal>
-            <SectionHead title="See how the relationships work" />
-            <p className="mt-4 text-text-muted">Deeper engagements tend to mean broader platform use and stronger retention. Move the inputs to see how the shape changes.</p>
-          </Reveal>
-          <Reveal><PracticeModel /></Reveal>
-        </div>
-      </Section>
-
-      {/* What partners get */}
-      <Section className="section-blend">
-        <SectionHead title="What partners get" />
-        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {FEATURES.map((f, i) => (
-            <Reveal key={f[0]}>
-              <div className="card h-full p-6" style={{ transitionDelay: `${i * 30}ms` }}>
-                <div className="grid h-9 w-9 place-items-center rounded-xl border border-accent/25 bg-accent/10 font-mono text-sm font-bold text-accent-3">{String(i + 1).padStart(2, "0")}</div>
-                <h3 className="mt-4 font-display text-lg font-semibold">{f[0]}</h3>
-                <p className="mt-2 text-sm text-text-muted">{f[1]}</p>
+        <SectionHead title="Our trusted partners" intro="We work alongside organisations who share our belief that sustainability should be practical and within reach of every business." center />
+        <div className="mx-auto mt-12 grid max-w-3xl gap-6 sm:grid-cols-2">
+          {PARTNERS.map((p) => (
+            <Reveal key={p.name}>
+              <div className="group flex h-44 items-center justify-center rounded-2xl border border-border px-10 transition-all duration-300 hover:-translate-y-1.5 hover:border-accent/50 hover:shadow-[0_24px_60px_-28px_rgba(77,139,245,0.55)]" style={{ background: "#000" }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={p.img} alt={`${p.name} logo`} className="max-h-24 w-auto max-w-full object-contain transition-transform duration-300 group-hover:scale-110" />
               </div>
             </Reveal>
           ))}
         </div>
       </Section>
 
-      {/* How to join */}
-      <Section>
-        <SectionHead title="How to join" center />
-        <div className="mt-12 grid gap-5 sm:grid-cols-3">
-          {STEPS.map(([t, d], i) => (
-            <Reveal key={t}>
-              <div className="relative h-full rounded-2xl border border-border bg-surface p-6" style={{ transitionDelay: `${i * 50}ms` }}>
-                <span className="grid h-11 w-11 place-items-center rounded-full border border-accent/25 bg-accent/10 font-display text-lg font-bold text-accent-3">{i + 1}</span>
-                <h3 className="mt-4 font-display text-lg font-semibold">{t}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-text-muted">{d}</p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </Section>
-
-      <CTASection title="Ready to grow your practice with ESGen?" intro="Tell us about your firm and the clients you serve, and we will find the right way to work together." primary={{ label: "Become a partner", href: "/contact" }} secondary={{ label: "Book a demo", href: "/demo" }} />
+      <CTASection title="Ready to grow with ESGen?" intro="Join our partner ecosystem and deliver scalable, audit-ready ESG solutions to your clients." primary={{ label: "Become a partner", href: "/contact" }} secondary={{ label: "Book a demo", href: "/demo" }} />
     </>
   );
 }

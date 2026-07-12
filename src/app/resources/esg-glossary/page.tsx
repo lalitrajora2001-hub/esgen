@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Section } from "@/components/ui/Section";
 import { Reveal } from "@/components/ui/Reveal";
-import { Breadcrumb, CTASection } from "@/components/sections/blocks";
+import { RHero, RCta } from "@/components/resources/light";
 import { GlossaryExplorer, type Term } from "@/components/resources/ResourceVisuals";
 
 export const metadata: Metadata = {
@@ -40,21 +40,18 @@ const TERMS: Term[] = [
 
 export default function GlossaryPage() {
   return (
-    <>
-      <section className="relative overflow-hidden pt-28 pb-6 sm:pt-36">
-        <div aria-hidden className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(900px 460px at 50% -10%, rgba(77,139,245,0.14), transparent 60%)" }} />
-        <div className="relative mx-auto max-w-6xl px-5 sm:px-6">
-          <Breadcrumb trail={[{ label: "Home", href: "/" }, { label: "Resources", href: "/resources" }, { label: "ESG Glossary" }]} />
-          <h1 className="max-w-2xl text-balance text-4xl font-semibold leading-[1.05] sm:text-5xl">The ESG glossary, in plain English</h1>
-          <p className="mt-5 max-w-xl text-lg text-text-muted">Search, filter by topic, or jump to a letter. Every term defined without the jargon it usually comes wrapped in.</p>
-        </div>
-      </section>
+    <div className="bg-white">
+      <RHero
+        trail={[{ label: "Home", href: "/" }, { label: "Resources", href: "/resources" }, { label: "ESG Glossary" }]}
+        title="The ESG glossary, in plain English"
+        intro="Search, filter by topic, or jump to a letter. Every term defined without the jargon it usually comes wrapped in."
+      />
 
       <Section size="sm">
         <Reveal><GlossaryExplorer terms={TERMS} /></Reveal>
       </Section>
 
-      <CTASection title="Turn the terms into a working inventory" intro="See how ESGen puts these concepts to work on your own data." />
-    </>
+      <RCta title="Turn the terms into a working inventory" intro="See how ESGen puts these concepts to work on your own data." />
+    </div>
   );
 }

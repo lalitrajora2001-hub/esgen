@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Section } from "@/components/ui/Section";
 import { Reveal } from "@/components/ui/Reveal";
-import { Breadcrumb, CTASection } from "@/components/sections/blocks";
 import { ArrowRight } from "@/components/ui/Button";
+import { RBreadcrumb, RCta } from "@/components/resources/light";
 
 export const metadata: Metadata = {
   title: "ESG Knowledge Hub",
@@ -20,14 +20,14 @@ const TOPICS: { n: string; title: string; href: string; desc: string }[] = [
 
 export default function KnowledgeHubPage() {
   return (
-    <>
+    <div className="bg-white">
       <section className="relative overflow-hidden pt-28 pb-6 sm:pt-36">
-        <div aria-hidden className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(900px 460px at 50% -10%, rgba(77,139,245,0.14), transparent 60%)" }} />
+        <div aria-hidden className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(900px 460px at 50% -10%, rgba(16,19,24,0.05), transparent 60%)" }} />
         <div className="relative mx-auto max-w-6xl px-5 sm:px-6">
-          <Breadcrumb trail={[{ label: "Home", href: "/" }, { label: "Resources", href: "/resources" }, { label: "Knowledge Hub" }]} />
+          <RBreadcrumb trail={[{ label: "Home", href: "/" }, { label: "Resources", href: "/resources" }, { label: "Knowledge Hub" }]} />
           <div className="max-w-2xl">
-            <h1 className="text-balance text-4xl font-semibold leading-[1.05] sm:text-5xl">The fundamentals, laid out as a path</h1>
-            <p className="mt-5 max-w-xl text-lg text-text-muted">Not a pile of articles. A route through ESG and carbon reporting, from first principles to the parts of ESGen that put them to work.</p>
+            <h1 className="text-balance text-4xl font-semibold leading-[1.05] text-[#101318] sm:text-5xl">The fundamentals, laid out as a path</h1>
+            <p className="mt-5 max-w-xl text-lg text-[#565d68]">Not a pile of articles. A route through ESG and carbon reporting, from first principles to the parts of ESGen that put them to work.</p>
           </div>
         </div>
       </section>
@@ -36,20 +36,20 @@ export default function KnowledgeHubPage() {
         <div className="space-y-4">
           {TOPICS.map((t, i) => (
             <Reveal key={t.href}>
-              <Link href={t.href} className="group flex items-center gap-6 rounded-2xl border border-border bg-surface p-6 transition-all hover:-translate-y-0.5 hover:border-accent/40" style={{ transitionDelay: `${i * 30}ms` }}>
-                <span className="font-display text-3xl font-bold text-border transition-colors group-hover:text-accent-3">{t.n}</span>
+              <Link href={t.href} className="group flex items-center gap-6 rounded-2xl border border-[#e6e8ec] bg-white p-6 transition-all hover:-translate-y-0.5 hover:border-[#101318]/30" style={{ transitionDelay: `${i * 30}ms` }}>
+                <span className="font-display text-3xl font-bold text-[#c8ccd2] transition-colors group-hover:text-[#101318]">{t.n}</span>
                 <div className="min-w-0 flex-1">
-                  <h2 className="font-display text-lg font-semibold text-white">{t.title}</h2>
-                  <p className="mt-1 text-sm text-text-muted">{t.desc}</p>
+                  <h2 className="font-display text-lg font-semibold text-[#101318]">{t.title}</h2>
+                  <p className="mt-1 text-sm text-[#565d68]">{t.desc}</p>
                 </div>
-                <ArrowRight className="h-5 w-5 shrink-0 text-text-muted transition-all group-hover:translate-x-1 group-hover:text-accent-3" />
+                <ArrowRight className="h-5 w-5 shrink-0 text-[#565d68] transition-all group-hover:translate-x-1 group-hover:text-[#101318]" />
               </Link>
             </Reveal>
           ))}
         </div>
       </Section>
 
-      <CTASection />
-    </>
+      <RCta />
+    </div>
   );
 }

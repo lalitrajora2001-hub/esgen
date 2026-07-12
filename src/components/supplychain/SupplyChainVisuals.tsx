@@ -72,7 +72,7 @@ export function SupplyChainNetwork() {
   const CIRC = 2 * Math.PI * R;
 
   return (
-    <div ref={ref} className="relative w-full" style={{ aspectRatio: "6 / 5" }}>
+    <div ref={ref} className="relative w-full" style={{ aspectRatio: "31 / 25" }}>
       <svg viewBox="0 0 620 500" className="absolute inset-0 h-full w-full">
         <defs>
           <radialGradient id="scnGlow"><stop offset="0%" stopColor={CK.blue} stopOpacity="0.28" /><stop offset="100%" stopColor={CK.blue} stopOpacity="0" /></radialGradient>
@@ -130,13 +130,12 @@ export function SupplyChainNetwork() {
         <motion.g style={spin} initial={{ scale: 0 }} animate={inView ? { scale: 1 } : {}} transition={{ duration: 0.55, delay: 0.15, ease: "backOut" }}>
           <circle cx={HUB.x} cy={HUB.y} r="50" fill="#ffffff" filter="url(#scnShadow)" />
           <circle cx={HUB.x} cy={HUB.y} r="50" fill="none" stroke={CK.blue} strokeOpacity="0.22" strokeWidth="1.6" />
+          {/* ESGen mark, embedded in-SVG so it stays perfectly centred on the hub */}
+          <foreignObject x={HUB.x - 29} y={HUB.y - 20.6} width={58} height={41.2}>
+            <EsgenMark color="#111827" className="h-full w-full" />
+          </foreignObject>
         </motion.g>
       </svg>
-
-      {/* hub ESGen mark (black), pinned over the hub */}
-      <div className="absolute top-1/2 -translate-y-1/2" style={{ left: `${(HUB.x / 620) * 100}%`, transform: "translate(-50%, -50%)", width: "8%", aspectRatio: "529 / 375" }}>
-        <EsgenMark color="#111827" className="h-full w-full" />
-      </div>
     </div>
   );
 }

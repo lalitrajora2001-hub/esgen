@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import { Section, SectionHead } from "@/components/ui/Section";
+import { Section } from "@/components/ui/Section";
 import { Reveal } from "@/components/ui/Reveal";
-import { Breadcrumb, CTASection } from "@/components/sections/blocks";
+import { RHero, RCta } from "@/components/resources/light";
 import { RegulationExplorer, type Reg } from "@/components/resources/ResourceVisuals";
 
 export const metadata: Metadata = {
@@ -24,24 +24,21 @@ const REGS: Reg[] = [
 
 export default function RegulationsPage() {
   return (
-    <>
-      <section className="relative overflow-hidden pt-28 pb-6 sm:pt-36">
-        <div aria-hidden className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(900px 460px at 50% -10%, rgba(77,139,245,0.14), transparent 60%)" }} />
-        <div className="relative mx-auto max-w-6xl px-5 sm:px-6">
-          <Breadcrumb trail={[{ label: "Home", href: "/" }, { label: "Resources", href: "/resources" }, { label: "Regulations" }]} />
-          <h1 className="max-w-2xl text-balance text-4xl font-semibold leading-[1.05] sm:text-5xl">The frameworks that shape reporting, mapped</h1>
-          <p className="mt-5 max-w-xl text-lg text-text-muted">Filter by jurisdiction, see who each one affects in plain terms, and jump to how ESGen helps you prepare.</p>
-        </div>
-      </section>
+    <div className="bg-white">
+      <RHero
+        trail={[{ label: "Home", href: "/" }, { label: "Resources", href: "/resources" }, { label: "Regulations" }]}
+        title="The frameworks that shape reporting, mapped"
+        intro="Filter by jurisdiction, see who each one affects in plain terms, and jump to how ESGen helps you prepare."
+      />
 
       <Section size="sm">
         <Reveal><RegulationExplorer regs={REGS} /></Reveal>
-        <p className="mt-10 font-mono text-xs text-text-muted/60">
+        <p className="mt-10 font-mono text-xs text-[#565d68]">
           This overview is for general information only and is not legal advice. Requirements change, several of these have been amended recently, so verify the current position for your organisation.
         </p>
       </Section>
 
-      <CTASection title="One inventory, every framework it feeds" intro="See how the same data answers the frameworks that apply to you." />
-    </>
+      <RCta title="One inventory, every framework it feeds" intro="See how the same data answers the frameworks that apply to you." />
+    </div>
   );
 }

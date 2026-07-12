@@ -72,10 +72,10 @@ export const industries: NavLink[] = [
 ];
 
 export const resources: NavLink[] = [
-  { label: "Resources Overview", href: "/resources", desc: "Guides, glossary, and framework explainers." },
+  { label: "Resources Overview", href: "/resources", desc: "White papers, glossary, and framework explainers." },
+  { label: "White papers", href: "/resources/guides", desc: "In-depth walkthroughs by topic." },
   { label: "Knowledge Hub", href: "/resources/knowledge-hub", desc: "ESG and carbon reporting fundamentals." },
   { label: "Blog", href: "/resources/blog", desc: "Notes on ESG reporting practice." },
-  { label: "Guides", href: "/resources/guides", desc: "Practical walkthroughs by topic." },
   { label: "ESG Glossary", href: "/resources/esg-glossary", desc: "Key ESG and carbon terms explained." },
   { label: "Carbon Accounting Basics", href: "/resources/carbon-accounting-basics", desc: "Scopes, factors, and tCO2e explained." },
   { label: "Regulations", href: "/resources/regulations", desc: "An overview of relevant frameworks." },
