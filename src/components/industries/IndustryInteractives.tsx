@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 
-const ACCENT = "#4d8bf5";
 
 /* ============================================================
    OUTPUT MAPPER (Manufacturing)
@@ -109,28 +108,31 @@ const PHASES: Phase[] = [
     captures: [["Waste transfer notes", "What left the site, and where it went"], ["Final supplier invoices", "Actuals replacing the estimates made in planning"], ["Footprint report", "The full picture, assumptions stated, ready for the client"]] },
 ];
 
+/* White and black editorial treatment, matching the Manufacturing showcases. */
+const E = { ink: "#101318", muted: "#565d68", faint: "#8a919c", line: "#e6e8ec", panel: "#f7f8f9" };
+
 export function EventTimeline() {
   const [sel, setSel] = useState(1);
   const reduce = useReducedMotion();
   const p = PHASES[sel];
 
   return (
-    <div className="overflow-hidden rounded-3xl border border-border bg-surface shadow-float">
-      <div className="flex items-center justify-between border-b border-border px-6 py-4">
-        <span className="font-mono text-[0.68rem] uppercase tracking-[0.16em] text-text-muted">The life of an event footprint</span>
-        <span className="font-mono text-[0.68rem] tabular-nums text-accent-3">~{p.cumPct}% captured</span>
+    <div className="overflow-hidden rounded-3xl border bg-white shadow-[0_28px_70px_-38px_rgba(16,19,24,0.35)]" style={{ borderColor: E.line }}>
+      <div className="flex items-center justify-between border-b px-6 py-4" style={{ borderColor: "#eceef1" }}>
+        <span className="font-mono text-[0.68rem] uppercase tracking-[0.16em]" style={{ color: E.muted }}>The life of an event footprint</span>
+        <span className="font-mono text-[0.68rem] font-bold tabular-nums" style={{ color: E.ink }}>~{p.cumPct}% captured</span>
       </div>
 
       {/* rail */}
       <div className="px-6 pt-6">
-        <div className="relative h-2 rounded-full bg-canvas">
-          <div className="absolute inset-y-0 left-0 rounded-full motion-safe:transition-[width] motion-safe:duration-500" style={{ width: `${p.cumPct}%`, background: `linear-gradient(90deg, #2f6fe0, ${ACCENT})` }} />
+        <div className="relative h-2 rounded-full" style={{ background: "#eef0f3" }}>
+          <div className="absolute inset-y-0 left-0 rounded-full motion-safe:transition-[width] motion-safe:duration-500" style={{ width: `${p.cumPct}%`, background: E.ink }} />
           {PHASES.map((x, i) => (
             <button key={x.k} onClick={() => setSel(i)} onMouseEnter={() => setSel(i)} onFocus={() => setSel(i)} aria-pressed={i === sel} aria-label={`${x.k} phase`}
-              className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+              className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#101318]"
               style={{ left: `${x.cumPct - (i === 0 ? 10 : i === 1 ? 0 : 0)}%` }}>
               <motion.span className="block h-5 w-5 rounded-full border-[3px]"
-                animate={{ borderColor: i <= sel ? ACCENT : "var(--color-border)", background: i === sel ? ACCENT : "var(--color-surface)", scale: i === sel ? 1.15 : 1 }}
+                animate={{ borderColor: i <= sel ? E.ink : E.line, background: i === sel ? E.ink : "#ffffff", scale: i === sel ? 1.15 : 1 }}
                 transition={reduce ? { duration: 0 } : { type: "spring", stiffness: 400, damping: 26 }} />
             </button>
           ))}
@@ -138,10 +140,10 @@ export function EventTimeline() {
         <div className="mt-3 flex">
           {PHASES.map((x, i) => (
             <button key={x.k} onClick={() => setSel(i)} onMouseEnter={() => setSel(i)} onFocus={() => setSel(i)} aria-pressed={i === sel}
-              className="flex-1 text-left first:text-left last:text-right focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
+              className="flex-1 text-left first:text-left last:text-right focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#101318]"
               style={{ textAlign: i === 0 ? "left" : i === 1 ? "center" : "right" }}>
-              <span className="font-display text-[0.95rem] font-semibold" style={{ color: i === sel ? "#fff" : "var(--color-text-muted)" }}>{x.k}</span>
-              <span className="block text-[0.66rem] text-text-muted">{x.window}</span>
+              <span className="font-display text-[0.95rem] font-semibold" style={{ color: i === sel ? E.ink : E.faint }}>{x.k}</span>
+              <span className="block text-[0.66rem]" style={{ color: E.faint }}>{x.window}</span>
             </button>
           ))}
         </div>
@@ -149,21 +151,21 @@ export function EventTimeline() {
 
       {/* phase detail */}
       <motion.div key={p.k} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.24 }} className="p-6">
-        <p className="max-w-2xl text-[0.92rem] leading-relaxed text-white">{p.blurb}</p>
+        <p className="max-w-2xl text-[0.92rem] leading-relaxed" style={{ color: E.ink }}>{p.blurb}</p>
         <div className="mt-5 grid gap-3 sm:grid-cols-3">
           {p.captures.map(([t, d], i) => (
-            <motion.div key={t} className="rounded-2xl border border-border bg-canvas p-4"
+            <motion.div key={t} className="rounded-2xl border p-4" style={{ borderColor: E.line, background: E.panel }}
               initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 + i * 0.07 }}>
               <div className="flex items-center gap-2">
-                <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full font-mono text-[0.54rem] font-bold" style={{ background: "rgba(77,139,245,0.16)", color: "#8fbaff" }}>{i + 1}</span>
-                <h4 className="font-display text-[0.86rem] font-semibold text-white">{t}</h4>
+                <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full font-mono text-[0.54rem] font-bold text-white" style={{ background: E.ink }}>{i + 1}</span>
+                <h4 className="font-display text-[0.86rem] font-semibold" style={{ color: E.ink }}>{t}</h4>
               </div>
-              <p className="mt-2 text-[0.76rem] leading-relaxed text-text-muted">{d}</p>
+              <p className="mt-2 text-[0.76rem] leading-relaxed" style={{ color: E.muted }}>{d}</p>
             </motion.div>
           ))}
         </div>
       </motion.div>
-      <p className="border-t border-border px-6 py-2.5 text-[0.64rem] text-text-muted">Capture shares are indicative. Select a phase to explore it.</p>
+      <p className="border-t px-6 py-2.5 text-[0.64rem]" style={{ borderColor: "#eceef1", color: E.faint }}>Capture shares are indicative. Select a phase to explore it.</p>
     </div>
   );
 }
