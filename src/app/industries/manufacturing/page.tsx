@@ -40,7 +40,7 @@ export default function ManufacturingPage() {
       <section className="relative flex min-h-[100svh] items-end overflow-hidden">
         <img src="/images/manufacturing-welder.jpg" alt="Welder working on a steel fabrication bench"
           className="absolute inset-0 h-full w-full object-cover" style={{ filter: "grayscale(1) contrast(1.05)" }} />
-        <div aria-hidden className="absolute inset-0" style={{ background: "linear-gradient(250deg, rgba(11,13,17,0.82) 0%, rgba(11,13,17,0.45) 45%, rgba(11,13,17,0.18) 100%)" }} />
+        <div aria-hidden className="absolute inset-0" style={{ background: "linear-gradient(110deg, rgba(11,13,17,0.85) 0%, rgba(11,13,17,0.5) 42%, rgba(11,13,17,0.18) 100%)" }} />
         <div aria-hidden className="absolute inset-x-0 bottom-0 h-40" style={{ background: "linear-gradient(180deg, transparent, rgba(11,13,17,0.6))" }} />
         <div aria-hidden className="absolute bottom-6 left-1/2 z-10 -translate-x-1/2">
           <span className="flex flex-col items-center gap-1.5 text-[0.6rem] font-bold uppercase tracking-[0.2em] text-white/60">
@@ -49,7 +49,7 @@ export default function ManufacturingPage() {
           </span>
         </div>
         <div className="relative mx-auto w-full max-w-6xl px-5 pb-20 pt-40 sm:px-6">
-          <div className="max-w-xl lg:ml-auto">
+          <div className="max-w-xl">
             <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-2 font-mono text-xs text-white/60">
               <Link href="/" className="hover:underline">Home</Link><span>/</span>
               <span>Industries</span><span>/</span>

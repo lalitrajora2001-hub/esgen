@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Reveal } from "@/components/ui/Reveal";
-import { Eyebrow, PrimaryBtn, GhostBtn, WH2, WhiteCTA, WNAVY, WSLATE, WBODY, WBLUE } from "@/components/whiteui/parts";
+import { Eyebrow, PrimaryBtn, GhostBtn, WH2, WhiteCTA, WNAVY, WBODY, WBLUE } from "@/components/whiteui/parts";
 import { ReportEditor, TemplateCard, UploadCard, AnomaliesCard, FrameworkRequirements, EmissionsDisclosure } from "@/components/reporting/ReportingVisuals";
 
 export const metadata: Metadata = {
@@ -30,7 +30,7 @@ export default function ReportingPage() {
         <div className="relative mx-auto max-w-6xl px-5 sm:px-6">
           <div className="max-w-3xl">
             <Eyebrow>ESGen Reporting</Eyebrow>
-            <h1 className="mt-4 font-display text-4xl font-bold leading-[1.05] tracking-tight sm:text-6xl" style={{ color: WSLATE }}>
+            <h1 className="mt-4 font-display text-4xl font-bold leading-[1.05] tracking-tight sm:text-6xl" style={{ color: WNAVY }}>
               Report to every ESG framework, from one dataset
             </h1>
             <p className="mt-5 max-w-2xl text-lg leading-relaxed" style={{ color: WBODY }}>

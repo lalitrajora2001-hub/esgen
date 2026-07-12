@@ -25,92 +25,116 @@ function Donut({ segs, play, size = 70 }: { segs: [number, string][]; play: bool
   );
 }
 
-/* ================= HERO VISUAL: living supplier network with flowing emissions ========= */
-const ICONS = [
-  "M4 20V9l5 3V9l5 3V6h6v14z",                 // factory
-  "M3 8h9v8H3zM12 11h4l3 3v2h-7z",              // truck
-  "M12 3l8 4v9l-8 4-8-4V7z",                    // box
-  "M5 19C5 11 11 6 20 5c0 8-6 14-15 14z",       // leaf
-  "M13 3l-8 11h6l-2 7 8-11h-6z",                // bolt
-  "M4 14h16l-2 6H6zM12 5v9M8 9h8",              // ship
-  "M6 21V4h8v17M14 10h4v11",                    // building
-  "M8 7l3-4 3 4M18 12l1 4-4 1M8 20l-4-2 1-4",   // recycle
-  "M9 4v5M15 4v5M7 9h10v2a5 5 0 01-10 0zM12 16v4", // plug
-];
-const HUB = { x: 300, y: 250 };
+/* ================= HERO VISUAL: value-chain consolidation funnel =========
+   Many suppliers on the right stream emissions data leftward through tiers
+   into one ESGen hub. Tells the real story of the page: consolidate a
+   scattered value chain into a single measured footprint. */
 const spin = { transformBox: "fill-box", transformOrigin: "center" } as const;
 
-const NODES = (() => {
-  const cats = [CK.blue, CK.navy, CK.teal, "#3f6fb8", CK.green, "#7b6bd0", CK.amber];
-  const N = 7, RX = 205, RY = 152;
-  return Array.from({ length: N }, (_, i) => {
-    const a = (-90 + i * (360 / N)) * (Math.PI / 180);
-    const x = HUB.x + RX * Math.cos(a), y = HUB.y + RY * Math.sin(a);
-    const mx = (x + HUB.x) / 2, my = (y + HUB.y) / 2, dx = HUB.x - x, dy = HUB.y - y, L = Math.hypot(dx, dy) || 1;
-    const off = (i % 2 ? 1 : -1) * 26;
-    const cx = mx + (-dy / L) * off, cy = my + (dx / L) * off;
-    const path = `M${x.toFixed(1)} ${y.toFixed(1)} Q${cx.toFixed(1)} ${cy.toFixed(1)} ${HUB.x} ${HUB.y}`;
-    return { x: +x.toFixed(1), y: +y.toFixed(1), c: cats[i % cats.length], icon: ICONS[i % ICONS.length], path, dur: 3.2 + (i % 3) * 0.6, begin: (i * 0.5).toFixed(2) };
-  });
+/* The hero masks the visual's left edge, so the hub sits on the right (fully
+   visible) and the supplier tiers recede leftward into the fade, reading as a
+   value chain fading into distance. Data flows left to right into the hub. */
+const HUB = { x: 470, y: 250 };
+/* Tier A closest to the hub carries a live "engaged %" ring. */
+const TIER_A = [{ x: 330, y: 168, pct: 88 }, { x: 330, y: 250, pct: 62 }, { x: 330, y: 332, pct: 77 }];
+const TIER_B = [{ x: 200, y: 126 }, { x: 200, y: 208 }, { x: 200, y: 292 }, { x: 200, y: 376 }];
+const TIER_C = [{ x: 78, y: 94 }, { x: 78, y: 172 }, { x: 78, y: 250 }, { x: 78, y: 330 }, { x: 78, y: 408 }];
+
+/* Data flows child -> parent (left to right, toward the hub). */
+const link = (x1: number, y1: number, x2: number, y2: number) => {
+  const mx = (x1 + x2) / 2;
+  return `M${x1} ${y1} C ${mx} ${y1}, ${mx} ${y2}, ${x2} ${y2}`;
+};
+const P = [CK.blue, CK.navy, CK.blue2, CK.teal];
+const EDGES: { d: string; dur: number; begin: number; c: string }[] = (() => {
+  const raw: [{ x: number; y: number }, { x: number; y: number }][] = [
+    [TIER_C[0], TIER_B[0]], [TIER_C[1], TIER_B[1]], [TIER_C[2], TIER_B[1]], [TIER_C[3], TIER_B[2]], [TIER_C[4], TIER_B[3]],
+    [TIER_B[0], TIER_A[0]], [TIER_B[1], TIER_A[1]], [TIER_B[2], TIER_A[1]], [TIER_B[3], TIER_A[2]],
+    [TIER_A[0], HUB], [TIER_A[1], HUB], [TIER_A[2], HUB],
+  ];
+  return raw.map(([a, b], i) => ({ d: link(a.x, a.y, b.x, b.y), dur: 3.4 + (i % 4) * 0.5, begin: +(i * 0.34).toFixed(2), c: P[i % P.length] }));
 })();
+
+function ChainNode({ x, y, r, ring, delay, inView }: { x: number; y: number; r: number; ring: string; delay: number; inView: boolean }) {
+  return (
+    <motion.g style={spin} initial={{ opacity: 0, scale: 0 }} animate={inView ? { opacity: 1, scale: 1 } : {}} transition={{ duration: 0.5, delay, ease: "backOut" }}>
+      <circle cx={x} cy={y} r={r} fill="#ffffff" filter="url(#scnShadow)" />
+      <circle cx={x} cy={y} r={r} fill="none" stroke={ring} strokeOpacity="0.85" strokeWidth="1.5" />
+      <circle cx={x} cy={y} r={r * 0.34} fill={ring} fillOpacity="0.9" />
+    </motion.g>
+  );
+}
 
 export function SupplyChainNetwork() {
   const { ref, inView } = useReveal();
   const reduce = useReducedMotion();
+  const R = 15; // response-ring radius on tier-A nodes
+  const CIRC = 2 * Math.PI * R;
+
   return (
     <div ref={ref} className="relative w-full" style={{ aspectRatio: "6 / 5" }}>
-      <svg viewBox="0 0 600 500" className="absolute inset-0 h-full w-full">
+      <svg viewBox="0 0 620 500" className="absolute inset-0 h-full w-full">
         <defs>
-          <radialGradient id="scnGlow"><stop offset="0%" stopColor={CK.blue} stopOpacity="0.26" /><stop offset="100%" stopColor={CK.blue} stopOpacity="0" /></radialGradient>
+          <radialGradient id="scnGlow"><stop offset="0%" stopColor={CK.blue} stopOpacity="0.28" /><stop offset="100%" stopColor={CK.blue} stopOpacity="0" /></radialGradient>
+          <linearGradient id="scnLink" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stopColor="#cdd8ef" /><stop offset="100%" stopColor={CK.blue} stopOpacity="0.7" />
+          </linearGradient>
           <filter id="scnShadow" x="-60%" y="-60%" width="220%" height="220%"><feDropShadow dx="0" dy="3" stdDeviation="5" floodColor="#12224f" floodOpacity="0.16" /></filter>
-          <filter id="scnBlur" x="-150%" y="-150%" width="400%" height="400%"><feGaussianBlur stdDeviation="3" /></filter>
+          <filter id="scnBlur" x="-150%" y="-150%" width="400%" height="400%"><feGaussianBlur stdDeviation="2.5" /></filter>
         </defs>
 
-        <circle cx={HUB.x} cy={HUB.y} r="215" fill="url(#scnGlow)" />
+        <circle cx={HUB.x} cy={HUB.y} r="150" fill="url(#scnGlow)" />
+        <motion.circle cx={HUB.x} cy={HUB.y} r="112" fill="none" stroke={CK.blue} strokeOpacity="0.12" strokeWidth="1" strokeDasharray="2 12" style={spin}
+          animate={reduce ? undefined : { rotate: 360 }} transition={{ duration: 120, repeat: Infinity, ease: "linear" }} />
 
-        {/* subtle rotating dashed halo */}
-        <motion.circle cx={HUB.x} cy={HUB.y} r="198" fill="none" stroke={CK.blue} strokeOpacity="0.1" strokeWidth="1" strokeDasharray="2 13" style={spin}
-          animate={reduce ? undefined : { rotate: 360 }} transition={{ duration: 130, repeat: Infinity, ease: "linear" }} />
-
-        {/* curved links */}
-        {NODES.map((n, i) => (
-          <motion.path key={"e" + i} d={n.path} fill="none" stroke="#b7c6e6" strokeWidth="1.4" strokeLinecap="round"
-            initial={{ pathLength: 0, opacity: 0 }} animate={inView ? { pathLength: 1, opacity: 1 } : {}} transition={{ duration: 0.95, delay: 0.15 + i * 0.08, ease: "easeInOut" }} />
+        {/* links draw in on reveal */}
+        {EDGES.map((e, i) => (
+          <motion.path key={"e" + i} d={e.d} fill="none" stroke="url(#scnLink)" strokeWidth="1.5" strokeLinecap="round"
+            initial={{ pathLength: 0, opacity: 0 }} animate={inView ? { pathLength: 1, opacity: 1 } : {}} transition={{ duration: 0.9, delay: 0.1 + i * 0.05, ease: "easeInOut" }} />
         ))}
 
-        {/* slow particles streaming into the hub */}
-        {!reduce && NODES.map((n, i) => (
+        {/* data packets streaming toward the hub */}
+        {!reduce && EDGES.map((e, i) => (
           <g key={"p" + i}>
-            <circle r="6" fill={n.c} opacity="0.26" filter="url(#scnBlur)">
-              <animateMotion dur={`${n.dur}s`} begin={`${n.begin}s`} repeatCount="indefinite" path={n.path} />
-              <animate attributeName="opacity" values="0;0.3;0.3;0" keyTimes="0;0.15;0.8;1" dur={`${n.dur}s`} begin={`${n.begin}s`} repeatCount="indefinite" />
-            </circle>
-            <circle r="2.8" fill={n.c}>
-              <animateMotion dur={`${n.dur}s`} begin={`${n.begin}s`} repeatCount="indefinite" path={n.path} />
-              <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.15;0.8;1" dur={`${n.dur}s`} begin={`${n.begin}s`} repeatCount="indefinite" />
-            </circle>
+            <rect x="-3" y="-3" width="6" height="6" rx="1.6" fill={e.c} opacity="0.22" filter="url(#scnBlur)">
+              <animateMotion dur={`${e.dur}s`} begin={`${e.begin}s`} repeatCount="indefinite" path={e.d} rotate="auto" />
+            </rect>
+            <rect x="-2.4" y="-2.4" width="4.8" height="4.8" rx="1.3" fill={e.c}>
+              <animateMotion dur={`${e.dur}s`} begin={`${e.begin}s`} repeatCount="indefinite" path={e.d} rotate="auto" />
+              <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.12;0.82;1" dur={`${e.dur}s`} begin={`${e.begin}s`} repeatCount="indefinite" />
+            </rect>
           </g>
         ))}
 
-        {/* nodes: clean white discs, thin ring, subtle icon */}
-        {NODES.map((n, i) => (
-          <motion.g key={"n" + i} style={spin} initial={{ opacity: 0, scale: 0 }} animate={inView ? { opacity: 1, scale: 1 } : {}} transition={{ duration: 0.5, delay: 0.3 + i * 0.08, ease: "backOut" }}>
-            <circle cx={n.x} cy={n.y} r="26" fill="#ffffff" filter="url(#scnShadow)" />
-            <circle cx={n.x} cy={n.y} r="26" fill="none" stroke={n.c} strokeOpacity="0.85" strokeWidth="1.6" />
-            <svg x={n.x - 12} y={n.y - 12} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={n.c} strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d={n.icon} /></svg>
+        {/* supplier tiers */}
+        {TIER_C.map((n, i) => <ChainNode key={"c" + i} x={n.x} y={n.y} r={7} ring={CK.blue3} delay={0.28 + i * 0.05} inView={inView} />)}
+        {TIER_B.map((n, i) => <ChainNode key={"b" + i} x={n.x} y={n.y} r={9} ring={CK.blue2} delay={0.4 + i * 0.05} inView={inView} />)}
+
+        {/* tier A: node + live engaged-% ring */}
+        {TIER_A.map((n, i) => (
+          <motion.g key={"a" + i} style={spin} initial={{ opacity: 0, scale: 0 }} animate={inView ? { opacity: 1, scale: 1 } : {}} transition={{ duration: 0.5, delay: 0.55 + i * 0.08, ease: "backOut" }}>
+            <circle cx={n.x} cy={n.y} r={R} fill="none" stroke="#e7ebf3" strokeWidth="3" />
+            <motion.circle cx={n.x} cy={n.y} r={R} fill="none" stroke={CK.blue} strokeWidth="3" strokeLinecap="round"
+              transform={`rotate(-90 ${n.x} ${n.y})`} strokeDasharray={CIRC}
+              initial={{ strokeDashoffset: CIRC }} animate={inView ? { strokeDashoffset: CIRC * (1 - n.pct / 100) } : {}}
+              transition={{ duration: 1.1, delay: 0.7 + i * 0.12, ease: [0.16, 1, 0.3, 1] }} />
+            <circle cx={n.x} cy={n.y} r="8" fill="#ffffff" filter="url(#scnShadow)" />
+            <circle cx={n.x} cy={n.y} r="3.4" fill={CK.blue} />
           </motion.g>
         ))}
 
         {/* hub */}
-        <motion.circle cx={HUB.x} cy={HUB.y} r="72" fill="url(#scnGlow)" style={spin} animate={reduce ? undefined : { scale: [1, 1.12, 1], opacity: [0.6, 0.95, 0.6] }} transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }} />
-        <motion.g style={spin} initial={{ scale: 0 }} animate={inView ? { scale: 1 } : {}} transition={{ duration: 0.55, delay: 0.1, ease: "backOut" }}>
-          <circle cx={HUB.x} cy={HUB.y} r="52" fill="#ffffff" filter="url(#scnShadow)" />
-          <circle cx={HUB.x} cy={HUB.y} r="52" fill="none" stroke={CK.blue} strokeOpacity="0.2" strokeWidth="1.6" />
+        <motion.circle cx={HUB.x} cy={HUB.y} r="66" fill="url(#scnGlow)" style={spin} animate={reduce ? undefined : { scale: [1, 1.14, 1], opacity: [0.55, 0.95, 0.55] }} transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut" }} />
+        {!reduce && <motion.circle cx={HUB.x} cy={HUB.y} r="50" fill="none" stroke={CK.blue} strokeWidth="1.4"
+          animate={{ r: [50, 78], opacity: [0.5, 0] }} transition={{ duration: 3.2, repeat: Infinity, ease: "easeOut" }} />}
+        <motion.g style={spin} initial={{ scale: 0 }} animate={inView ? { scale: 1 } : {}} transition={{ duration: 0.55, delay: 0.15, ease: "backOut" }}>
+          <circle cx={HUB.x} cy={HUB.y} r="50" fill="#ffffff" filter="url(#scnShadow)" />
+          <circle cx={HUB.x} cy={HUB.y} r="50" fill="none" stroke={CK.blue} strokeOpacity="0.22" strokeWidth="1.6" />
         </motion.g>
       </svg>
 
-      {/* hub ESGen mark (black), scales with the disc */}
-      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" style={{ width: "9.5%", aspectRatio: "529 / 375" }}>
+      {/* hub ESGen mark (black), pinned over the hub */}
+      <div className="absolute top-1/2 -translate-y-1/2" style={{ left: `${(HUB.x / 620) * 100}%`, transform: "translate(-50%, -50%)", width: "8%", aspectRatio: "529 / 375" }}>
         <EsgenMark color="#111827" className="h-full w-full" />
       </div>
     </div>

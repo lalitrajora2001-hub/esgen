@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 const NAVY = "#12224f";
-const SLATE = "#3f4a63";
+
 const BODY = "#5b6472";
 const BLUE = "#2f6fe0";
 
@@ -45,7 +45,7 @@ export default function SupplyChainPage() {
           </div>
           <div className="relative max-w-xl">
             <Eyebrow>ESGen Supply Chain</Eyebrow>
-            <h1 className="mt-4 font-display text-4xl font-bold leading-[1.07] tracking-tight sm:text-5xl" style={{ color: SLATE }}>
+            <h1 className="mt-4 font-display text-4xl font-bold leading-[1.07] tracking-tight sm:text-5xl" style={{ color: NAVY }}>
               Decarbonise your supply chain
             </h1>
             <p className="mt-5 max-w-md text-lg leading-relaxed" style={{ color: BODY }}>

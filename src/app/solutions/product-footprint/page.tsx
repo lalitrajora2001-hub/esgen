@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Reveal } from "@/components/ui/Reveal";
-import { Eyebrow, PrimaryBtn, GhostBtn, WhiteCTA, WNAVY, WSLATE, WBODY } from "@/components/whiteui/parts";
+import { Eyebrow, PrimaryBtn, GhostBtn, WhiteCTA, WNAVY, WBODY } from "@/components/whiteui/parts";
 import { ProductGraphHero, ProductsTable, PcfReport, ProductionGraphMini, MaterialsCompare, CorporateFootprint, VariantBars } from "@/components/productfootprint/ProductFootprintVisuals";
 
 export const metadata: Metadata = {
@@ -29,7 +29,7 @@ export default function ProductFootprintPage() {
         <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-5 sm:px-6 lg:grid-cols-[1.02fr_1.15fr]">
           <div>
             <Eyebrow>ESGen Product Footprint</Eyebrow>
-            <h1 className="mt-4 font-display text-4xl font-bold leading-[1.07] tracking-tight sm:text-5xl" style={{ color: WSLATE }}>
+            <h1 className="mt-4 font-display text-4xl font-bold leading-[1.07] tracking-tight sm:text-5xl" style={{ color: WNAVY }}>
               PCFs that reflect your unique supply chain
             </h1>
             <p className="mt-5 max-w-md text-lg leading-relaxed" style={{ color: WBODY }}>
