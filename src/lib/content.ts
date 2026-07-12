@@ -26,18 +26,19 @@ export type ContentPage = {
   sections: PageSection[];
 };
 
-/* ---- Solutions (by use-case / team) ---- */
+/* ---- Solutions (by use-case / team) ----
+   Reporting leads. Finance is hidden — its entry lives in HIDDEN_PAGES below. */
 const SOLUTIONS: ContentPage[] = [
   {
-    slug: "finance", collection: "solutions", navLabel: "Finance",
-    kicker: "Finance", h1: "Reporting-grade ESG data your finance team can trust",
-    intro: "Give finance and reporting teams audit-ready sustainability data, with every figure traceable to its source and mapped to the disclosures that matter.",
-    seoTitle: "ESG for Finance Teams", seoDescription: "Audit-ready ESG and carbon data for finance teams, with traceable figures and disclosure-ready outputs.",
-    visual: "audit",
+    slug: "reporting", collection: "solutions", navLabel: "Reporting",
+    kicker: "Reporting", h1: "One dataset, every report",
+    intro: "Prepare structured, framework-ready disclosures from a single source of ESG and emissions data, with evidence connected to every figure.",
+    seoTitle: "ESG Reporting", seoDescription: "Prepare framework-ready ESG and carbon disclosures from one structured dataset, with evidence on every figure.",
+    visual: "compliance", frameworks: ["CSRD / ESRS", "ISSB", "UK SRS", "SECR", "CDP", "GHG Protocol", "VSME", "Evidence"],
     sections: [
-      { h: "Financial-grade data", p: "Bring sustainability data up to the standard finance already works to, with clear ownership, controls, and a full audit trail." },
-      { h: "Disclosure mapping", p: "Map figures to the frameworks that apply to your reporting, so a single dataset supports several disclosures." },
-      { h: "Audit-ready evidence", p: "Keep source files, methods, and approvals connected to every number, ready for review and assurance." },
+      { h: "Framework mapping", p: "Map a single dataset across the frameworks you report to, so you collect once and report across many needs." },
+      { h: "Structured outputs", p: "Prepare structured, review-ready outputs with consistent figures throughout." },
+      { h: "Evidence and audit trail", p: "Keep evidence connected to each figure, with a clear record of how every number was produced." },
     ],
   },
   {
@@ -62,18 +63,6 @@ const SOLUTIONS: ContentPage[] = [
       { h: "Product-level emissions", p: "Model the emissions of individual products using structured activity and materials data." },
       { h: "Life-cycle view", p: "Account for impact across the life cycle, from raw materials through use and end of life." },
       { h: "Customer-ready evidence", p: "Prepare clear, defensible product footprints to answer customer and tender questions." },
-    ],
-  },
-  {
-    slug: "reporting", collection: "solutions", navLabel: "Reporting",
-    kicker: "Reporting", h1: "One dataset, every report",
-    intro: "Prepare structured, framework-ready disclosures from a single source of ESG and emissions data, with evidence connected to every figure.",
-    seoTitle: "ESG Reporting", seoDescription: "Prepare framework-ready ESG and carbon disclosures from one structured dataset, with evidence on every figure.",
-    visual: "compliance", frameworks: ["CSRD / ESRS", "ISSB", "UK SRS", "SECR", "CDP", "GHG Protocol", "VSME", "Evidence"],
-    sections: [
-      { h: "Framework mapping", p: "Map a single dataset across the frameworks you report to, so you collect once and report across many needs." },
-      { h: "Structured outputs", p: "Prepare structured, review-ready outputs with consistent figures throughout." },
-      { h: "Evidence and audit trail", p: "Keep evidence connected to each figure, with a clear record of how every number was produced." },
     ],
   },
 ];
@@ -182,27 +171,15 @@ const PLATFORM: ContentPage[] = [
     ],
   }),
   P({
-    slug: "tcfd-ifrs", navLabel: "TCFD / IFRS",
-    kicker: "ESG Management", h1: "Structure your climate reporting",
-    intro: "Organise governance, strategy, risk, and metrics to support TCFD-aligned and IFRS S1/S2 climate disclosure.",
-    seoTitle: "TCFD / IFRS Climate Reporting", seoDescription: "Support TCFD-aligned and IFRS S1/S2 climate disclosure across governance, strategy, risk, and metrics.",
-    visual: "compliance", frameworks: ["TCFD", "IFRS S1", "IFRS S2", "Governance", "Strategy", "Risk", "Metrics", "Targets"],
+    slug: "brsr", navLabel: "BRSR",
+    kicker: "ESG Management", h1: "Prepare India's BRSR disclosures",
+    intro: "Organise the environmental, social, and governance data India's Business Responsibility and Sustainability Report asks for, principle by principle.",
+    seoTitle: "BRSR Reporting", seoDescription: "Prepare India's SEBI Business Responsibility and Sustainability Report with structured, principle-wise ESG data.",
+    visual: "compliance", frameworks: ["BRSR", "NGRBC", "SEBI", "Section A", "Section B", "Section C", "Essential", "Leadership"],
     sections: [
-      { h: "Governance and strategy", p: "Capture governance and how climate risks and opportunities affect your business." },
-      { h: "Risk management", p: "Document how climate risks are identified, assessed, and managed." },
-      { h: "Metrics and targets", p: "Bring together the metrics and targets your disclosure requires." },
-    ],
-  }),
-  P({
-    slug: "eudr", navLabel: "EUDR",
-    kicker: "ESG Management", h1: "Ensure supply chain traceability",
-    intro: "Collect due-diligence data and geolocation evidence to support EU Deforestation Regulation traceability.",
-    seoTitle: "EUDR Traceability", seoDescription: "Support EU Deforestation Regulation due diligence with supply chain traceability and geolocation evidence.",
-    visual: "supplier",
-    sections: [
-      { h: "Due-diligence data", p: "Collect the supplier and commodity data EUDR due diligence requires." },
-      { h: "Geolocation evidence", p: "Keep plot-level geolocation and supporting evidence organised." },
-      { h: "Traceability", p: "Trace commodities through your supply chain in a structured way." },
+      { h: "Nine principles, one dataset", p: "Map your data to the NGRBC principles that structure Section C of the report." },
+      { h: "Essential and leadership indicators", p: "Cover the mandatory essential indicators first, then add voluntary leadership indicators where you can evidence them." },
+      { h: "Assurance-ready evidence", p: "Keep the source and method behind each figure, ready for BRSR Core assurance conversations." },
     ],
   }),
   P({
@@ -230,18 +207,6 @@ const PLATFORM: ContentPage[] = [
     ],
   }),
   P({
-    slug: "vsme", navLabel: "VSME",
-    kicker: "ESG Management", h1: "Simplify your ESG reporting",
-    intro: "Prepare a proportionate ESG report using the voluntary SME standard, with only the data that matters.",
-    seoTitle: "VSME ESG Reporting", seoDescription: "Prepare a proportionate ESG report using the voluntary SME standard, focused on the data that matters.",
-    visual: "compliance", frameworks: ["VSME", "Basic module", "Comprehensive module", "Environment", "Social", "Governance", "Evidence", "Disclosure"],
-    sections: [
-      { h: "Proportionate scope", p: "Report using a standard designed to be proportionate for smaller businesses." },
-      { h: "Only what matters", p: "Focus on the data points that are relevant to your business." },
-      { h: "Reusable evidence", p: "Reuse the same structured data across other reporting needs." },
-    ],
-  }),
-  P({
     slug: "secr", navLabel: "SECR",
     kicker: "ESG Management", h1: "Manage your UK carbon reporting",
     intro: "Organise UK energy use and carbon data to prepare SECR disclosures for your annual report.",
@@ -251,6 +216,61 @@ const PLATFORM: ContentPage[] = [
       { h: "Energy and carbon data", p: "Bring together the UK energy and carbon data SECR requires." },
       { h: "Intensity ratios", p: "Calculate the intensity ratios your disclosure needs." },
       { h: "Annual report ready", p: "Prepare structured outputs ready for your annual report." },
+    ],
+  }),
+];
+
+/* ---- Hidden pages (stored, not routed or sitemapped) ----
+   The full page code lives in src/app/_hidden/. To restore one: move its
+   folder back under src/app/, re-add its nav entry, and move its entry from
+   here back into the array above. */
+export const HIDDEN_PAGES: ContentPage[] = [
+  {
+    slug: "finance", collection: "solutions", navLabel: "Finance",
+    kicker: "Finance", h1: "Reporting-grade ESG data your finance team can trust",
+    intro: "Give finance and reporting teams audit-ready sustainability data, with every figure traceable to its source and mapped to the disclosures that matter.",
+    seoTitle: "ESG for Finance Teams", seoDescription: "Audit-ready ESG and carbon data for finance teams, with traceable figures and disclosure-ready outputs.",
+    visual: "audit",
+    sections: [
+      { h: "Financial-grade data", p: "Bring sustainability data up to the standard finance already works to, with clear ownership, controls, and a full audit trail." },
+      { h: "Disclosure mapping", p: "Map figures to the frameworks that apply to your reporting, so a single dataset supports several disclosures." },
+      { h: "Audit-ready evidence", p: "Keep source files, methods, and approvals connected to every number, ready for review and assurance." },
+    ],
+  },
+  P({
+    slug: "tcfd-ifrs", navLabel: "TCFD / IFRS",
+    kicker: "ESG Management", h1: "Structure your climate reporting",
+    intro: "Organise governance, strategy, risk, and metrics to support TCFD-aligned and IFRS S1/S2 climate disclosure.",
+    seoTitle: "TCFD / IFRS Climate Reporting", seoDescription: "Support TCFD-aligned and IFRS S1/S2 climate disclosure across governance, strategy, risk, and metrics.",
+    visual: "compliance", frameworks: ["TCFD", "IFRS S1", "IFRS S2", "Governance", "Strategy", "Risk", "Metrics", "Targets"],
+    sections: [
+      { h: "Governance and strategy", p: "Capture governance and how climate risks and opportunities affect your business." },
+      { h: "Risk management", p: "Document how climate risks are identified, assessed, and managed." },
+      { h: "Metrics and targets", p: "Bring together the metrics and targets your disclosure requires." },
+    ],
+  }),
+  P({
+    slug: "eudr", navLabel: "EUDR",
+    kicker: "ESG Management", h1: "Ensure supply chain traceability",
+    intro: "Collect due-diligence data and geolocation evidence to support EU Deforestation Regulation traceability.",
+    seoTitle: "EUDR Traceability", seoDescription: "Support EU Deforestation Regulation due diligence with supply chain traceability and geolocation evidence.",
+    visual: "supplier",
+    sections: [
+      { h: "Due-diligence data", p: "Collect the supplier and commodity data EUDR due diligence requires." },
+      { h: "Geolocation evidence", p: "Keep plot-level geolocation and supporting evidence organised." },
+      { h: "Traceability", p: "Trace commodities through your supply chain in a structured way." },
+    ],
+  }),
+  P({
+    slug: "vsme", navLabel: "VSME",
+    kicker: "ESG Management", h1: "Simplify your ESG reporting",
+    intro: "Prepare a proportionate ESG report using the voluntary SME standard, with only the data that matters.",
+    seoTitle: "VSME ESG Reporting", seoDescription: "Prepare a proportionate ESG report using the voluntary SME standard, focused on the data that matters.",
+    visual: "compliance", frameworks: ["VSME", "Basic module", "Comprehensive module", "Environment", "Social", "Governance", "Evidence", "Disclosure"],
+    sections: [
+      { h: "Proportionate scope", p: "Report using a standard designed to be proportionate for smaller businesses." },
+      { h: "Only what matters", p: "Focus on the data points that are relevant to your business." },
+      { h: "Reusable evidence", p: "Reuse the same structured data across other reporting needs." },
     ],
   }),
   P({

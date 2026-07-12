@@ -21,12 +21,13 @@ export const site = {
 export type NavLink = { label: string; href: string; desc?: string };
 export type NavGroup = { heading: string; items: NavLink[] };
 
-/* ---- Solutions (by use-case / team) ---- */
+/* ---- Solutions (by use-case / team) ----
+   Finance is hidden for now (page stored in src/app/_hidden/solutions-finance);
+   restore by moving the folder back and re-adding its entry here. */
 export const solutions: NavLink[] = [
-  { label: "Finance", href: "/solutions/finance", desc: "Audit-ready ESG data your finance team can trust." },
+  { label: "Reporting", href: "/solutions/reporting", desc: "One dataset, every framework-ready report." },
   { label: "Supply Chain", href: "/solutions/supply-chain", desc: "Engage suppliers and strengthen Scope 3." },
   { label: "Product Footprint", href: "/solutions/product-footprint", desc: "Measure product-level emissions and impact." },
-  { label: "Reporting", href: "/solutions/reporting", desc: "One dataset, every framework-ready report." },
 ];
 
 /* ---- Platform (product capabilities), grouped for the mega-menu ---- */
@@ -48,17 +49,16 @@ export const platformGroups: NavGroup[] = [
   },
   {
     heading: "ESG Management",
+    /* TCFD/IFRS, EUDR, VSME and DPP are hidden for now (pages stored in
+       src/app/_hidden); restore by moving the folders back and re-adding here. */
     items: [
       { label: "UK SRS", href: "/platform/uk-srs", desc: "Structure your UK climate reporting" },
       { label: "EcoVadis", href: "/platform/ecovadis", desc: "Boost your ESG performance score" },
       { label: "CSRD", href: "/platform/csrd", desc: "Structure your CSRD compliance" },
-      { label: "TCFD / IFRS", href: "/platform/tcfd-ifrs", desc: "Structure your climate reporting" },
-      { label: "EUDR", href: "/platform/eudr", desc: "Ensure supply chain traceability" },
       { label: "CBAM", href: "/platform/cbam", desc: "Prepare for the carbon border tax" },
       { label: "SBTi", href: "/platform/sbti", desc: "Align your targets with climate science" },
-      { label: "VSME", href: "/platform/vsme", desc: "Simplify your ESG reporting" },
       { label: "SECR", href: "/platform/secr", desc: "Manage your UK carbon reporting" },
-      { label: "DPP", href: "/platform/dpp", desc: "Create your digital product passports" },
+      { label: "BRSR", href: "/platform/brsr", desc: "Prepare India's SEBI sustainability report" },
     ],
   },
 ];

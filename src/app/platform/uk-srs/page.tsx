@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Reveal } from "@/components/ui/Reveal";
 import { INK, BODY, GREENDK, GCrumbs, GPrimaryBtn, GGhostBtn, GH2, GFaq, GreenCTA } from "@/components/platform/greenParts";
-import { CEyebrow, FrameworkWall, FactStrip, ScopeNote } from "@/components/platform/complianceKit";
+import { CEyebrow, FactStrip, ScopeNote } from "@/components/platform/complianceKit";
 import { DisclosureMapper, ScenarioExposure } from "@/components/platform/UkSrsVisuals";
 
 export const metadata: Metadata = {
@@ -104,16 +104,6 @@ export default function UkSrsPage() {
         </div>
       </section>
 
-      {/* Standards wall */}
-      <section className="py-16 sm:py-20" style={{ background: "#f8faf9" }}>
-        <div className="mx-auto max-w-6xl px-5 sm:px-6">
-          <Reveal>
-            <h2 className="mx-auto max-w-2xl text-center font-display text-2xl font-bold sm:text-3xl" style={{ color: INK }}>Built to support the standards you report to</h2>
-            <p className="mx-auto mt-3 max-w-xl text-center text-base" style={{ color: BODY }}>One inventory, reused across the frameworks that ask for it.</p>
-          </Reveal>
-          <div className="mt-10"><FrameworkWall highlight="UK SRS" /></div>
-        </div>
-      </section>
 
       {/* FAQ */}
       <section className="py-16 sm:py-24">

@@ -27,7 +27,7 @@ function Visual({ page }: { page: CP }) {
 }
 
 const trailBase: Record<CP["collection"], { label: string; href: string }> = {
-  solutions: { label: "Solutions", href: "/solutions/finance" },
+  solutions: { label: "Solutions", href: "/solutions/reporting" },
   platform: { label: "Platform", href: "/platform/carbon-assessment" },
   industries: { label: "Industries", href: "/industries/manufacturing" },
 };

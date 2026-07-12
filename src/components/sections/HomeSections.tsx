@@ -30,20 +30,19 @@ function FeatureCard({ href, title, desc, cta = "Explore", icon }: { href: strin
 }
 
 /* --- premium line symbols --- */
-const FinanceIcon = <><path d="M3 21h18M5 21V10l7-4.5L19 10v11M10 21v-6h4v6" /></>;
-const SupplyChainIcon = <><path d="M3 7h10v8H3zM13 10h4l3 3v2h-7z" /><circle cx="7" cy="18" r="1.6" /><circle cx="17" cy="18" r="1.6" /></>;
+const SupplyChainIcon =<><path d="M3 7h10v8H3zM13 10h4l3 3v2h-7z" /><circle cx="7" cy="18" r="1.6" /><circle cx="17" cy="18" r="1.6" /></>;
 const ProductFootprintIcon = <><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z" /><path d="M4 7.5l8 4.5 8-4.5M12 12v9" /></>;
 const ReportingIcon = <><rect x="5" y="3" width="14" height="18" rx="2" /><path d="M9 8h6M9 12h6M9 16h4" /></>;
 const ManufacturingIcon = <><path d="M3 20V10l5.5 3.2V10l5.5 3.2V7h6.5v13z" /><path d="M7 16.5h1.5M11.5 16.5H13M16 16.5h1.5" /></>;
 const EventsIcon = <><rect x="3.5" y="5" width="17" height="16" rx="2.5" /><path d="M3.5 9.5h17M8 3.5v3.5M16 3.5v3.5" /><path d="M12 12.5l1 2 2.2.3-1.6 1.5.4 2.2-2-1-2 1 .4-2.2L9 14.8l2.2-.3z" /></>;
 
+/* Finance card hidden with its page (src/app/_hidden/solutions-finance). */
 export function ServiceCards() {
   return (
-    <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-      <FeatureCard href="/solutions/finance" title="Finance" cta="For finance teams" desc="Audit-ready ESG data your finance team can trust, with every figure traceable to its source." icon={FinanceIcon} />
+    <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <FeatureCard href="/solutions/reporting" title="Reporting" cta="For reporting leads" desc="Prepare framework-ready disclosures from one dataset, with evidence connected to every figure." icon={ReportingIcon} />
       <FeatureCard href="/solutions/supply-chain" title="Supply Chain" cta="For procurement" desc="Engage suppliers, collect primary data, and strengthen Scope 3 across your value chain." icon={SupplyChainIcon} />
       <FeatureCard href="/solutions/product-footprint" title="Product Footprint" cta="For product teams" desc="Measure product-level emissions and life-cycle impact, ready for customers and disclosure." icon={ProductFootprintIcon} />
-      <FeatureCard href="/solutions/reporting" title="Reporting" cta="For reporting leads" desc="Prepare framework-ready disclosures from one dataset, with evidence connected to every figure." icon={ReportingIcon} />
     </div>
   );
 }

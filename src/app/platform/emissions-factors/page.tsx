@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Reveal } from "@/components/ui/Reveal";
 
-import { INK, BODY, PEyebrow, GCrumbs, GPrimaryBtn, GGhostBtn, GH2, GreenCTA, MonoFrameworks } from "@/components/platform/greenParts";
+import { INK, BODY, PEyebrow, GCrumbs, GPrimaryBtn, GGhostBtn, GH2, GreenCTA } from "@/components/platform/greenParts";
 import { FactorConsole, PrecisionLadder, ProvenanceTrail, CustomFactorCompare, NetworkLoop } from "@/components/platform/FactorVisuals";
 
 export const metadata: Metadata = {
@@ -93,16 +93,6 @@ export default function EmissionsFactorsPage() {
         </div>
       </section>
 
-      {/* Standards */}
-      <section className="border-t border-[#eef1ef] py-16 sm:py-20">
-        <div className="mx-auto max-w-6xl px-5 sm:px-6">
-          <Reveal>
-            <h2 className="mx-auto max-w-2xl text-center font-display text-2xl font-bold sm:text-3xl" style={{ color: INK }}>Built to support the world&rsquo;s leading standards</h2>
-            <p className="mx-auto mt-3 max-w-xl text-center text-base" style={{ color: BODY }}>Factors that feed straight into the frameworks you report to.</p>
-          </Reveal>
-          <div className="mt-10"><MonoFrameworks /></div>
-        </div>
-      </section>
 
       <GreenCTA title="Start your journey now" intro="See how ESGen's factor database turns your activity and spend data into figures you can defend." />
     </div>

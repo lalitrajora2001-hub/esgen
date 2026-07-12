@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Reveal } from "@/components/ui/Reveal";
 import { INK, BODY, GCrumbs, GPrimaryBtn, GGhostBtn, GH2, GFaq, GreenCTA } from "@/components/platform/greenParts";
-import { CEyebrow, FrameworkWall, ScopeNote } from "@/components/platform/complianceKit";
+import { CEyebrow, ScopeNote } from "@/components/platform/complianceKit";
 import { MaterialityMatrix, EsrsCoverage } from "@/components/platform/CsrdVisuals";
 
 export const metadata: Metadata = {
@@ -100,12 +100,6 @@ export default function CsrdPage() {
         </div>
       </section>
 
-      <section className="py-16 sm:py-20">
-        <div className="mx-auto max-w-6xl px-5 sm:px-6">
-          <Reveal><h2 className="mx-auto max-w-2xl text-center font-display text-2xl font-bold sm:text-3xl" style={{ color: INK }}>One inventory, many frameworks</h2></Reveal>
-          <div className="mt-10"><FrameworkWall highlight="CSRD" /></div>
-        </div>
-      </section>
 
       <section className="pb-16 sm:pb-24">
         <div className="mx-auto max-w-6xl px-5 sm:px-6">

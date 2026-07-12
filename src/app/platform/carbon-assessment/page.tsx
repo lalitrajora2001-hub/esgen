@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Reveal } from "@/components/ui/Reveal";
-import { MonoFrameworks } from "@/components/platform/greenParts";
 
 import {
   CarbonDashboard, ReductionPathway, FeatureCard, DataArcs, FactorTableViz, CoverageMeter,
@@ -157,16 +156,6 @@ export default function CarbonAssessmentPage() {
         </div>
       </section>
 
-      {/* Standards wall */}
-      <section className="py-16 sm:py-20">
-        <div className="mx-auto max-w-6xl px-5 sm:px-6">
-          <Reveal>
-            <h2 className="mx-auto max-w-2xl text-center font-display text-2xl font-bold sm:text-3xl" style={{ color: INK }}>Built to support the world&rsquo;s leading standards</h2>
-            <p className="mx-auto mt-3 max-w-xl text-center text-base" style={{ color: BODY }}>ESGen is designed to support structured reporting across the frameworks that shape carbon and ESG disclosure.</p>
-          </Reveal>
-          <div className="mt-10"><MonoFrameworks /></div>
-        </div>
-      </section>
 
       {/* FAQ */}
       <section className="py-16 sm:py-24" style={{ background: "#f6fbf7" }}>
