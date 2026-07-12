@@ -53,7 +53,7 @@ export default function ManufacturingPage() {
         <div className="flex items-center px-6 py-14 sm:px-10 lg:px-14 lg:py-16">
           <div className="max-w-xl">
             <Crumbs />
-            <h1 className="mt-6 font-display text-4xl font-bold leading-[1.06] tracking-tight sm:text-5xl">
+            <h1 className="mt-6 font-display text-4xl font-bold leading-[1.06] tracking-tight sm:text-5xl" style={{ color: INK }}>
               Carbon accounting for manufacturers. Audit-ready, tender-ready.
             </h1>
             <p className="mt-6 text-lg leading-relaxed" style={{ color: MUTED }}>
@@ -76,7 +76,7 @@ export default function ManufacturingPage() {
       <section className="border-t py-16 sm:py-24" style={{ borderColor: LINE }}>
         <div className="mx-auto max-w-6xl px-5 sm:px-6">
           <div className="grid gap-8 lg:grid-cols-[0.5fr_1.5fr] lg:items-end">
-            <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">Impacts</h2>
+            <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl" style={{ color: INK }}>Impacts</h2>
             <p className="max-w-xl text-base leading-relaxed lg:justify-self-end" style={{ color: MUTED }}>
               Manufacturing generates a significant amount of carbon, and accounting for it is genuinely hard. Three numbers set the context.
             </p>
@@ -98,7 +98,7 @@ export default function ManufacturingPage() {
       <section className="py-16 sm:py-24">
         <div className="mx-auto grid max-w-6xl gap-12 px-5 sm:px-6 lg:grid-cols-[1.05fr_0.95fr]">
           <div>
-            <h2 className="max-w-md font-display text-3xl font-bold leading-[1.1] tracking-tight sm:text-4xl">Barriers to accurate carbon reporting</h2>
+            <h2 className="max-w-md font-display text-3xl font-bold leading-[1.1] tracking-tight sm:text-4xl" style={{ color: INK }}>Barriers to accurate carbon reporting</h2>
             <div className="mt-8 max-w-xl space-y-5 text-[1.02rem] leading-relaxed" style={{ color: "#3a414c" }}>
               <p>
                 For most of the last decade, carbon reporting in manufacturing was a disclosure exercise. Something the sustainability team produced once a year, reviewed by the board, and filed with the annual report. The number mattered, but it did not affect the order book.
@@ -128,25 +128,25 @@ export default function ManufacturingPage() {
       <section className="border-t py-16 sm:py-24" style={{ borderColor: LINE }}>
         <div className="mx-auto max-w-6xl px-5 sm:px-6">
           <div className="max-w-2xl">
-            <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">Where the footprint actually sits</h2>
+            <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl" style={{ color: INK }}>Where the footprint actually sits</h2>
             <p className="mt-4 text-base leading-relaxed" style={{ color: MUTED }}>
               A typical manufacturer&rsquo;s emissions, category by category. Select a segment to see what drives it.
             </p>
           </div>
-          <div className="mt-10"><Reveal><FootprintBreakdown title={data.footprintTitle} categories={data.categories} /></Reveal></div>
+          <div className="mt-10"><Reveal><FootprintBreakdown title={data.footprintTitle} categories={data.categories} variant="light" /></Reveal></div>
         </div>
       </section>
 
       {/* Why ESGen: three editorial columns */}
       <section className="py-16 sm:py-24">
         <div className="mx-auto max-w-6xl px-5 sm:px-6">
-          <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">Why ESGen</h2>
+          <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl" style={{ color: INK }}>Why ESGen</h2>
           <div className="mt-12 grid gap-10 lg:grid-cols-3">
             {WHY.map((w, i) => (
               <Reveal key={w.t}>
                 <div style={{ transitionDelay: `${i * 40}ms` }}>
                   <svg viewBox="0 0 24 24" className="h-7 w-7" fill="none" stroke={INK} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d={w.icon} /></svg>
-                  <h3 className="mt-5 font-display text-xl font-bold leading-snug">{w.t}</h3>
+                  <h3 className="mt-5 font-display text-xl font-bold leading-snug" style={{ color: INK }}>{w.t}</h3>
                   <p className="mt-3 text-[0.95rem] leading-relaxed" style={{ color: MUTED }}>{w.d}</p>
                 </div>
               </Reveal>
@@ -159,7 +159,7 @@ export default function ManufacturingPage() {
       <section className="border-t py-16 sm:py-24" style={{ borderColor: LINE }}>
         <div className="mx-auto max-w-6xl px-5 sm:px-6">
           <div className="max-w-2xl">
-            <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">Collect once, answer everyone</h2>
+            <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl" style={{ color: INK }}>Collect once, answer everyone</h2>
             <p className="mt-4 text-base leading-relaxed" style={{ color: MUTED }}>
               Pick an output and watch which parts of the inventory feed it. The work is collecting the rows. The answers are then a mapping, not a new project.
             </p>
@@ -171,11 +171,11 @@ export default function ManufacturingPage() {
       {/* FAQ */}
       <section className="py-16 sm:py-24">
         <div className="mx-auto grid max-w-6xl gap-12 px-5 sm:px-6 lg:grid-cols-[0.8fr_1.2fr]">
-          <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">Questions from manufacturing teams</h2>
+          <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl" style={{ color: INK }}>Questions from manufacturing teams</h2>
           <div className="divide-y border-y" style={{ borderColor: LINE }}>
             {data.faqs.map(([q, a]) => (
               <details key={q} className="group py-5" style={{ borderColor: LINE }}>
-                <summary className="flex cursor-pointer items-center justify-between gap-4 font-display text-base font-bold">
+                <summary className="flex cursor-pointer items-center justify-between gap-4 font-display text-base font-bold" style={{ color: INK }}>
                   {q}
                   <svg viewBox="0 0 24 24" fill="none" stroke={INK} strokeWidth="2.4" strokeLinecap="round" className="h-4 w-4 shrink-0 transition-transform group-open:rotate-45"><path d="M12 5v14M5 12h14" /></svg>
                 </summary>

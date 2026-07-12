@@ -28,31 +28,34 @@ const OUTPUTS: Output[] = [
   { k: "Corporate disclosure", desc: "Scope 1, 2 and 3 for SECR, UK SRS, CSRD or a customer questionnaire.", uses: [0, 1, 3, 4], note: "The same rows, aggregated to company level, with the method retained against each figure." },
 ];
 
+/* White and black editorial treatment: white card, hairline borders, black
+   as the active accent. Used on the Manufacturing page. */
+const M = { ink: "#101318", muted: "#565d68", faint: "#8a919c", line: "#e6e8ec", wash: "#f4f5f7", panel: "#f7f8f9" };
+
 export function OutputMapper() {
   const [sel, setSel] = useState(1);
-  const reduce = useReducedMotion();
   const out = OUTPUTS[sel];
 
   return (
-    <div className="overflow-hidden rounded-3xl border border-border bg-surface shadow-float">
-      <div className="flex items-center justify-between border-b border-border px-6 py-4">
-        <span className="font-mono text-[0.68rem] uppercase tracking-[0.16em] text-text-muted">One inventory, three answers</span>
-        <span className="rounded-full bg-accent/10 px-2.5 py-1 text-[0.62rem] font-bold text-accent-3">{out.uses.length} of {INVENTORY.length} rows feed this</span>
+    <div className="overflow-hidden rounded-3xl border bg-white shadow-[0_28px_70px_-38px_rgba(16,19,24,0.35)]" style={{ borderColor: M.line }}>
+      <div className="flex items-center justify-between border-b px-6 py-4" style={{ borderColor: "#eceef1" }}>
+        <span className="font-mono text-[0.68rem] uppercase tracking-[0.16em]" style={{ color: M.muted }}>One inventory, three answers</span>
+        <span className="rounded-full px-2.5 py-1 text-[0.62rem] font-bold text-white" style={{ background: M.ink }}>{out.uses.length} of {INVENTORY.length} rows feed this</span>
       </div>
 
       <div className="grid md:grid-cols-[1fr_1fr]">
         {/* inventory rows */}
-        <div className="border-b border-border p-5 md:border-b-0 md:border-r">
-          <p className="px-1 pb-2 text-[0.62rem] font-bold uppercase tracking-[0.12em] text-text-muted">What you collect</p>
+        <div className="border-b p-5 md:border-b-0 md:border-r" style={{ borderColor: "#eceef1" }}>
+          <p className="px-1 pb-2 text-[0.62rem] font-bold uppercase tracking-[0.12em]" style={{ color: M.faint }}>What you collect</p>
           <div className="space-y-1.5">
             {INVENTORY.map((r, i) => {
               const on = out.uses.includes(i);
               return (
                 <div key={r.k} className="flex items-center gap-3 rounded-xl border px-3.5 py-2.5 motion-safe:transition-all motion-safe:duration-300"
-                  style={{ borderColor: on ? "rgba(77,139,245,0.45)" : "var(--color-border)", background: on ? "rgba(77,139,245,0.08)" : "transparent", opacity: on ? 1 : 0.45 }}>
-                  <span className="h-2 w-2 shrink-0 rounded-full motion-safe:transition-colors" style={{ background: on ? ACCENT : "var(--color-border)" }} />
-                  <span className="min-w-0 flex-1 truncate text-[0.86rem]" style={{ color: on ? "#fff" : "var(--color-text-muted)" }}>{r.k}</span>
-                  <span className="shrink-0 font-mono text-[0.62rem] text-text-muted">{r.src}</span>
+                  style={{ borderColor: on ? M.ink : M.line, background: on ? M.wash : "transparent", opacity: on ? 1 : 0.42, boxShadow: on ? `inset 3px 0 0 ${M.ink}` : "none" }}>
+                  <span className="h-2 w-2 shrink-0 rounded-full motion-safe:transition-colors" style={{ background: on ? M.ink : "#cdd2d8" }} />
+                  <span className="min-w-0 flex-1 truncate text-[0.86rem] font-medium" style={{ color: on ? M.ink : M.muted }}>{r.k}</span>
+                  <span className="shrink-0 font-mono text-[0.62rem]" style={{ color: M.faint }}>{r.src}</span>
                 </div>
               );
             })}
@@ -61,25 +64,25 @@ export function OutputMapper() {
 
         {/* outputs */}
         <div className="p-5">
-          <p className="px-1 pb-2 text-[0.62rem] font-bold uppercase tracking-[0.12em] text-text-muted">What it produces</p>
+          <p className="px-1 pb-2 text-[0.62rem] font-bold uppercase tracking-[0.12em]" style={{ color: M.faint }}>What it produces</p>
           <div className="space-y-2">
             {OUTPUTS.map((o, i) => {
               const on = i === sel;
               return (
                 <button key={o.k} onClick={() => setSel(i)} onMouseEnter={() => setSel(i)} onFocus={() => setSel(i)} aria-pressed={on}
-                  className="w-full rounded-xl border p-4 text-left transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent"
-                  style={{ borderColor: on ? "rgba(77,139,245,0.5)" : "var(--color-border)", background: on ? "var(--color-surface-2)" : "transparent" }}>
+                  className="w-full rounded-xl border p-4 text-left transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[#101318]"
+                  style={{ borderColor: on ? M.ink : M.line, background: on ? M.ink : "#ffffff" }}>
                   <div className="flex items-center justify-between gap-2">
-                    <span className="font-display text-[0.95rem] font-semibold" style={{ color: on ? "#fff" : "var(--color-text-muted)" }}>{o.k}</span>
-                    <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0 motion-safe:transition-transform" style={{ color: on ? "#8fbaff" : "var(--color-border)", transform: on ? "translateX(2px)" : "none" }} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M9 6l6 6-6 6" /></svg>
+                    <span className="font-display text-[0.95rem] font-semibold" style={{ color: on ? "#ffffff" : M.ink }}>{o.k}</span>
+                    <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0 motion-safe:transition-transform" style={{ color: on ? "#ffffff" : "#cdd2d8", transform: on ? "translateX(2px)" : "none" }} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M9 6l6 6-6 6" /></svg>
                   </div>
-                  <p className="mt-1 text-[0.78rem] leading-relaxed text-text-muted">{o.desc}</p>
+                  <p className="mt-1 text-[0.78rem] leading-relaxed" style={{ color: on ? "rgba(255,255,255,0.72)" : M.muted }}>{o.desc}</p>
                 </button>
               );
             })}
           </div>
           <motion.p key={out.k} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.25 }}
-            className="mt-4 rounded-xl border border-border bg-canvas p-3.5 text-[0.78rem] leading-relaxed text-text-muted">
+            className="mt-4 rounded-xl border p-3.5 text-[0.78rem] leading-relaxed" style={{ borderColor: "#eceef1", background: M.panel, color: M.muted }}>
             {out.note}
           </motion.p>
         </div>
