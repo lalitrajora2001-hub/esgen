@@ -19,7 +19,7 @@ const IC = {
   pen: "M14 6l4 4M4 20l1-5L16 4l4 4L9 19z",
 };
 
-const FEATURED = { href: "/resources/carbon-accounting-basics", eyebrow: "Start here", title: "Carbon accounting, from zero", desc: "Scopes, emission factors, and tCO₂e — the vocabulary everything else is built on, explained without assuming you already know it.", icon: IC.calc };
+const FEATURED = { href: "/resources/carbon-accounting-basics", eyebrow: "Start here", title: "Carbon accounting, from zero", desc: "Scopes, emission factors, and tCO₂e, the vocabulary everything else is built on, explained without assuming you already know it.", icon: IC.calc };
 
 const CARDS: { href: string; title: string; desc: string; icon: string; tag: string }[] = [
   { href: "/resources/esg-glossary", title: "ESG Glossary", desc: "Every term, searchable and filterable by topic. Jump to a letter or hunt by keyword.", icon: IC.glossary, tag: "Interactive" },
@@ -39,7 +39,7 @@ export default function ResourcesPage() {
           <Breadcrumb trail={[{ label: "Home", href: "/" }, { label: "Resources" }]} />
           <div className="max-w-2xl">
             <h1 className="text-balance text-4xl font-semibold leading-[1.05] sm:text-5xl">Learn the essentials, without the jargon</h1>
-            <p className="mt-5 max-w-xl text-lg text-text-muted">Plain-English material on carbon accounting, ESG data, and the frameworks that shape reporting — some of it interactive, all of it built for people who have to actually do this.</p>
+            <p className="mt-5 max-w-xl text-lg text-text-muted">Plain-English material on carbon accounting, ESG data, and the frameworks that shape reporting, some of it interactive, all of it built for people who have to actually do this.</p>
           </div>
         </div>
       </section>

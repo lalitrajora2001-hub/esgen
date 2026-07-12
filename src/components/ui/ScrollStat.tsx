@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 
 /**
  * A stat that counts up from 0 to `value` the moment it scrolls into view, then
- * holds — the live "number ticking up" effect used by Normative / Greenly. Uses a
+ * holds, the live "number ticking up" effect used by Normative / Greenly. Uses a
  * plain IntersectionObserver (robust regardless of the smooth-scroll layer) and an
  * eased rAF tween. Respects reduced motion by showing the final value.
  */

@@ -7,7 +7,7 @@ import { GK } from "@/components/platform/CarbonVisuals";
 const INK = "#0f1720", MUTED = "#6b7280";
 
 /* ============================================================
-   MODULE SELECTOR — VSME has a Basic module, and a Comprehensive
+   MODULE SELECTOR, VSME has a Basic module, and a Comprehensive
    module that sits on top of it for undertakings that need more.
    ============================================================ */
 type Row = { k: string; label: string; basic: boolean; comp: boolean };
@@ -19,9 +19,9 @@ const ROWS: Row[] = [
   { k: "B5", label: "Biodiversity", basic: true, comp: true },
   { k: "B6", label: "Water", basic: true, comp: true },
   { k: "B7", label: "Resource use, circular economy and waste", basic: true, comp: true },
-  { k: "B8", label: "Workforce — general characteristics", basic: true, comp: true },
-  { k: "B9", label: "Workforce — health and safety", basic: true, comp: true },
-  { k: "B10", label: "Workforce — remuneration, bargaining and training", basic: true, comp: true },
+  { k: "B8", label: "Workforce, general characteristics", basic: true, comp: true },
+  { k: "B9", label: "Workforce, health and safety", basic: true, comp: true },
+  { k: "B10", label: "Workforce, remuneration, bargaining and training", basic: true, comp: true },
   { k: "B11", label: "Convictions and fines for corruption and bribery", basic: true, comp: true },
   { k: "C1", label: "Strategy: business model and sustainability initiatives", basic: false, comp: true },
   { k: "C2", label: "Description of practices, policies and future initiatives", basic: false, comp: true },

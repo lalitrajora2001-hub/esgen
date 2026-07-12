@@ -23,7 +23,7 @@ const FAQS: [string, string][] = [
 export default function SecrPage() {
   return (
     <div className="bg-white" style={{ color: BODY }}>
-      {/* Hero — centred question, checker beneath */}
+      {/* Hero, centred question, checker beneath */}
       <section className="relative overflow-hidden pt-24 sm:pt-28">
         <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-[480px]" style={{ background: "radial-gradient(110% 90% at 50% 0%, #eef7f1 0%, #f8fbf9 45%, #ffffff 80%)" }} />
         <div className="relative mx-auto max-w-6xl px-5 sm:px-6">
@@ -46,7 +46,7 @@ export default function SecrPage() {
         </div>
       </section>
 
-      {/* What must be disclosed — composer */}
+      {/* What must be disclosed, composer */}
       <section className="py-16 sm:py-24" style={{ background: "#f8faf9" }}>
         <div className="mx-auto max-w-6xl px-5 sm:px-6">
           <Reveal>
@@ -61,7 +61,7 @@ export default function SecrPage() {
         </div>
       </section>
 
-      {/* Intensity ratio explainer — numbered rail */}
+      {/* Intensity ratio explainer, numbered rail */}
       <section className="py-16 sm:py-24">
         <div className="mx-auto max-w-6xl px-5 sm:px-6">
           <Reveal><GH2>An intensity ratio makes the number comparable</GH2></Reveal>

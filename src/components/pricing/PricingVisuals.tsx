@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 
-/* Dark-theme pricing — no invented prices. ESGen, like the reference vendors,
+/* Dark-theme pricing, no invented prices. ESGen, like the reference vendors,
    scopes commercially. This configurator shows what a setup would contain, and
    which plan shape fits, from the user's own inputs. */
 

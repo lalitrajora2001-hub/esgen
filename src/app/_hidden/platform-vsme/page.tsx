@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 const FAQS: [string, string][] = [
   ["What is the VSME?", "A voluntary sustainability reporting standard developed by EFRAG for small and medium-sized undertakings that are not in scope of the CSRD but are asked for sustainability information anyway."],
   ["Why would we report if it is voluntary?", "Because your customers, banks, and insurers ask. The VSME gives a single, proportionate structure to answer with, instead of completing a different bespoke questionnaire for every counterparty."],
-  ["What is the difference between the modules?", "The Basic module is the starting point and stands alone. The Comprehensive module builds on it with additional disclosures — targets, climate risks, human rights processes, and governance diversity — for undertakings whose stakeholders need more."],
+  ["What is the difference between the modules?", "The Basic module is the starting point and stands alone. The Comprehensive module builds on it with additional disclosures, targets, climate risks, human rights processes, and governance diversity, for undertakings whose stakeholders need more."],
   ["Which module should we choose?", "Start with Basic unless a specific counterparty has asked for information that only the Comprehensive module covers. Reporting more than you can evidence is worse than reporting less."],
   ["Is the VSME the same as the CSRD?", "No. The CSRD is law for undertakings in its scope and requires the full ESRS with assurance. The VSME is voluntary and deliberately lighter, designed so that value-chain requests can be answered proportionately."],
   ["How does ESGen help?", "ESGen gathers the energy, emissions, workforce, and waste data the disclosures ask for, keeps the source behind each figure, and lets you reuse the same evidence when the next questionnaire arrives."],
@@ -22,7 +22,7 @@ const FAQS: [string, string][] = [
 export default function VsmePage() {
   return (
     <div className="bg-white" style={{ color: BODY }}>
-      {/* Hero — statement led, wide selector below */}
+      {/* Hero, statement led, wide selector below */}
       <section className="relative overflow-hidden pt-24 sm:pt-28">
         <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-[440px]" style={{ background: "radial-gradient(110% 90% at 50% 0%, #eef7f1 0%, #f8fbf9 45%, #ffffff 80%)" }} />
         <div className="relative mx-auto max-w-6xl px-5 sm:px-6">
@@ -33,7 +33,7 @@ export default function VsmePage() {
               Answer once, not once per customer
             </h1>
             <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed" style={{ color: BODY }}>
-              You are not in scope of the CSRD, but your customers are — and their questions land on you. The VSME gives you one proportionate structure to answer with.
+              You are not in scope of the CSRD, but your customers are, and their questions land on you. The VSME gives you one proportionate structure to answer with.
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-3">
               <GPrimaryBtn href="/demo">Request a demo</GPrimaryBtn>
@@ -45,7 +45,7 @@ export default function VsmePage() {
         </div>
       </section>
 
-      {/* The trickle-down problem — offset editorial */}
+      {/* The trickle-down problem, offset editorial */}
       <section className="py-16 sm:py-24">
         <div className="mx-auto max-w-6xl px-5 sm:px-6">
           <div className="grid gap-12 lg:grid-cols-[1fr_1fr] lg:items-start">

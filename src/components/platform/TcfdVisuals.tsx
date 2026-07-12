@@ -7,7 +7,7 @@ import { GK } from "@/components/platform/CarbonVisuals";
 const INK = "#0f1720", MUTED = "#6b7280";
 
 /* ============================================================
-   PILLAR WHEEL — four pillars, eleven recommended disclosures.
+   PILLAR WHEEL, four pillars, eleven recommended disclosures.
    Click a quadrant to read what it asks for.
    ============================================================ */
 type Pillar = { k: string; blurb: string; items: string[]; icon: string };

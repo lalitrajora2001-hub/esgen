@@ -141,7 +141,7 @@ export function PracticeModel() {
             <div className="mt-1 text-[0.68rem] text-text-muted">{note}</div>
           </div>
         ))}
-        <div className="col-span-2 bg-surface p-4 text-center text-[0.66rem] text-text-muted">Illustrative relationships between depth, breadth, and retention — not a revenue projection or guarantee.</div>
+        <div className="col-span-2 bg-surface p-4 text-center text-[0.66rem] text-text-muted">Illustrative relationships between depth, breadth, and retention, not a revenue projection or guarantee.</div>
       </div>
     </div>
   );

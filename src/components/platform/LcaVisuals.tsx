@@ -123,7 +123,7 @@ export function BomUpload() {
         {!reduce && <motion.div className="pointer-events-none absolute inset-y-0 w-1/3" style={{ background: "linear-gradient(90deg,transparent,rgba(22,163,74,0.12),transparent)" }} animate={{ x: ["-140%", "440%"] }} transition={{ duration: 3.6, repeat: Infinity, ease: "easeInOut" }} />}
       </div>
 
-      {/* parsed — toggle rows to recompute */}
+      {/* parsed, toggle rows to recompute */}
       <div className="rounded-xl bg-white p-3.5 shadow-lg">
         <div className="flex items-center justify-between gap-2">
           <span className="text-[0.68rem] font-bold" style={{ color: INK }}>Matched line items</span>
@@ -303,7 +303,7 @@ export function CircularLoop() {
         })}
       </svg>
 
-      {/* centre label — HTML so it wraps instead of overlapping */}
+      {/* centre label, HTML so it wraps instead of overlapping */}
       <div className="pointer-events-none absolute left-1/2 top-1/2 w-[7.5rem] -translate-x-1/2 -translate-y-1/2 text-center">
         {active === null ? (
           <div>

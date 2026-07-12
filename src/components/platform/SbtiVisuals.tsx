@@ -122,7 +122,7 @@ export function TargetCalculator() {
 }
 
 /* ============================================================
-   CRITERIA CHECKS — a compact, honest checklist.
+   CRITERIA CHECKS, a compact, honest checklist.
    ============================================================ */
 const CRITERIA: [string, string][] = [
   ["Base year", "A recent year with a complete, verifiable inventory."],

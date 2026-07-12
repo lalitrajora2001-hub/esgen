@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 };
 
 const STEPS: [string, string][] = [
-  ["A short conversation", "We start by understanding your reporting obligations and how you are structured — not by pitching features you do not need."],
+  ["A short conversation", "We start by understanding your reporting obligations and how you are structured, not by pitching features you do not need."],
   ["A tailored walkthrough", "We show the platform against a scenario that fits your business, using the frameworks that actually apply to you."],
   ["Honest next steps", "Practical advice on where ESGen fits and where it does not, with no obligation and no pressure."],
 ];
@@ -32,7 +32,7 @@ export default function DemoPage() {
 
       <Section size="sm">
         <div className="grid gap-12 lg:grid-cols-[1fr_1.15fr] lg:items-start">
-          {/* What to expect — connected timeline */}
+          {/* What to expect, connected timeline */}
           <div>
             <h2 className="text-2xl font-semibold sm:text-3xl">What to expect</h2>
             <ol className="relative mt-8">

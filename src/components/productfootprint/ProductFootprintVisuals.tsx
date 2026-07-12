@@ -166,7 +166,7 @@ export function ProductionGraphMini() {
 /* 4. Material comparison table */
 export function MaterialsCompare() {
   const rows: [string, string, string, string, string, string][] = [
-    ["Current", "Conventional", "£6", "8.1", "—", CK.muted],
+    ["Current", "Conventional", "£6", "8.1", "-", CK.muted],
     ["Option A", "Recycled", "£5", "4.5", "Lower cost & emissions", CK.green],
     ["Option B", "Bio-based", "£7", "3.3", "Higher cost, lower emissions", CK.amber],
   ];
@@ -183,7 +183,7 @@ export function MaterialsCompare() {
               <span className="tabular-nums" style={{ color: CK.navy }}>{r[2]}</span>
               <span className="font-semibold tabular-nums" style={{ color: CK.blue }}>{r[3]}</span>
             </div>
-            {r[4] !== "—" && <span className="mt-1 inline-block rounded px-1.5 py-0.5 text-[0.5rem] font-semibold" style={{ background: r[5] === CK.green ? "#e9f7ef" : "#fbf3dd", color: r[5] }}>{r[4]}</span>}
+            {r[4] !== "-" && <span className="mt-1 inline-block rounded px-1.5 py-0.5 text-[0.5rem] font-semibold" style={{ background: r[5] === CK.green ? "#e9f7ef" : "#fbf3dd", color: r[5] }}>{r[4]}</span>}
           </div>
         ))}
       </div>

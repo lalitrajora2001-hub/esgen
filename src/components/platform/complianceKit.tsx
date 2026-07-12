@@ -4,7 +4,7 @@ import { INK, BODY, GREEN, GREENDK } from "@/components/platform/greenParts";
 /* Shared chrome for the ESG-compliance pages. Each page supplies its own
    signature visual; only the breadcrumb, eyebrow, and standards wall are
    common. Marks below are simplified, monochrome representations of the
-   frameworks ESGen supports reporting to — not accreditation badges. */
+   frameworks ESGen supports reporting to, not accreditation badges. */
 
 export function CEyebrow({ children }: { children: React.ReactNode }) {
   return (

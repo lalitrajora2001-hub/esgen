@@ -24,7 +24,7 @@ const CHANGE: [string, string][] = [
 export default function ReportingPage() {
   return (
     <div className="bg-white" style={{ color: WBODY }}>
-      {/* Hero — wide report editor below the headline */}
+      {/* Hero, wide report editor below the headline */}
       <section className="relative overflow-hidden pt-28 pb-12 sm:pt-32 sm:pb-16">
         <div aria-hidden className="pointer-events-none absolute inset-0" style={{ background: "linear-gradient(180deg, #f4f7fd, #ffffff 55%)" }} />
         <div className="relative mx-auto max-w-6xl px-5 sm:px-6">
@@ -45,7 +45,7 @@ export default function ReportingPage() {
         </div>
       </section>
 
-      {/* One audit-ready workspace — 3-col pillars */}
+      {/* One audit-ready workspace, 3-col pillars */}
       <section className="py-16 sm:py-24">
         <div className="mx-auto max-w-6xl px-5 sm:px-6">
           <div className="max-w-2xl">
@@ -104,7 +104,7 @@ export default function ReportingPage() {
         </div>
       </section>
 
-      {/* Keep up with change — numbered */}
+      {/* Keep up with change, numbered */}
       <section className="py-16 sm:py-24" style={{ background: "#f8fafc" }}>
         <div className="mx-auto grid max-w-6xl gap-12 px-5 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
           <Reveal>

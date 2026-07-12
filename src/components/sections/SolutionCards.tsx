@@ -15,7 +15,7 @@ function Screen({ children }: { children: React.ReactNode }) {
   );
 }
 
-/* 1. Data management — status table */
+/* 1. Data management, status table */
 function DataPreview() {
   const rows = [["Facilities energy", "Complete", C.green], ["Procurement spend", "In review", C.blue], ["Supplier data", "Missing 3", C.coral]];
   return (
@@ -36,7 +36,7 @@ function DataPreview() {
   );
 }
 
-/* 2. GHG accounting — scope donut */
+/* 2. GHG accounting, scope donut */
 function GhgPreview() {
   const segs = [[55, C.blue3], [25, C.blue2], [20, C.blue1]];
   let acc = 0;
@@ -64,7 +64,7 @@ function GhgPreview() {
   );
 }
 
-/* 3. Supplier assessment — supplier progress rows */
+/* 3. Supplier assessment, supplier progress rows */
 function SupplierPreview() {
   const rows = [["Acme Components", 82, C.green], ["Northgate Logistics", 54, C.blue], ["Vertex Materials", 28, C.coral]];
   return (
@@ -85,7 +85,7 @@ function SupplierPreview() {
   );
 }
 
-/* 4. Reporting automation — framework readiness */
+/* 4. Reporting automation, framework readiness */
 function ReportPreview() {
   const rows = [["CSRD / ESRS", 86, C.blue], ["SECR", 64, C.teal], ["ISSB", 48, C.blue]];
   return (
@@ -104,7 +104,7 @@ function ReportPreview() {
   );
 }
 
-/* 5. Advisory & compliance — readiness roadmap */
+/* 5. Advisory & compliance, readiness roadmap */
 function AdvisoryPreview() {
   const steps = [["Materiality assessment", "Done", C.green], ["Reduction planning", "In progress", C.blue], ["Assurance readiness", "Upcoming", C.muted]];
   return (

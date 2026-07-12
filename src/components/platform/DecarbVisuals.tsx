@@ -23,7 +23,7 @@ export function HeroFloatingCards() {
     <div ref={ref} className="relative overflow-hidden rounded-2xl" style={{ aspectRatio: "5 / 4", background: "linear-gradient(140deg,#1d3d22 0%,#2f6b32 40%,#4f9440 70%,#7cae55 100%)" }}>
       <div aria-hidden className="absolute inset-0" style={{ background: "radial-gradient(70% 60% at 25% 30%, rgba(255,255,255,0.16), transparent 60%)" }} />
 
-      {/* SBTi progress — derived from the roadmap slider */}
+      {/* SBTi progress, derived from the roadmap slider */}
       <motion.div className="absolute left-[6%] top-[10%] w-[46%] rounded-xl bg-white p-3 shadow-xl"
         initial={{ opacity: 0, y: 14 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.5, delay: 0.1 }}>
         <div className="text-[0.6rem] font-semibold" style={{ color: GK.ink }}>SBTi scope 1</div>
@@ -35,7 +35,7 @@ export function HeroFloatingCards() {
         </div>
       </motion.div>
 
-      {/* Roadmap — drag or use arrow keys */}
+      {/* Roadmap, drag or use arrow keys */}
       <motion.div className="absolute right-[5%] top-[16%] w-[42%] rounded-xl bg-white p-3 shadow-xl"
         initial={{ opacity: 0, y: 14 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.5, delay: 0.25 }}>
         <div className="flex items-baseline justify-between gap-1">

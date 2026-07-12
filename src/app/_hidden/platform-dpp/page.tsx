@@ -23,7 +23,7 @@ const FAQS: [string, string][] = [
 export default function DppPage() {
   return (
     <div className="bg-white" style={{ color: BODY }}>
-      {/* Hero — the passport is the argument */}
+      {/* Hero, the passport is the argument */}
       <section className="relative overflow-hidden pt-24 sm:pt-28">
         <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-[420px]" style={{ background: "linear-gradient(180deg,#f5faf7,#ffffff 74%)" }} />
         <div className="relative mx-auto max-w-6xl px-5 sm:px-6">
@@ -46,7 +46,7 @@ export default function DppPage() {
         </div>
       </section>
 
-      {/* Different readers — three-column contrast */}
+      {/* Different readers, three-column contrast */}
       <section className="py-16 sm:py-24" style={{ background: "#f8faf9" }}>
         <div className="mx-auto max-w-6xl px-5 sm:px-6">
           <Reveal><div className="max-w-2xl"><GH2>One record, three readers</GH2>

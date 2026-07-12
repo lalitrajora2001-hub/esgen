@@ -27,7 +27,7 @@ export type ContentPage = {
 };
 
 /* ---- Solutions (by use-case / team) ----
-   Reporting leads. Finance is hidden — its entry lives in HIDDEN_PAGES below. */
+   Reporting leads. Finance is hidden, its entry lives in HIDDEN_PAGES below. */
 const SOLUTIONS: ContentPage[] = [
   {
     slug: "reporting", collection: "solutions", navLabel: "Reporting",

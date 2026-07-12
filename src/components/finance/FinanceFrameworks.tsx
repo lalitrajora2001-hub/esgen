@@ -1,4 +1,4 @@
-/* Finance-relevant standards wall — white cards, monochrome black wordmarks.
+/* Finance-relevant standards wall, white cards, monochrome black wordmarks.
    Original vector wordmark renderings (acronym set in black), not pixel copies
    of trademarked artwork; drop official SVGs into /public/brand to swap 1:1. */
 

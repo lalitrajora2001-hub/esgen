@@ -1,30 +1,26 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
-import Link from "next/link";
-import { pagesIn, getPage } from "@/lib/content";
 import { INDUSTRY_DATA } from "@/lib/industries";
 import { Section, SectionHead } from "@/components/ui/Section";
 import { Reveal } from "@/components/ui/Reveal";
 import { Breadcrumb, CTASection } from "@/components/sections/blocks";
 import { Button, ArrowRight } from "@/components/ui/Button";
 import { FootprintBreakdown } from "@/components/industries/FootprintBreakdown";
+import { OutputMapper, PressureCards } from "@/components/industries/IndustryInteractives";
 
-export const dynamicParams = false;
-export function generateStaticParams() {
-  return pagesIn("industries").map((p) => ({ slug: p.slug }));
-}
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
-  const { slug } = await params;
-  const page = getPage("industries", slug);
-  if (!page) return {};
-  return { title: page.seoTitle, description: page.seoDescription, alternates: { canonical: `/industries/${slug}` }, openGraph: { title: `${page.seoTitle} | ESGen`, description: page.seoDescription } };
-}
+export const metadata: Metadata = {
+  title: "Manufacturing ESG Reporting Software",
+  description: "Carbon accounting for manufacturers: measure materials, sites, and logistics, then answer CBAM requests, product footprints, and disclosures from one inventory.",
+  alternates: { canonical: "/industries/manufacturing" },
+};
 
-export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
-  const page = getPage("industries", slug);
-  const data = INDUSTRY_DATA[slug];
-  if (!page || !data) notFound();
+const PRESSURES = [
+  { tag: "CBAM", title: "Your emissions become your customer's cost", desc: "From 2026, EU importers of covered goods surrender certificates priced on embedded emissions, and the UK has announced its own CBAM for 2027. If you sell steel, aluminium, cement or their products into those markets, your data sets your customer's bill." },
+  { tag: "Procurement", title: "Product footprints are now tender questions", desc: "Per-product carbon figures have moved from a nice-to-have into standard procurement questionnaires. The manufacturer who can answer with a defensible number keeps the shortlist spot." },
+  { tag: "Disclosure", title: "Your customers must report your emissions", desc: "CSRD and UK SRS require in-scope companies to disclose value-chain emissions. Their Scope 3 is your Scope 1 and 2, so the data request lands with you whether you are in scope or not." },
+];
+
+export default function ManufacturingPage() {
+  const data = INDUSTRY_DATA.manufacturing;
 
   return (
     <>
@@ -33,10 +29,10 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
         <div aria-hidden className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(900px 480px at 75% -10%, rgba(77,139,245,0.16), transparent 60%)" }} />
         <div className="grid-texture pointer-events-none absolute inset-0 opacity-60" aria-hidden />
         <div className="relative mx-auto max-w-6xl px-5 sm:px-6">
-          <Breadcrumb trail={[{ label: "Home", href: "/" }, { label: "Industries", href: "/industries/manufacturing" }, { label: page.navLabel }]} />
+          <Breadcrumb trail={[{ label: "Home", href: "/" }, { label: "Industries" }, { label: "Manufacturing" }]} />
           <div className="max-w-2xl">
-            <h1 className="text-balance text-4xl font-semibold leading-[1.05] sm:text-5xl">{data.h1}</h1>
-            <p className="mt-5 max-w-xl text-lg text-text-muted">{data.lead}</p>
+            <h1 className="text-balance text-4xl font-semibold leading-[1.05] sm:text-5xl">Carbon accounting for manufacturers. Ready for the audit, ready for the tender.</h1>
+            <p className="mt-5 max-w-xl text-lg text-text-muted">Most of a manufacturer&rsquo;s footprint is upstream, in the materials you buy, not on a meter you can read. ESGen measures the whole picture and turns it into the answers your customers now ask for.</p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button href="/demo" size="lg">Book a demo <ArrowRight /></Button>
               <Button href="/contact" variant="ghost" size="lg">Talk to our team</Button>
@@ -50,9 +46,21 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
         <Reveal><FootprintBreakdown title={data.footprintTitle} categories={data.categories} /></Reveal>
       </Section>
 
-      {/* Challenges */}
+      {/* Why now: three pressures */}
       <Section className="section-blend">
-        <SectionHead title="What makes this sector hard" />
+        <SectionHead title="Three pressures, arriving at once" intro="None of them asks whether you find carbon accounting interesting. All of them ask for the same underlying data." />
+        <div className="mt-12"><Reveal><PressureCards items={PRESSURES} /></Reveal></div>
+      </Section>
+
+      {/* One inventory, three answers */}
+      <Section>
+        <SectionHead title="Collect once, answer everyone" intro="Pick an output and watch which parts of the inventory feed it. The work is collecting the rows; the answers are then a mapping, not a new project." />
+        <div className="mt-12"><Reveal><OutputMapper /></Reveal></div>
+      </Section>
+
+      {/* Sector challenges */}
+      <Section className="section-blend">
+        <SectionHead title="What makes manufacturing hard" />
         <div className="mt-10 grid gap-5 lg:grid-cols-3">
           {data.challenges.map(([t, d], i) => (
             <Reveal key={t}>
@@ -66,7 +74,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
         </div>
       </Section>
 
-      {/* Features */}
+      {/* How ESGen fits */}
       <Section>
         <div className="grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
           <Reveal>
@@ -92,7 +100,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
       {/* FAQ */}
       <Section className="section-blend">
         <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr]">
-          <SectionHead title={`Questions from ${page.navLabel.toLowerCase()} teams`} />
+          <SectionHead title="Questions from manufacturing teams" />
           <div className="divide-y divide-border border-y border-border">
             {data.faqs.map(([q, a]) => (
               <details key={q} className="group py-4">
@@ -107,7 +115,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
         </div>
       </Section>
 
-      <CTASection title={`Bring your ${page.navLabel.toLowerCase()} footprint into one workspace`} intro="See how ESGen measures the whole picture and helps you act on the part that counts." />
+      <CTASection title="Bring your manufacturing footprint into one workspace" intro="See how ESGen measures materials, sites, and logistics, then answers CBAM, tenders, and disclosure from the same inventory." />
     </>
   );
 }

@@ -23,7 +23,7 @@ const FAQS: [string, string][] = [
 export default function CbamPage() {
   return (
     <div className="bg-white" style={{ color: BODY }}>
-      {/* Hero — split, calculator carries the weight */}
+      {/* Hero, split, calculator carries the weight */}
       <section className="relative overflow-hidden pt-24 sm:pt-28">
         <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-[440px]" style={{ background: "linear-gradient(180deg,#f5faf7,#ffffff 72%)" }} />
         <div className="relative mx-auto max-w-6xl px-5 sm:px-6">
@@ -46,7 +46,7 @@ export default function CbamPage() {
         </div>
       </section>
 
-      {/* Why the data is the hard part — dark band */}
+      {/* Why the data is the hard part, dark band */}
       <section className="py-16 sm:py-24">
         <div className="mx-auto max-w-6xl px-5 sm:px-6">
           <div className="overflow-hidden rounded-3xl bg-[#0d1411] p-8 sm:p-14">
@@ -61,7 +61,7 @@ export default function CbamPage() {
               <div className="space-y-3">
                 {[
                   ["Ask the installation, not the trader", "Embedded emissions are a property of where the good was made, so the request has to reach that far up the chain."],
-                  ["Default values carry a cost", "Where actual data is unavailable, defaults may apply — and they rarely flatter the importer."],
+                  ["Default values carry a cost", "Where actual data is unavailable, defaults may apply, and they rarely flatter the importer."],
                   ["Evidence the carbon already paid", "A price paid at origin can reduce what you surrender, but only if you can show it was paid."],
                 ].map(([t, d]) => (
                   <div key={t} className="rounded-xl bg-white/[0.04] p-4 ring-1 ring-white/10">

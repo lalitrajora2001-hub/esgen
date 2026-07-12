@@ -5,7 +5,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import type { Category } from "@/lib/industries";
 
 const ACCENT = "#4d8bf5";
-/* Blue ramp from brand accent to deep — the first (largest) category is
+/* Blue ramp from brand accent to deep, the first (largest) category is
    brightest, drawing the eye to where the footprint actually sits. */
 const RAMP = ["#8fbaff", "#4d8bf5", "#2f6fe0", "#2457b0", "#1b4288", "#132f61"];
 

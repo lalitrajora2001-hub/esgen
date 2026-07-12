@@ -37,7 +37,7 @@ export default function RegulationsPage() {
       <Section size="sm">
         <Reveal><RegulationExplorer regs={REGS} /></Reveal>
         <p className="mt-10 font-mono text-xs text-text-muted/60">
-          This overview is for general information only and is not legal advice. Requirements change — several of these have been amended recently — so verify the current position for your organisation.
+          This overview is for general information only and is not legal advice. Requirements change, several of these have been amended recently, so verify the current position for your organisation.
         </p>
       </Section>
 

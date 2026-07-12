@@ -20,7 +20,7 @@ export const INDUSTRY_DATA: Record<string, Industry> = {
     slug: "manufacturing",
     eyebrow: "Industries · Manufacturing",
     h1: "Where a manufacturer's footprint actually sits",
-    lead: "Most of it is upstream, in the materials you buy — not in the energy you can see on a meter. ESGen measures the whole picture and helps you act on the part that matters.",
+    lead: "Most of it is upstream, in the materials you buy, not in the energy you can see on a meter. ESGen measures the whole picture and helps you act on the part that matters.",
     footprintTitle: "A typical manufacturer's emissions",
     categories: [
       { k: "Purchased materials", pct: 52, scope: "Scope 3", driver: "Steel, aluminium, plastics and components carry embedded emissions from their own production, usually the single largest share of the footprint." },
@@ -56,7 +56,7 @@ export const INDUSTRY_DATA: Record<string, Industry> = {
     categories: [
       { k: "Attendee travel", pct: 58, scope: "Scope 3", driver: "How people get to the event, especially long-haul flights, is almost always the dominant share of an event's footprint." },
       { k: "Venue energy", pct: 15, scope: "Scope 2", driver: "Power and heating for the venue over the event's duration, attributed to the event rather than the building's year." },
-      { k: "Catering", pct: 12, scope: "Scope 3", driver: "Food and drink, where menu choices — particularly meat and dairy — drive most of the difference." },
+      { k: "Catering", pct: 12, scope: "Scope 3", driver: "Food and drink, where menu choices, particularly meat and dairy, drive most of the difference." },
       { k: "Freight & logistics", pct: 8, scope: "Scope 3", driver: "Moving stands, equipment, and materials to and from the site, often at short notice." },
       { k: "Accommodation", pct: 5, scope: "Scope 3", driver: "Hotel nights for attendees, staff, and contractors around the event dates." },
       { k: "Waste", pct: 2, scope: "Scope 3", driver: "What is left behind: single-use materials, signage, and catering waste." },
@@ -67,7 +67,7 @@ export const INDUSTRY_DATA: Record<string, Industry> = {
       ["Clients want evidence, fast", "Increasingly a footprint report is a condition of the contract, needed soon after the event closes rather than months later."],
     ],
     features: [
-      ["A repeatable event template", "Model each event the same way — venue, travel, catering, freight, waste — so the second one takes a fraction of the effort of the first."],
+      ["A repeatable event template", "Model each event the same way, venue, travel, catering, freight, waste, so the second one takes a fraction of the effort of the first."],
       ["Capture travel without chasing everyone", "Estimate attendee travel from registration and location data, then refine with surveys where the accuracy is worth it."],
       ["Report before the client asks twice", "Produce the footprint report and evidence pack quickly after the event, with assumptions stated plainly."],
     ],

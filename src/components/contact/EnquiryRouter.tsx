@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 const ACCENT = "#4d8bf5";
 
 /* Routes an enquiry to the right next step and contact. Uses only ESGen's
-   real published addresses — no invented phone numbers or offices. */
+   real published addresses, no invented phone numbers or offices. */
 type Route = { k: string; icon: string; blurb: string; to: string; cta: string; href: string };
 const ROUTES: Route[] = [
   { k: "I need to report to a framework", icon: "M4 5a2 2 0 0 1 2-2h9l5 5v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zM14 3v6h6", blurb: "Tell us which frameworks you are preparing for and how you are structured. We will scope the right setup and walk you through the platform.", to: "contactus@esgen.co.uk", cta: "Book a demo", href: "/demo" },

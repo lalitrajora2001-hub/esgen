@@ -22,7 +22,7 @@ const FAQS: [string, string][] = [
 export default function EcovadisPage() {
   return (
     <div className="bg-white" style={{ color: BODY }}>
-      {/* Hero — split with radar */}
+      {/* Hero, split with radar */}
       <section className="relative overflow-hidden pt-24 sm:pt-28">
         <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-[430px]" style={{ background: "linear-gradient(180deg,#f5faf7,#ffffff 73%)" }} />
         <div className="relative mx-auto max-w-6xl px-5 sm:px-6">
@@ -56,7 +56,7 @@ export default function EcovadisPage() {
         </div>
       </section>
 
-      {/* Where ESGen fits — honest scoping */}
+      {/* Where ESGen fits, honest scoping */}
       <section className="py-16 sm:py-24">
         <div className="mx-auto max-w-6xl px-5 sm:px-6">
           <Reveal><GH2>Where ESGen actually helps</GH2></Reveal>

@@ -7,7 +7,7 @@ import { GK } from "@/components/platform/CarbonVisuals";
 const INK = "#0f1720", MUTED = "#6b7280";
 
 /* ============================================================
-   PRODUCT PASSPORT — a scannable identity with tabbed sections.
+   PRODUCT PASSPORT, a scannable identity with tabbed sections.
    Everything shown is illustrative sample data.
    ============================================================ */
 type Tab = { k: string; icon: string; rows: [string, string][] };

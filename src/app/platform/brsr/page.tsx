@@ -17,10 +17,10 @@ const FACTS: [string, string][] = [
 ];
 
 const FAQS: [string, string][] = [
-  ["What is the BRSR?", "India's Business Responsibility and Sustainability Report — a structured ESG disclosure that listed companies file with their annual report under SEBI's listing regulations. It replaced the earlier, lighter Business Responsibility Report."],
+  ["What is the BRSR?", "India's Business Responsibility and Sustainability Report, a structured ESG disclosure that listed companies file with their annual report under SEBI's listing regulations. It replaced the earlier, lighter Business Responsibility Report."],
   ["Who has to file it?", "The top 1,000 listed entities by market capitalisation must file; other listed companies may adopt it voluntarily. If you are in an Indian group or supply chain, the request can also reach you from a customer who files."],
   ["What are the nine principles?", "The National Guidelines on Responsible Business Conduct set nine principles covering ethics, product sustainability, employee well-being, stakeholders, human rights, environment, policy advocacy, inclusive growth, and consumer value. Section C of the BRSR reports against each one."],
-  ["What is the difference between essential and leadership indicators?", "Essential indicators are mandatory for every filer. Leadership indicators are voluntary — for companies that want to demonstrate more than the minimum and can evidence it."],
+  ["What is the difference between essential and leadership indicators?", "Essential indicators are mandatory for every filer. Leadership indicators are voluntary, for companies that want to demonstrate more than the minimum and can evidence it."],
   ["What is BRSR Core?", "A focused subset of key performance indicators that SEBI subjects to assurance or assessment, phased in from the largest listed companies. SEBI has adjusted the timelines and requirements more than once, so check the current position for your filing year."],
   ["How does ESGen help?", "The heaviest data in a BRSR sits in Principle 6: energy, emissions, water, effluents, and waste. That is exactly the inventory ESGen builds, with the source and method retained against each figure. Responsibility for the filing remains with the company."],
 ];
@@ -28,7 +28,7 @@ const FAQS: [string, string][] = [
 export default function BrsrPage() {
   return (
     <div className="bg-white" style={{ color: BODY }}>
-      {/* Hero — board leads */}
+      {/* Hero, board leads */}
       <section className="relative overflow-hidden pt-24 sm:pt-28">
         <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-[440px]" style={{ background: "linear-gradient(180deg,#f5faf7,#ffffff 72%)" }} />
         <div className="relative mx-auto max-w-6xl px-5 sm:px-6">
@@ -39,7 +39,7 @@ export default function BrsrPage() {
               Nine principles. One report. India&rsquo;s BRSR.
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed" style={{ color: BODY }}>
-              SEBI&rsquo;s Business Responsibility and Sustainability Report structures ESG disclosure around the NGRBC principles. ESGen organises the data behind each one, with the environment principle — the heaviest — fed straight from your inventory.
+              SEBI&rsquo;s Business Responsibility and Sustainability Report structures ESG disclosure around the NGRBC principles. ESGen organises the data behind each one, with the environment principle, the heaviest, fed straight from your inventory.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <GPrimaryBtn href="/demo">Request a demo</GPrimaryBtn>
@@ -65,7 +65,7 @@ export default function BrsrPage() {
             <div className="max-w-2xl">
               <GH2>Three sections, unevenly heavy</GH2>
               <p className="mt-5 text-lg leading-relaxed" style={{ color: BODY }}>
-                Sections A and B are mostly facts and policies. Section C is where the year&rsquo;s work concentrates — indicator after indicator, principle by principle.
+                Sections A and B are mostly facts and policies. Section C is where the year&rsquo;s work concentrates, indicator after indicator, principle by principle.
               </p>
             </div>
           </Reveal>
@@ -82,7 +82,7 @@ export default function BrsrPage() {
                 <span className="text-[0.68rem] font-bold uppercase tracking-[0.14em]" style={{ color: "#4ade80" }}>Principle 6</span>
                 <h2 className="mt-4 font-display text-3xl font-bold leading-tight text-white sm:text-4xl">The environment principle is an inventory in disguise</h2>
                 <p className="mt-5 max-w-md text-lg leading-relaxed text-white/65">
-                  Energy consumed, Scope 1 and 2 emissions, water withdrawn and discharged, waste generated and recovered — Principle 6 asks for the same structured data a carbon inventory holds. Build it once and the filing draws from it every year.
+                  Energy consumed, Scope 1 and 2 emissions, water withdrawn and discharged, waste generated and recovered, Principle 6 asks for the same structured data a carbon inventory holds. Build it once and the filing draws from it every year.
                 </p>
               </div>
               <div className="space-y-3">

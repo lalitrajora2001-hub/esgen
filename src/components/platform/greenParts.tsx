@@ -6,7 +6,7 @@ export const BODY = "#47505c";
 export const GREEN = "#16a34a";
 export const GREENDK = "#15803d";
 
-/* Life-cycle-assessment category accent — deep forest, never blue or purple. */
+/* Life-cycle-assessment category accent, deep forest, never blue or purple. */
 export const ACCENT = "#0b3d2c";
 export const ACCENT_DK = "#062a1e";
 export const TINT = "#eaf6ef";

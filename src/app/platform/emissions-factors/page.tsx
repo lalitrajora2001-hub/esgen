@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 export default function EmissionsFactorsPage() {
   return (
     <div className="bg-white" style={{ color: BODY }}>
-      {/* Hero — centred, with the console beneath */}
+      {/* Hero, centred, with the console beneath */}
       <section className="relative overflow-hidden pt-24 sm:pt-28">
         <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-[520px]" style={{ background: "radial-gradient(120% 100% at 50% 0%, #eef7f1 0%, #f8fbf9 42%, #ffffff 78%)" }} />
         <div className="relative mx-auto max-w-6xl px-5 sm:px-6">

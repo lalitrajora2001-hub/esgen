@@ -52,7 +52,7 @@ export function EligibilityChecker() {
   const verdict = exempt
     ? { t: "In scope, but likely a low energy user", d: "Organisations consuming 40,000 kWh or less over the reporting period may state that, rather than making the full disclosures.", tone: "amber" as const }
     : inScope
-      ? { t: quoted ? "In scope — quoted company" : "In scope — meets the size test", d: quoted ? "Quoted companies report regardless of size, including global energy use and emissions." : `You meet ${met} of the three criteria. Two or more brings a large unquoted company or LLP into scope.`, tone: "green" as const }
+      ? { t: quoted ? "In scope, quoted company" : "In scope, meets the size test", d: quoted ? "Quoted companies report regardless of size, including global energy use and emissions." : `You meet ${met} of the three criteria. Two or more brings a large unquoted company or LLP into scope.`, tone: "green" as const }
       : { t: "Likely out of scope", d: `You meet ${met} of the three criteria. A large unquoted company or LLP needs at least two.`, tone: "grey" as const };
 
   const TONE = {
@@ -121,7 +121,7 @@ export function EligibilityChecker() {
             <h4 className="mt-3 font-display text-[0.95rem] font-bold leading-tight" style={{ color: INK }}>{verdict.t}</h4>
             <p className="mt-2 text-[0.76rem] leading-relaxed" style={{ color: MUTED }}>{verdict.d}</p>
           </motion.div>
-          <p className="mt-3 text-[0.6rem] leading-relaxed" style={{ color: MUTED }}>Indicative only, based on the published size criteria. It is not legal advice — confirm your position with your advisers.</p>
+          <p className="mt-3 text-[0.6rem] leading-relaxed" style={{ color: MUTED }}>Indicative only, based on the published size criteria. It is not legal advice, confirm your position with your advisers.</p>
         </div>
       </div>
     </div>
@@ -129,7 +129,7 @@ export function EligibilityChecker() {
 }
 
 /* ============================================================
-   REPORT COMPOSER — toggle the required disclosures and watch
+   REPORT COMPOSER, toggle the required disclosures and watch
    the report page assemble.
    ============================================================ */
 const PARTS: { k: string; label: string; required: boolean; line: string }[] = [

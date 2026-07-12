@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     title: "Next-Generation ESG Reporting Built for the Future",
     description: site.description,
     url: site.url,
-    images: [{ url: "/brand/og-image.png", width: 1200, height: 630, alt: "ESGen — next-generation ESG reporting" }],
+    images: [{ url: "/brand/og-image.png", width: 1200, height: 630, alt: "ESGen, next-generation ESG reporting" }],
   },
   twitter: {
     card: "summary_large_image",
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
   },
 };
 
-/* Organization structured data — what Google uses to associate a brand logo
+/* Organization structured data, what Google uses to associate a brand logo
    with the site. Verifiable facts only: no invented address or socials. */
 const orgJsonLd = {
   "@context": "https://schema.org",

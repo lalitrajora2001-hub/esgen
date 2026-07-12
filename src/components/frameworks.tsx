@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------------
-   Standards & frameworks "logo wall" — white cards on a light panel,
+   Standards & frameworks "logo wall", white cards on a light panel,
    matching the reference composition. Each tile is a clean, brand-
    coloured logo lockup (official acronym + brand colour + a simple
    geometric mark), representing standards ESGen's platform supports.

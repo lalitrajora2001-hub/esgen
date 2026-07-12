@@ -13,7 +13,7 @@ const C = {
   coral: "#fb7351", green: "#16a34a", teal: "#0d9488",
 };
 
-/** The real ESGen "E" symbol, in white — matching the website logo. */
+/** The real ESGen "E" symbol, in white, matching the website logo. */
 function ToolMark() {
   return (
     <span
@@ -97,7 +97,7 @@ export function InsightsDashboard() {
     { t: "Scope 2", d: "Purchased energy", spark: [8, 6, 5, 5, 4, 3], delta: "↓ 12%", bad: false, c: C.blue2 },
     { t: "Scope 3", d: "Value chain", spark: [3, 4, 5, 6, 8, 11], delta: "↑ 22%", bad: true, c: C.blue },
   ];
-  // [S1, S2, S3] in px — kept within the h-24 (96px) plot so bars never overlap.
+  // [S1, S2, S3] in px, kept within the h-24 (96px) plot so bars never overlap.
   const stacks = [[12, 20, 50], [12, 19, 47], [11, 17, 42], [10, 15, 36], [9, 13, 31]];
   return (
     <AppShell title="Corporate carbon footprint">

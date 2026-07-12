@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 const ACCENT = "#4d8bf5";
 
 /* ============================================================
-   GLOSSARY EXPLORER — search + A–Z rail + category filter.
+   GLOSSARY EXPLORER, search + A–Z rail + category filter.
    ============================================================ */
 export type Term = { term: string; def: string; cat: "Carbon" | "Frameworks" | "Data" };
 
@@ -91,7 +91,7 @@ export function GlossaryExplorer({ terms }: { terms: Term[] }) {
 }
 
 /* ============================================================
-   REGULATION EXPLORER — filter by jurisdiction; cards link out.
+   REGULATION EXPLORER, filter by jurisdiction; cards link out.
    ============================================================ */
 export type Reg = { name: string; juris: "UK" | "EU" | "Global"; what: string; who: string; href: string };
 

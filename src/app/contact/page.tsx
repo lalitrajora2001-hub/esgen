@@ -28,7 +28,7 @@ export default function ContactPage() {
           <Breadcrumb trail={[{ label: "Home", href: "/" }, { label: "Contact" }]} />
           <div className="max-w-2xl">
             <h1 className="text-balance text-4xl font-semibold leading-[1.05] sm:text-5xl">Let's find the right way to help</h1>
-            <p className="mt-5 max-w-xl text-lg text-text-muted">Pick what brings you here and we will point you to the right next step and the right person — no phone tree, no gatekeeping.</p>
+            <p className="mt-5 max-w-xl text-lg text-text-muted">Pick what brings you here and we will point you to the right next step and the right person, no phone tree, no gatekeeping.</p>
           </div>
         </div>
       </section>

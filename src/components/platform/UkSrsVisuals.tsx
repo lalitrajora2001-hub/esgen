@@ -8,7 +8,7 @@ import { GK } from "@/components/platform/CarbonVisuals";
 const INK = "#0f1720", MUTED = "#6b7280";
 
 /* ============================================================
-   1. DISCLOSURE MAPPER — click an IFRS requirement on the left;
+   1. DISCLOSURE MAPPER, click an IFRS requirement on the left;
    a connector draws across to the evidence ESGen holds for it.
    ============================================================ */
 type Req = { id: string; std: "S1" | "S2"; title: string; source: string; detail: string };
@@ -90,7 +90,7 @@ export function DisclosureMapper() {
 }
 
 /* ============================================================
-   2. SCENARIO EXPOSURE — pick a warming pathway; the modelled
+   2. SCENARIO EXPOSURE, pick a warming pathway; the modelled
    physical/transition split re-plots.
    ============================================================ */
 const SCEN: { k: string; label: string; phys: number[]; trans: number[] }[] = [
@@ -101,7 +101,7 @@ const SCEN: { k: string; label: string; phys: number[]; trans: number[] }[] = [
 const DECADES = ["2030", "2040", "2050", "2060", "2070"];
 
 /* Pixels per index unit. Tallest stack (4.0°C in 2070) is 88+17=105 units,
-   which lands at 158px inside the 176px plot — no clipping. */
+   which lands at 158px inside the 176px plot, no clipping. */
 const UNIT = 1.5;
 
 export function ScenarioExposure() {

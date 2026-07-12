@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 const FAQS: [string, string][] = [
   ["What is the CSRD?", "The Corporate Sustainability Reporting Directive is EU law requiring in-scope companies to report sustainability information using the European Sustainability Reporting Standards (ESRS), with the information subject to assurance."],
   ["What is double materiality?", "Two tests applied to every sustainability topic. Impact materiality asks how your business affects people and the environment. Financial materiality asks how the topic affects your own financial position, performance, and cash flows. A topic is material if it passes either test."],
-  ["Which standards would we report against?", "ESRS 2, the general disclosures, applies to every undertaking in scope. The topical standards — E1 to E5, S1 to S4, and G1 — apply where your materiality assessment finds the topic material."],
+  ["Which standards would we report against?", "ESRS 2, the general disclosures, applies to every undertaking in scope. The topical standards, E1 to E5, S1 to S4, and G1, apply where your materiality assessment finds the topic material."],
   ["Does the CSRD apply to UK companies?", "It can. Scope depends on factors such as EU turnover, whether you have a large EU subsidiary, and securities listed on an EU regulated market. The scope and timing have also been subject to change through the EU's Omnibus proposals, so you should confirm your position rather than assume it."],
   ["What does assurance mean here?", "The sustainability statement is subject to an assurance engagement. In practice that means an assurance provider will want to see the source data, the method, and the trail behind each figure, not just the final number."],
   ["How does ESGen help?", "ESGen structures the materiality assessment, holds the underlying data against each disclosure, and retains the calculation and its source. That produces the evidence base your assurance provider will ask for. Responsibility for the statement remains with the company."],
@@ -22,7 +22,7 @@ const FAQS: [string, string][] = [
 export default function CsrdPage() {
   return (
     <div className="bg-white" style={{ color: BODY }}>
-      {/* Hero — matrix leads, text supports */}
+      {/* Hero, matrix leads, text supports */}
       <section className="relative overflow-hidden pt-24 sm:pt-28">
         <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-[420px]" style={{ background: "linear-gradient(180deg,#f5faf7,#ffffff 75%)" }} />
         <div className="relative mx-auto max-w-6xl px-5 sm:px-6">
@@ -45,7 +45,7 @@ export default function CsrdPage() {
         </div>
       </section>
 
-      {/* Two tests explained — asymmetric split */}
+      {/* Two tests explained, asymmetric split */}
       <section className="py-16 sm:py-24" style={{ background: "#f8faf9" }}>
         <div className="mx-auto max-w-6xl px-5 sm:px-6">
           <Reveal><GH2>One topic, two questions</GH2></Reveal>
@@ -84,7 +84,7 @@ export default function CsrdPage() {
       <section className="py-16 sm:py-24" style={{ background: "#f8faf9" }}>
         <div className="mx-auto max-w-6xl px-5 sm:px-6">
           <Reveal><div className="max-w-2xl"><GH2>Built for the assurance conversation</GH2>
-            <p className="mt-5 text-lg leading-relaxed" style={{ color: BODY }}>The sustainability statement is assured. Your assurance provider will ask where each figure came from — so ESGen keeps the answer attached to it.</p></div></Reveal>
+            <p className="mt-5 text-lg leading-relaxed" style={{ color: BODY }}>The sustainability statement is assured. Your assurance provider will ask where each figure came from, so ESGen keeps the answer attached to it.</p></div></Reveal>
           <div className="mt-12 grid gap-px overflow-hidden rounded-2xl border border-[#e6ece7] bg-[#e6ece7] sm:grid-cols-3">
             {[
               ["The assessment itself", "How topics were scored, who was consulted, and why each conclusion was reached."],

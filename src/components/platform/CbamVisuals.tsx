@@ -125,7 +125,7 @@ export function CbamCostModel() {
 }
 
 /* ============================================================
-   IMPORT FLOW — a small, continuously animated pipeline.
+   IMPORT FLOW, a small, continuously animated pipeline.
    ============================================================ */
 const STEPS: [string, string][] = [
   ["Supplier data", "Installation-level embedded emissions collected from the producer."],

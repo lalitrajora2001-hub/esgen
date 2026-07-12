@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { Button, ArrowRight } from "@/components/ui/Button";
 
 /**
- * Interactive CTA panel — a neutral dark card with a soft white spotlight that
+ * Interactive CTA panel, a neutral dark card with a soft white spotlight that
  * follows the cursor, a slow ambient sheen, and a fine grid texture. No blue.
  */
 export function CtaPanel({

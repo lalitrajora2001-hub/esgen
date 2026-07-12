@@ -50,13 +50,13 @@ export function ServiceCards() {
 export function IndustryCards() {
   return (
     <div className="grid gap-5 sm:grid-cols-2">
-      <FeatureCard href="/industries/manufacturing" title="Manufacturing" cta="For manufacturers" desc="Energy, process emissions, materials, logistics, and supplier data — mapped to Scope 1, 2, and 3 for industrial operations." icon={ManufacturingIcon} />
+      <FeatureCard href="/industries/manufacturing" title="Manufacturing" cta="For manufacturers" desc="Energy, process emissions, materials, logistics, and supplier data, mapped to Scope 1, 2, and 3 for industrial operations." icon={ManufacturingIcon} />
       <FeatureCard href="/industries/events" title="Events" cta="For event organisers" desc="Venue energy, travel, catering, freight, and waste captured across a whole event to build a credible footprint." icon={EventsIcon} />
     </div>
   );
 }
 
-/* --- Why ESGen — six clean white symbols --- */
+/* --- Why ESGen, six clean white symbols --- */
 const WHY: { t: string; d: string; icon: React.ReactNode }[] = [
   { t: "Traceable data", d: "Every figure links back to its source, method, and owner.", icon: <path d="M7 7h4a4 4 0 0 1 0 8H9M17 17h-4a4 4 0 0 1 0-8h2" /> },
   { t: "Guided workflows", d: "A clear, repeatable path from data collection to reporting.", icon: <path d="M5 6h6M5 12h14M5 18h9M17 4l3 3-3 3" /> },

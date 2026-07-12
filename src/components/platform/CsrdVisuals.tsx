@@ -101,7 +101,7 @@ export function MaterialityMatrix() {
               ))}
             </dl>
             <p className="mt-3 border-t border-[#e2e8e4] pt-2.5 text-[0.7rem] font-semibold" style={{ color: material(t) ? GK.greenDk : MUTED }}>
-              {material(t) ? "Material — disclose under this standard" : "Below threshold — explain why it is not material"}
+              {material(t) ? "Material, disclose under this standard" : "Below threshold, explain why it is not material"}
             </p>
           </motion.div>
           <p className="mt-3 text-[0.62rem] leading-relaxed" style={{ color: MUTED }}>A topic is material if it passes <em>either</em> test. Positions shown are illustrative; your own assessment sets them.</p>
@@ -112,7 +112,7 @@ export function MaterialityMatrix() {
 }
 
 /* ============================================================
-   ESRS COVERAGE — mark topics material and watch the reporting
+   ESRS COVERAGE, mark topics material and watch the reporting
    set assemble. ESRS 2 is always required.
    ============================================================ */
 const ESRS: [string, string][] = [

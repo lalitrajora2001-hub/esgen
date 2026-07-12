@@ -12,7 +12,7 @@ const TINT = "#eaf6ef";
 const ROW_H = 46;
 
 /* ============================================================
-   1. FACTOR CONSOLE — a working search surface.
+   1. FACTOR CONSOLE, a working search surface.
    Type in the box, filter by sector, click a row to inspect
    its provenance. Nothing is faked.
    ============================================================ */
@@ -150,7 +150,7 @@ export function FactorConsole() {
 }
 
 /* ============================================================
-   2. PRECISION LADDER — pick a factor type; the axis marker
+   2. PRECISION LADDER, pick a factor type; the axis marker
    slides to it and the card takes the dark treatment.
    ============================================================ */
 const LADDER: { n: string; t: string; d: string; q: number }[] = [
@@ -203,7 +203,7 @@ export function PrecisionLadder() {
 }
 
 /* ============================================================
-   3. PROVENANCE TRAIL — click a step to walk the audit trail.
+   3. PROVENANCE TRAIL, click a step to walk the audit trail.
    ============================================================ */
 const TRAIL: [string, string, string][] = [
   ["Activity data", "482,610 kWh recorded", "Meter readings imported for the reporting year."],
@@ -247,7 +247,7 @@ export function ProvenanceTrail() {
 }
 
 /* ============================================================
-   4. CUSTOM FACTORS — without / with
+   4. CUSTOM FACTORS, without / with
    ============================================================ */
 export function CustomFactorCompare() {
   const { ref, inView } = useReveal();
@@ -286,7 +286,7 @@ export function CustomFactorCompare() {
 }
 
 /* ============================================================
-   5. NETWORK LOOP — drag the globe to spin it. Hover a step to
+   5. NETWORK LOOP, drag the globe to spin it. Hover a step to
    light it up. No radial text, so nothing can collide.
    ============================================================ */
 const LOOP = ["More organisations measuring", "More activity and supplier data", "Tighter, better-evidenced factors", "Sharper decarbonisation decisions", "A stronger case for customers"];

@@ -7,7 +7,7 @@ import { GK } from "@/components/platform/CarbonVisuals";
 const INK = "#0f1720", MUTED = "#6b7280";
 
 /* ============================================================
-   PLOT TRACEABILITY — pick a commodity, trace each consignment
+   PLOT TRACEABILITY, pick a commodity, trace each consignment
    back to the geolocated plots it came from.
    Coordinates and plots are illustrative.
    ============================================================ */

@@ -7,7 +7,7 @@ import { TierSelector, PracticeModel } from "@/components/partner/PartnerVisuals
 
 export const metadata: Metadata = {
   title: "Partner Program",
-  description: "Build a sustainability practice on ESGen. Refer, deliver, or white-label — the program grows with you.",
+  description: "Build a sustainability practice on ESGen. Refer, deliver, or white-label, the program grows with you.",
 };
 
 const FEATURES: [string, string][] = [
@@ -53,7 +53,7 @@ export default function PartnerProgramPage() {
 
       {/* Tier selector */}
       <Section size="sm">
-        <SectionHead title="Three tiers, each building on the last" intro="Start by referring, grow into delivering, and — when you are ready — run your practice on ESGen under your own brand." />
+        <SectionHead title="Three tiers, each building on the last" intro="Start by referring, grow into delivering, and, when you are ready, run your practice on ESGen under your own brand." />
         <div className="mt-10"><Reveal><TierSelector /></Reveal></div>
       </Section>
 

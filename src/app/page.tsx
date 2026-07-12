@@ -66,7 +66,7 @@ export default function Home() {
         <div className="mt-12"><IndustryCards /></div>
       </Section>
 
-      {/* 8. How ESGen works — process flow */}
+      {/* 8. How ESGen works, process flow */}
       <Section className="section-blend">
         <SectionHead title="How ESGen works" intro="A clear path from first assessment through to audit-ready assurance." center />
         <div className="mt-16"><ProcessFlow /></div>

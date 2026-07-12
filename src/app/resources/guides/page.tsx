@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 const GUIDES: { title: string; href: string; desc: string; mins: string }[] = [
-  { title: "Getting started with carbon accounting", href: "/resources/carbon-accounting-basics", desc: "Scopes, activity data, factors, and tCO₂e — the groundwork.", mins: "Foundations" },
+  { title: "Getting started with carbon accounting", href: "/resources/carbon-accounting-basics", desc: "Scopes, activity data, factors, and tCO₂e, the groundwork.", mins: "Foundations" },
   { title: "Improving Scope 3 with supplier data", href: "/platform/suppliers-engagement", desc: "How to collect primary data from the suppliers that matter most.", mins: "Scope 3" },
   { title: "Understanding double materiality", href: "/platform/csrd", desc: "Impact and financial materiality, and how a topic becomes reportable.", mins: "CSRD" },
   { title: "Preparing for CSRD and ESRS", href: "/platform/csrd", desc: "Datapoint mapping, evidence, and the assurance conversation.", mins: "CSRD" },
@@ -28,7 +28,7 @@ export default function GuidesPage() {
           <Breadcrumb trail={[{ label: "Home", href: "/" }, { label: "Resources", href: "/resources" }, { label: "Guides" }]} />
           <div className="max-w-2xl">
             <h1 className="text-balance text-4xl font-semibold leading-[1.05] sm:text-5xl">Practical walkthroughs for the slow parts</h1>
-            <p className="mt-5 max-w-xl text-lg text-text-muted">Step-by-step guides to the tasks that actually take time — the ones where a clear method saves days.</p>
+            <p className="mt-5 max-w-xl text-lg text-text-muted">Step-by-step guides to the tasks that actually take time, the ones where a clear method saves days.</p>
           </div>
         </div>
       </section>

@@ -7,7 +7,7 @@ import { GK } from "@/components/platform/CarbonVisuals";
 const INK = "#0f1720", MUTED = "#6b7280";
 
 /* ============================================================
-   PRINCIPLE BOARD — the nine NGRBC principles that structure
+   PRINCIPLE BOARD, the nine NGRBC principles that structure
    Section C of the BRSR, as a 3×3 board. Select one to see what
    it covers and the kind of disclosures it asks for.
    ============================================================ */
@@ -25,7 +25,7 @@ const PRINCIPLES: Principle[] = [
 ];
 
 export function PrincipleBoard() {
-  const [sel, setSel] = useState(5); // P6 — where ESGen does the heavy lifting
+  const [sel, setSel] = useState(5); // P6, where ESGen does the heavy lifting
   const p = PRINCIPLES[sel];
 
   return (
@@ -73,7 +73,7 @@ export function PrincipleBoard() {
             {p.dataHeavy && (
               <div className="mt-4 flex items-start gap-2 rounded-xl bg-[#eaf6ef] p-3">
                 <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: GK.green }} />
-                <p className="text-[0.72rem] leading-relaxed" style={{ color: "#14392a" }}>This is the data-heavy principle — the energy, emissions, water and waste figures here come straight out of the inventory ESGen builds.</p>
+                <p className="text-[0.72rem] leading-relaxed" style={{ color: "#14392a" }}>This is the data-heavy principle, the energy, emissions, water and waste figures here come straight out of the inventory ESGen builds.</p>
               </div>
             )}
           </motion.div>
@@ -85,13 +85,13 @@ export function PrincipleBoard() {
 }
 
 /* ============================================================
-   REPORT ANATOMY — Sections A, B and C as a document outline.
+   REPORT ANATOMY, Sections A, B and C as a document outline.
    ============================================================ */
 type SectionDef = { k: string; title: string; blurb: string; items: string[]; weight: number };
 const SECTIONS: SectionDef[] = [
-  { k: "A", title: "General disclosures", weight: 20, blurb: "Facts about the entity itself — mostly stable year to year.", items: ["Company details, listings and locations", "Products, services and markets", "Employees, workers and turnover", "Holding and subsidiary structure", "CSR details and transparency channels"] },
+  { k: "A", title: "General disclosures", weight: 20, blurb: "Facts about the entity itself, mostly stable year to year.", items: ["Company details, listings and locations", "Products, services and markets", "Employees, workers and turnover", "Holding and subsidiary structure", "CSR details and transparency channels"] },
   { k: "B", title: "Management & process", weight: 20, blurb: "Whether policies exist for each principle, and who owns them.", items: ["Policy coverage across the nine principles", "Board and committee oversight", "Review, certification and escalation"] },
-  { k: "C", title: "Principle-wise performance", weight: 60, blurb: "The bulk of the report: indicators for each of the nine principles.", items: ["Essential indicators — mandatory for all filers", "Leadership indicators — voluntary, for those who can evidence more", "P6 environment data usually takes the most collection effort"] },
+  { k: "C", title: "Principle-wise performance", weight: 60, blurb: "The bulk of the report: indicators for each of the nine principles.", items: ["Essential indicators, mandatory for all filers", "Leadership indicators, voluntary, for those who can evidence more", "P6 environment data usually takes the most collection effort"] },
 ];
 
 export function ReportAnatomy() {

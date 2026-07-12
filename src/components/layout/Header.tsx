@@ -55,7 +55,7 @@ export function Header() {
             <LogoMorph className="h-6" />
           </Link>
 
-          {/* Desktop nav — centered */}
+          {/* Desktop nav, centered */}
           <nav className="hidden flex-1 items-center justify-center gap-1 lg:flex" aria-label="Primary">
             {mainNav.map((entry) => {
               if (!hasItems(entry) && !hasGroups(entry)) {
@@ -162,7 +162,7 @@ export function Header() {
             <span className="hidden h-6 w-px bg-border lg:block" aria-hidden="true" />
             <Link href="/login" className="hidden text-sm font-medium text-text-muted transition-colors hover:text-white lg:block">Sign in</Link>
 
-            {/* Book a demo — bold, chunky */}
+            {/* Book a demo, bold, chunky */}
             <Link
               href="/demo"
               className="hidden items-center gap-2 rounded-xl bg-accent px-5 py-2.5 text-sm font-bold text-white shadow-[0_12px_30px_-12px_rgba(77,139,245,0.9)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-accent-2 hover:shadow-[0_16px_36px_-12px_rgba(77,139,245,1)] sm:inline-flex"

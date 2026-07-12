@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 
-/* Horizontal four-step process, connected by an animated line — the steps
+/* Horizontal four-step process, connected by an animated line, the steps
    reveal in sequence as the section scrolls into view. */
 
 const STEPS: { n: string; t: string; d: string; icon: React.ReactNode }[] = [

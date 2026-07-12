@@ -7,7 +7,7 @@ import { GK } from "@/components/platform/CarbonVisuals";
 const INK = "#0f1720", MUTED = "#6b7280";
 
 /* ============================================================
-   SCORECARD RADAR — four assessment themes. Drag a theme's score
+   SCORECARD RADAR, four assessment themes. Drag a theme's score
    and watch the shape and the weighted total respond.
    Weights and scores here are illustrative: EcoVadis sets the real
    weighting by sector, size, and country.
@@ -102,7 +102,7 @@ export function ScorecardRadar() {
 }
 
 /* ============================================================
-   EVIDENCE LADDER — what actually moves a score.
+   EVIDENCE LADDER, what actually moves a score.
    ============================================================ */
 const RUNGS: [string, string][] = [
   ["Policies", "A documented commitment, endorsed at the right level, covering the issue in question."],
