@@ -5,13 +5,13 @@ import { ProductTabs } from "@/components/sections/ProductTabs";
 import { SolutionCards } from "@/components/sections/SolutionCards";
 import { ServiceCards, IndustryCards } from "@/components/sections/HomeSections";
 import { ProcessFlow } from "@/components/sections/ProcessFlow";
-import { HomeHero } from "@/components/sections/HomeHero";
+import { SplineHero } from "@/components/sections/SplineHero";
 
 export default function Home() {
   return (
     <>
       {/* 1. Full-viewport hero */}
-      <HomeHero />
+      <SplineHero />
 
       {/* 2. What it is, the platform at a glance */}
       <Section>
