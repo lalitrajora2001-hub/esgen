@@ -12,9 +12,9 @@ export function HomeHero() {
         loop
         playsInline
         preload="auto"
-        style={{ filter: "saturate(1.1) contrast(1.03)" }}
+        style={{ filter: "saturate(1.15) contrast(1.04)" }}
       >
-        <source src="/videos/sunset.mp4" type="video/mp4" />
+        <source src="/videos/forest.mp4" type="video/mp4" />
       </video>
 
       {/* colour-preserving scrims: dark top-left for legibility, a soft vignette, and a blend into the page */}
@@ -24,12 +24,8 @@ export function HomeHero() {
 
       <div className="relative mx-auto w-full max-w-6xl px-5 pb-24 pt-32 sm:px-6 sm:pt-40">
         <div className="max-w-2xl" style={{ textShadow: "0 1px 30px rgba(2,4,9,0.82), 0 1px 5px rgba(2,4,9,0.7)" }}>
-          <p className="font-mono text-[0.72rem] uppercase tracking-[0.22em]" style={{ color: "#ffd9a8" }}>ESG &amp; carbon intelligence</p>
-          <h1 className="mt-5 text-balance font-display text-5xl font-semibold leading-[1.02] text-white sm:text-6xl lg:text-7xl">
-            Turn ESG mandates into your{" "}
-            <span style={{ backgroundImage: "linear-gradient(92deg, #ffe3b0 0%, #ffcf9e 45%, #ffb3c9 100%)", WebkitBackgroundClip: "text", backgroundClip: "text", color: "transparent" }}>
-              competitive advantage.
-            </span>
+          <h1 className="text-balance font-display text-5xl font-semibold leading-[1.02] text-white sm:text-6xl lg:text-7xl">
+            Turn ESG mandates into your competitive advantage.
           </h1>
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/85">
             ESGen evaluates your operational footprint and maps a precise, actionable pathway to meet industry-specific ESG standards, so reporting becomes a foundation for growth rather than an administrative burden.
