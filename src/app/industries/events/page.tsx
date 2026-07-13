@@ -34,23 +34,25 @@ export default function EventsPage() {
   return (
     <div className="bg-white" style={{ color: INK }}>
       {/* Full-viewport grayscale hero; the page content starts on scroll */}
-      <section className="relative flex min-h-[100svh] items-end overflow-hidden">
+      <section className="relative flex min-h-[100svh] items-start overflow-hidden">
         <img src="/images/events-festival.jpg" alt="Festival crowd under falling confetti and stage lights"
           className="absolute inset-0 h-full w-full object-cover" style={{ filter: "grayscale(1) contrast(1.05)" }} />
-        <div aria-hidden className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(11,13,17,0.35) 0%, rgba(11,13,17,0.1) 40%, rgba(11,13,17,0.82) 100%)" }} />
+        <div aria-hidden className="absolute inset-0" style={{ background: "linear-gradient(to bottom right, rgba(11,13,17,0.88) 0%, rgba(11,13,17,0.45) 40%, rgba(11,13,17,0.12) 76%, transparent 100%)" }} />
+        <div aria-hidden className="absolute inset-x-0 bottom-0 h-40" style={{ background: "linear-gradient(180deg, transparent, rgba(11,13,17,0.6))" }} />
         <div aria-hidden className="absolute bottom-6 left-1/2 z-10 -translate-x-1/2">
           <span className="flex flex-col items-center gap-1.5 text-[0.6rem] font-bold uppercase tracking-[0.2em] text-white/60">
             Scroll
             <svg viewBox="0 0 24 24" className="h-4 w-4 motion-safe:animate-bounce" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6" /></svg>
           </span>
         </div>
-        <div className="relative mx-auto w-full max-w-6xl px-5 pb-20 pt-40 sm:px-6">
+        <div className="relative mx-auto w-full max-w-6xl px-5 pb-20 pt-32 sm:px-6 sm:pt-40">
+          <div className="max-w-2xl">
           <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-2 font-mono text-xs text-white/60">
             <Link href="/" className="hover:underline">Home</Link><span>/</span>
             <span>Industries</span><span>/</span>
             <span className="text-white">Events</span>
           </nav>
-          <h1 className="mt-5 max-w-3xl font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-6xl">
+          <h1 className="mt-5 font-display text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-6xl">
             The footprint of a great day out
           </h1>
           <p className="mt-5 max-w-xl text-lg leading-relaxed text-white/80">
@@ -64,6 +66,7 @@ export default function EventsPage() {
             <Link href="/contact" className="inline-flex items-center border border-white/50 px-6 py-3.5 text-sm font-bold text-white transition-colors hover:bg-white/10">
               Talk to our team
             </Link>
+          </div>
           </div>
         </div>
       </section>

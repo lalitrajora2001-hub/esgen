@@ -104,31 +104,11 @@ function ReportPreview() {
   );
 }
 
-/* 5. Advisory & compliance, readiness roadmap */
-function AdvisoryPreview() {
-  const steps = [["Materiality assessment", "Done", C.green], ["Reduction planning", "In progress", C.blue], ["Assurance readiness", "Upcoming", C.muted]];
-  return (
-    <Screen>
-      <span className="text-[0.7rem] font-semibold" style={{ color: C.ink }}>Readiness roadmap</span>
-      <ol className="mt-2 ml-1 border-l pl-3" style={{ borderColor: C.line }}>
-        {steps.map(([n, s, c], i) => (
-          <li key={i} className="relative mb-2 last:mb-0">
-            <span className="absolute -left-[15px] mt-0.5 h-2.5 w-2.5 rounded-full border-2 border-white" style={{ background: c }} />
-            <p className="text-[0.62rem] font-medium leading-tight" style={{ color: C.ink }}>{n}</p>
-            <p className="text-[0.52rem]" style={{ color: c }}>{s}</p>
-          </li>
-        ))}
-      </ol>
-    </Screen>
-  );
-}
-
 const CARDS = [
   { title: "Carbon Assessment", href: "/platform/carbon-assessment", desc: "Measure Scope 1, 2, and 3 with transparent calculations and factors.", preview: <GhgPreview /> },
   { title: "Suppliers Engagement", href: "/platform/suppliers-engagement", desc: "Onboard suppliers and collect primary Scope 3 data.", preview: <SupplierPreview /> },
   { title: "Emissions Factors", href: "/platform/emissions-factors", desc: "A transparent, up-to-date emissions factor database.", preview: <DataPreview /> },
   { title: "CSRD", href: "/platform/csrd", desc: "Map ESRS datapoints and prepare structured disclosures.", preview: <ReportPreview /> },
-  { title: "Decarbonization Strategy", href: "/platform/decarbonization-strategy", desc: "Model reduction levers and build a concrete action plan.", preview: <AdvisoryPreview /> },
 ];
 
 export function SolutionCards() {

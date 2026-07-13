@@ -112,14 +112,11 @@ export default function SuppliersEngagementPage() {
         <div className="mx-auto max-w-6xl px-5 sm:px-6">
           <h2 className="mx-auto max-w-2xl text-center font-display text-2xl font-bold tracking-tight sm:text-3xl" style={{ color: INK }}>Spend less time chasing suppliers, more time reducing emissions</h2>
 
-          <div className="mt-14 grid gap-10 lg:grid-cols-3 lg:items-start">
+          <div className="mt-14 grid gap-12 lg:grid-cols-2 lg:items-start">
             <Reveal>
               <h3 className="font-display text-lg font-bold" style={{ color: INK }}>Effortless and accurate emissions tracking</h3>
               <p className="mt-3 text-sm leading-relaxed" style={{ color: BODY }}>Bring supplier data into your Scope 3 reporting with automatic supplier recognition and recognised emission-factor sources.</p>
               <div className="mt-6"><FactorIconGrid /></div>
-            </Reveal>
-            <Reveal>
-              <div className="h-56 rounded-2xl" style={{ background: "linear-gradient(150deg,#e9fbef,#bfe6cd)" }} />
             </Reveal>
             <Reveal>
               <h3 className="font-display text-lg font-bold" style={{ color: INK }}>Assess your suppliers on KPIs that really matter</h3>

@@ -96,18 +96,6 @@ const PLATFORM: ContentPage[] = [
       { h: "Response tracking", p: "See who has responded, what is outstanding, and where to follow up." },
     ],
   }),
-  P({
-    slug: "decarbonization-strategy", navLabel: "Decarbonization Strategy",
-    kicker: "Carbon management", h1: "Build a concrete decarbonisation plan",
-    intro: "Identify your biggest emission sources, model reduction levers, and turn targets into a practical, trackable action plan.",
-    seoTitle: "Decarbonization Strategy", seoDescription: "Identify emission hotspots, model reduction levers, and build a practical decarbonisation action plan.",
-    visual: "roadmap",
-    sections: [
-      { h: "Find the hotspots", p: "Focus effort where it matters by understanding which sources drive your footprint." },
-      { h: "Model reduction levers", p: "Explore the impact of different actions before you commit to a plan." },
-      { h: "Track the plan", p: "Turn targets into a phased action plan with owners and progress tracking." },
-    ],
-  }),
   /* LCA */
   P({
     slug: "emissions-factors", navLabel: "Emissions Factors",

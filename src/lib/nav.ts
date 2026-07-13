@@ -37,7 +37,6 @@ export const platformGroups: NavGroup[] = [
     items: [
       { label: "Carbon Assessment", href: "/platform/carbon-assessment", desc: "Measure your Scope 1, 2 & 3 emissions" },
       { label: "Suppliers Engagement", href: "/platform/suppliers-engagement", desc: "Onboard your entire value chain" },
-      { label: "Decarbonization Strategy", href: "/platform/decarbonization-strategy", desc: "Build a concrete action plan" },
     ],
   },
   {

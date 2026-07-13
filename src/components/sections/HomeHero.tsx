@@ -4,7 +4,7 @@ import { Button, ArrowRight } from "@/components/ui/Button";
    headline scrimmed on the left for legibility. Mirrors the industries heroes. */
 export function HomeHero() {
   return (
-    <section className="relative flex min-h-[100svh] items-center overflow-hidden bg-canvas">
+    <section className="relative flex min-h-[100svh] items-start overflow-hidden bg-canvas">
       <video
         className="absolute inset-0 h-full w-full object-cover motion-reduce:hidden"
         autoPlay
@@ -12,16 +12,16 @@ export function HomeHero() {
         loop
         playsInline
         preload="auto"
-        style={{ filter: "brightness(1.1) saturate(1.25) contrast(1.03)" }}
+        style={{ filter: "brightness(1.05) saturate(1.12) contrast(1.02)" }}
       >
-        <source src="/videos/forest.mp4" type="video/mp4" />
+        <source src="/videos/clouds.mp4" type="video/mp4" />
       </video>
 
-      {/* legibility scrims, footage stays bright on the right */}
-      <div aria-hidden className="pointer-events-none absolute inset-0" style={{ background: "linear-gradient(90deg, rgba(6,7,11,0.9) 0%, rgba(6,7,11,0.55) 32%, rgba(6,7,11,0.1) 66%, rgba(6,7,11,0) 100%)" }} />
-      <div aria-hidden className="pointer-events-none absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(6,7,11,0.5) 0%, rgba(6,7,11,0) 26%, rgba(6,7,11,0) 60%, rgba(6,7,11,0.72) 92%, #06070b 100%)" }} />
+      {/* legibility scrims, footage stays bright toward the lower right */}
+      <div aria-hidden className="pointer-events-none absolute inset-0" style={{ background: "linear-gradient(to bottom right, rgba(6,7,11,0.92) 0%, rgba(6,7,11,0.55) 38%, rgba(6,7,11,0.12) 72%, rgba(6,7,11,0) 100%)" }} />
+      <div aria-hidden className="pointer-events-none absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(6,7,11,0.45) 0%, rgba(6,7,11,0) 30%, rgba(6,7,11,0) 62%, rgba(6,7,11,0.72) 92%, #06070b 100%)" }} />
 
-      <div className="relative mx-auto w-full max-w-6xl px-5 sm:px-6">
+      <div className="relative mx-auto w-full max-w-6xl px-5 pb-24 pt-32 sm:px-6 sm:pt-40">
         <div className="max-w-2xl" style={{ textShadow: "0 1px 28px rgba(3,6,10,0.72), 0 1px 4px rgba(3,6,10,0.6)" }}>
           <p className="font-mono text-[0.72rem] uppercase tracking-[0.2em] text-accent-3">ESG &amp; carbon intelligence</p>
           <h1 className="mt-5 text-balance font-display text-5xl font-semibold leading-[1.03] text-white sm:text-6xl lg:text-7xl">

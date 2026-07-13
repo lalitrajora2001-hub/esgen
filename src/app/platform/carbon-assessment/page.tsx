@@ -66,7 +66,7 @@ export default function CarbonAssessmentPage() {
             <p className="mt-5 max-w-md text-lg leading-relaxed" style={{ color: BODY }}>
               Calculate your Scope 1, 2, and 3 emissions with a clear, auditable method, find where they come from, and turn the numbers into a practical reduction plan.
             </p>
-            <div className="mt-8 flex flex-wrap gap-3"><PrimaryBtn href="/demo">Request a demo</PrimaryBtn><GhostBtn href="/platform/decarbonization-strategy">See the workflow</GhostBtn></div>
+            <div className="mt-8 flex flex-wrap gap-3"><PrimaryBtn href="/demo">Request a demo</PrimaryBtn><GhostBtn href="/solutions/reporting">See the workflow</GhostBtn></div>
           </div>
           <Reveal className="min-w-0"><CarbonDashboard /></Reveal>
         </div>
