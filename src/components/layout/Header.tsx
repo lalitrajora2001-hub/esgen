@@ -160,7 +160,7 @@ export function Header() {
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-5 w-5"><circle cx="11" cy="11" r="7" /><path d="M21 21l-4.3-4.3" /></svg>
             </button>
             <span className="hidden h-6 w-px bg-border lg:block" aria-hidden="true" />
-            <Link href="/login" className="hidden text-sm font-medium text-text-muted transition-colors hover:text-white lg:block">Sign in</Link>
+            <Link href="/app/login" className="hidden text-sm font-medium text-text-muted transition-colors hover:text-white lg:block">Sign in</Link>
 
             {/* Book a demo, bold, chunky */}
             <Link

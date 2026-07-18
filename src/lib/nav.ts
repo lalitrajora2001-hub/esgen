@@ -138,6 +138,6 @@ export const footerColumns: { heading: string; links: NavLink[] }[] = [
     { label: "Pricing", href: "/pricing" },
     { label: "Contact", href: "/contact" },
     { label: "Book a demo", href: "/demo" },
-    { label: "Sign in", href: "/login" },
+    { label: "Sign in", href: "/app/login" },
   ] },
 ];

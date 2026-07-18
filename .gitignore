@@ -32,6 +32,13 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+# ...but commit the PUBLIC production config so the static build has the
+# Supabase URL + anon key (both are public; RLS protects the data).
+!.env.production
+
+# local tooling / build artifacts
+.claude/
+esgen-site.zip
 
 # vercel
 .vercel

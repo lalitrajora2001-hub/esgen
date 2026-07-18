@@ -2,9 +2,7 @@ import type { Metadata } from "next";
 import { Sora, Inter } from "next/font/google";
 import "./globals.css";
 import { site } from "@/lib/nav";
-import { SmoothScroll } from "@/components/layout/SmoothScroll";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
+import { SiteFrame } from "@/components/layout/SiteFrame";
 
 const sora = Sora({ subsets: ["latin"], variable: "--font-sora", weight: ["400", "500", "600", "700"], display: "swap" });
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
@@ -69,11 +67,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         >
           Skip to content
         </a>
-        <SmoothScroll>
-          <Header />
-          <main id="main">{children}</main>
-          <Footer />
-        </SmoothScroll>
+        <SiteFrame>{children}</SiteFrame>
       </body>
     </html>
   );

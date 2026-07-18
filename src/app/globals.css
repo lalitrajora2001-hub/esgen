@@ -153,3 +153,64 @@
   *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
   .has-js [data-reveal] { opacity: 1 !important; transform: none !important; }
 }
+
+/* ============================================================
+   Light theme scope for the BRSR tool (/app). Overrides the dark
+   tokens within .app-light only, so the marketing site stays dark.
+   accent-3 (the old light-blue text) is neutralised to near-black so
+   scattered blue labels read as clean black/grey. Brand blue stays
+   only on primary buttons and active states (--color-accent).
+   ============================================================ */
+.app-light {
+  --color-canvas: #f7f8fa;
+  --color-surface: #ffffff;
+  --color-surface-2: #f3f5f8;
+  --color-border: #e9ebf0;
+  --color-text: #101828;
+  --color-text-muted: #667085;
+  --color-accent: #2f6fe0;
+  --color-accent-2: #2559c0;
+  --color-accent-3: #101828;
+  --color-teal: #0f766e;
+  color: var(--color-text);
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  -webkit-font-smoothing: antialiased;
+}
+.app-light h1, .app-light h2, .app-light h3, .app-light h4, .app-light h5 { color: var(--color-text); letter-spacing: -0.015em; }
+.app-light .card {
+  background: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04), 0 1px 3px -1px rgba(16, 24, 40, 0.05);
+  transition: box-shadow 0.2s var(--ease-out), border-color 0.2s var(--ease-out);
+}
+.app-light .card-hover:hover {
+  transform: none;
+  border-color: #d6dae2;
+  box-shadow: 0 8px 24px -12px rgba(16, 24, 40, 0.18);
+  background: #ffffff;
+}
+/* Inputs/selects: consistent premium look in the tool */
+.app-light input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+.app-light select,
+.app-light textarea {
+  background: #ffffff;
+  border-color: #e2e5ea;
+  color: var(--color-text);
+}
+.app-light input::placeholder, .app-light textarea::placeholder { color: #98a2b3; }
+.app-light input:focus, .app-light select:focus, .app-light textarea:focus {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(47, 111, 224, 0.12);
+  outline: none;
+}
+.app-light ::-webkit-scrollbar-track { background: transparent; }
+.app-light ::-webkit-scrollbar-thumb { background: #d0d5dd; border: 3px solid transparent; border-radius: 99px; }
+.app-light ::-webkit-scrollbar-thumb:hover { background: #b6bcc7; }
+
+/* Print: strip the app chrome so only the report document sheet remains */
+@media print {
+  .no-print { display: none !important; }
+  body { background: #fff !important; }
+  .print-sheet { box-shadow: none !important; margin: 0 !important; max-width: 100% !important; }
+}
