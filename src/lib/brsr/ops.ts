@@ -172,6 +172,10 @@ export interface SupplierPayload {
   allocation_basis?: string;
   allocation_pct?: number | null;
   method_note?: string;
+  /** Server-computed allocated figure (Scope 1+2 x share), stored redacted. */
+  allocated_tco2e?: number | null;
+  /** Supplier opted in to share raw totals and share % with the client. */
+  shared_details?: boolean;
 }
 
 export interface SupplierInvite {

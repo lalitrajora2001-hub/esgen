@@ -15,6 +15,17 @@ import { Button } from "@/components/ui/Button";
 
 interface Line { factor_id: string; quantity: string; note?: string }
 
+/** Factor snapshot frozen at apply time, so results stay reproducible for
+ *  assurance even after the factor library is updated. */
+interface AppliedSnapshot {
+  at: string;
+  source: string;
+  scope1: number;
+  scope2: number;
+  scope3: number;
+  factors: Record<string, { activity: string; unit: string; kgco2ePerUnit: number; source: string; year: number }>;
+}
+
 const CALC_KEY = "_emissions";
 
 function tonnes(kg: number): number {
@@ -30,16 +41,27 @@ export function EmissionsCalculator({
   onChangeAnswer: (key: string, value: unknown) => void;
   onApplyUpdates: (updates: Record<string, unknown>) => Promise<void>;
 }) {
-  const stored = (responses[CALC_KEY] as { entries?: Line[] } | undefined)?.entries ?? [];
+  const calcValue = responses[CALC_KEY] as { entries?: Line[]; applied?: AppliedSnapshot } | undefined;
+  const stored = calcValue?.entries ?? [];
+  const applied = calcValue?.applied;
   const [lines, setLines] = useState<Line[]>(stored.length ? stored : [{ factor_id: EMISSION_FACTORS[0].id, quantity: "" }]);
   const [note, setNote] = useState<string | null>(null);
   const [applying, setApplying] = useState(false);
+
+  // Factor drift: the library changed since the figures were applied to P6.
+  const driftedFactors = applied
+    ? Object.entries(applied.factors).filter(([id, snap]) => {
+        const cur = getFactor(id);
+        return !cur || cur.kgco2ePerUnit !== snap.kgco2ePerUnit;
+      })
+    : [];
 
   const grouped = ([1, 2, 3] as Scope[]).map((scope) => ({ scope, items: EMISSION_FACTORS.filter((f) => f.scope === scope) }));
 
   const save = (next: Line[]) => {
     setLines(next);
-    onChangeAnswer(CALC_KEY, { entries: next });
+    // Preserve the applied snapshot; only a fresh apply replaces it.
+    onChangeAnswer(CALC_KEY, applied ? { entries: next, applied } : { entries: next });
   };
 
   const setLine = (i: number, patch: Partial<Line>) => save(lines.map((l, idx) => (idx === i ? { ...l, ...patch } : l)));
@@ -74,6 +96,24 @@ export function EmissionsCalculator({
         li2Cur.scope3 = { ...(li2Cur.scope3 ?? {}), value: s3, unit: "MT CO2e" };
         updates["C.P6.LI.2"] = { ...li2, current: li2Cur };
       }
+      // Freeze the factor set used, so the applied figures stay reproducible
+      // for assurance even after the factor library updates.
+      const usedFactors: AppliedSnapshot["factors"] = {};
+      for (const l of lines) {
+        const f = getFactor(l.factor_id);
+        if (f && Number(l.quantity) > 0) {
+          usedFactors[f.id] = { activity: f.activity, unit: f.unit, kgco2ePerUnit: f.kgco2ePerUnit, source: f.source, year: f.year };
+        }
+      }
+      updates[CALC_KEY] = {
+        entries: lines,
+        applied: {
+          at: new Date().toISOString(),
+          source: FACTORS_SOURCE_LABEL,
+          scope1: s1, scope2: s2, scope3: s3,
+          factors: usedFactors,
+        } satisfies AppliedSnapshot,
+      };
       await onApplyUpdates(updates);
       setNote(`Applied Scope 1 = ${s1}, Scope 2 = ${s2}, Scope 3 = ${s3} tCO2e into Principle 6 (current year).`);
     } catch (e) {
@@ -92,6 +132,22 @@ export function EmissionsCalculator({
           Principle 6. Factors: {FACTORS_SOURCE_LABEL}.
         </p>
       </div>
+
+      {applied && (
+        <p className="mb-4 rounded-xl border border-border bg-surface-2/60 p-3 text-xs leading-relaxed text-text-muted">
+          Applied to Principle 6 on {new Date(applied.at).toLocaleDateString("en-GB")} (Scope 1 = {applied.scope1},
+          Scope 2 = {applied.scope2}{applied.scope3 > 0 ? `, Scope 3 = ${applied.scope3}` : ""} tCO2e) with the factor
+          set frozen at that date for traceability.
+        </p>
+      )}
+      {driftedFactors.length > 0 && (
+        <p className="mb-4 rounded-xl border border-[#f0a020]/30 bg-[#f0a020]/8 p-3 text-xs leading-relaxed text-[#92600a]">
+          The factor library has changed since you applied ({driftedFactors.length} factor{driftedFactors.length === 1 ? "" : "s"} updated:
+          {" "}{driftedFactors.slice(0, 3).map(([, s]) => s.activity).join(", ")}{driftedFactors.length > 3 ? "…" : ""}).
+          The figures stored in Principle 6 still reflect the frozen factors above; press &ldquo;Apply to Principle 6&rdquo; again
+          only if you want to restate with current factors.
+        </p>
+      )}
 
       <div className="card overflow-hidden">
         <div className="overflow-x-auto">

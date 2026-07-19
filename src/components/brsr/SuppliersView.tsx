@@ -25,9 +25,14 @@ const STATUS_META: Record<string, { label: string; cls: string }> = {
   declined: { label: "Declined", cls: "bg-[#e5484d]/10 text-[#b42318]" },
 };
 
-/** Allocated tCO2e for one submission: (S1 + S2 [+ S3 when provided]) x share. */
+/**
+ * Allocated tCO2e for one submission. New submissions carry a server-computed
+ * figure (Scope 1+2 x share, supplier's own Scope 3 excluded to avoid double
+ * counting). Legacy rows fall back to the same S1+S2 formula client-side.
+ */
 export function allocatedEmissions(p: SupplierPayload): number | null {
-  const total = (p.scope1 ?? 0) + (p.scope2 ?? 0) + (p.scope3 ?? 0);
+  if (p.allocated_tco2e != null) return p.allocated_tco2e;
+  const total = (p.scope1 ?? 0) + (p.scope2 ?? 0);
   if (total <= 0) return null;
   const pct = p.allocation_pct;
   if (pct == null || pct <= 0 || pct > 100) return null;
@@ -250,6 +255,14 @@ export function SuppliersView({
                       <button onClick={() => copyLink(inv)} className="rounded-lg border border-border px-2.5 py-1.5 text-xs text-text-muted transition hover:border-teal hover:text-text">
                         {copied === inv.id ? "Copied!" : "Copy link"}
                       </button>
+                      <a
+                        href={`https://wa.me/?text=${encodeURIComponent(`${company?.name ?? "We"} request your emissions data for FY ${inv.financial_year} for sustainability reporting. Please submit here (10 minutes, no account needed): ${linkFor(inv)}`)}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="rounded-lg border border-border px-2.5 py-1.5 text-xs text-text-muted transition hover:border-teal hover:text-text"
+                      >
+                        WhatsApp
+                      </a>
                       {sub && (
                         <button onClick={() => setExpanded(open ? null : inv.id)} className="rounded-lg border border-border px-2.5 py-1.5 text-xs text-text-muted transition hover:border-teal hover:text-text">
                           {open ? "Hide data" : "View data"}
@@ -267,16 +280,27 @@ export function SuppliersView({
 
                   {open && sub && (
                     <div className="mt-3 grid gap-2 rounded-xl border border-border bg-surface-2/40 p-4 sm:grid-cols-3">
-                      <SubStat label="Scope 1" value={sub.payload.scope1} unit="tCO2e" />
-                      <SubStat label="Scope 2" value={sub.payload.scope2} unit="tCO2e" />
-                      <SubStat label="Scope 3 (theirs)" value={sub.payload.scope3} unit="tCO2e" />
-                      <SubStat label="Energy" value={sub.payload.energy_total_gj} unit="GJ" />
-                      <SubStat label="Renewable" value={sub.payload.renewable_pct} unit="%" />
-                      <SubStat label="Share allocated to you" value={sub.payload.allocation_pct} unit={`% · ${sub.payload.allocation_basis ?? "basis not stated"}`} />
+                      <SubStat label="Allocated to you (S1+S2 basis)" value={alloc} unit="tCO2e" />
+                      <SubStat label="Allocation basis" value={null} unit="" text={sub.payload.allocation_basis ?? "Not stated"} />
+                      <SubStat label="Renewable energy share" value={sub.payload.renewable_pct} unit="%" />
+                      {sub.payload.shared_details || sub.payload.scope1 != null ? (
+                        <>
+                          <SubStat label="Scope 1" value={sub.payload.scope1} unit="tCO2e" />
+                          <SubStat label="Scope 2" value={sub.payload.scope2} unit="tCO2e" />
+                          <SubStat label="Share attributed" value={sub.payload.allocation_pct} unit="%" />
+                        </>
+                      ) : (
+                        <p className="text-[11px] text-text-muted sm:col-span-3">
+                          The supplier chose to share only the allocated figure, not their underlying
+                          totals or business share. The allocation was computed on submission from
+                          Scope 1+2 and their stated share.
+                        </p>
+                      )}
                       {sub.payload.method_note && <p className="text-[11px] text-text-muted sm:col-span-3">Method: {sub.payload.method_note}</p>}
                       <p className="text-[11px] text-text-muted sm:col-span-3">
                         Submitted {new Date(sub.created_at).toLocaleString("en-GB")}{sub.submitted_by ? ` by ${sub.submitted_by}` : ""}.
-                        Period: {sub.payload.period ?? "not stated"}.
+                        Period: {sub.payload.period ?? "not stated"}. Supplier&apos;s own Scope 3 is
+                        excluded from the allocation to avoid double counting.
                       </p>
                     </div>
                   )}
@@ -288,9 +312,10 @@ export function SuppliersView({
       </section>
 
       <p className="rounded-xl border border-border bg-surface-2/60 p-3 text-xs leading-relaxed text-text-muted">
-        Allocation uses the share each supplier attributes to your business (typically revenue share), so
-        the aggregate is an indicative estimate of supplier-driven Scope 3, not an assured figure.
-        Review each submission before accepting; only accepted submissions count.
+        Allocation = the supplier&apos;s Scope 1+2 multiplied by the share they attribute to your business
+        (their own Scope 3 is excluded to avoid double counting). Suppliers share only the allocated
+        figure by default, not their raw totals. The aggregate is an indicative estimate of
+        supplier-driven Scope 3, not an assured figure; review before accepting.
       </p>
     </div>
   );
@@ -305,11 +330,14 @@ function SupTile({ label, value, warn, good }: { label: string; value: number; w
   );
 }
 
-function SubStat({ label, value, unit }: { label: string; value: number | null | undefined; unit: string }) {
+function SubStat({ label, value, unit, text }: { label: string; value: number | null | undefined; unit: string; text?: string }) {
   return (
     <div>
       <p className="text-[10px] uppercase tracking-wide text-text-muted">{label}</p>
-      <p className="text-sm font-semibold">{value != null ? fmtNum(value) : "—"} <span className="text-[10px] font-normal text-text-muted">{unit}</span></p>
+      <p className="text-sm font-semibold">
+        {text ?? (value != null ? fmtNum(value) : "—")}
+        {unit && <span className="ml-1 text-[10px] font-normal text-text-muted">{unit}</span>}
+      </p>
     </div>
   );
 }

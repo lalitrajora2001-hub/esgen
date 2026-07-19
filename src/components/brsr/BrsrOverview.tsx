@@ -8,18 +8,41 @@ import { validateReport } from "@/lib/brsr/validate";
 import type { ModuleDef, QuestionDef } from "@/lib/brsr/types";
 
 export function BrsrOverview({
-  report, responses, kpis, onNavigate, onStatusChange, isAdmin = false,
+  report, responses, kpis, onNavigate, onStatusChange, onUpdateFinancials, isAdmin = false,
 }: {
   report: BrsrReport;
   responses: ResponseMap;
   kpis: Kpi[];
   onNavigate: (moduleKey: string) => void;
   onStatusChange: (status: string) => Promise<void>;
+  onUpdateFinancials?: (patch: { turnover: number | null; ppp_factor: number | null }) => Promise<void>;
   isAdmin?: boolean;
 }) {
   const [status, setStatus] = useState(report.status);
   const [savingStatus, setSavingStatus] = useState(false);
   const [statusError, setStatusError] = useState<string | null>(null);
+  // Financials editor (turnover entered in ₹ crore, stored in INR).
+  const [crore, setCrore] = useState(report.turnover != null ? String(Number(report.turnover) / 1e7) : "");
+  const [pppVal, setPppVal] = useState(report.ppp_factor != null ? String(report.ppp_factor) : "");
+  const [finBusy, setFinBusy] = useState(false);
+  const [finNote, setFinNote] = useState<string | null>(null);
+
+  const saveFinancials = async () => {
+    if (!onUpdateFinancials) return;
+    setFinBusy(true);
+    setFinNote(null);
+    try {
+      await onUpdateFinancials({
+        turnover: crore ? Number(crore) * 1e7 : null,
+        ppp_factor: pppVal ? Number(pppVal) : null,
+      });
+      setFinNote("Saved. Intensity figures now use these values.");
+    } catch (e) {
+      setFinNote(e instanceof Error ? e.message : "Could not save.");
+    } finally {
+      setFinBusy(false);
+    }
+  };
 
   const allIssues = validateReport(responses);
   const errors = allIssues.filter((i) => i.kind === "error");
@@ -118,6 +141,43 @@ export function BrsrOverview({
           <div className="h-full rounded-full bg-accent transition-all" style={{ width: `${pct}%` }} />
         </div>
         {statusError && <p className="mt-3 rounded-lg border border-[#f0a020]/30 bg-[#f0a020]/8 p-2.5 text-xs text-[#b54708]">{statusError}</p>}
+      </div>
+
+      {/* Financials: the denominators every SEBI intensity ratio depends on. */}
+      <div className="card p-6">
+        <h3 className="font-display text-base font-semibold">Reporting entity financials</h3>
+        <p className="mt-1 text-xs text-text-muted">Used for the intensity ratios (per rupee of turnover, PPP-adjusted). FY {report.financial_year}.</p>
+        <div className="mt-4 flex flex-wrap items-end gap-3">
+          <label className="flex min-w-[180px] flex-col gap-1">
+            <span className="text-xs font-medium">Turnover (₹ crore)</span>
+            <input value={crore} onChange={(e) => setCrore(e.target.value)} inputMode="decimal" placeholder="e.g. 300" className="h-10 rounded-lg border border-border bg-surface px-3 text-sm" />
+          </label>
+          <label className="flex min-w-[160px] flex-col gap-1">
+            <span className="text-xs font-medium">PPP factor (INR per int&apos;l $)</span>
+            <input value={pppVal} onChange={(e) => setPppVal(e.target.value)} inputMode="decimal" placeholder="e.g. 21.6" className="h-10 rounded-lg border border-border bg-surface px-3 text-sm" />
+          </label>
+          <button onClick={saveFinancials} disabled={finBusy || !onUpdateFinancials} className="h-10 rounded-lg bg-accent px-4 text-sm font-medium text-white disabled:opacity-50">
+            {finBusy ? "Saving..." : "Save"}
+          </button>
+        </div>
+        <p className="mt-2 text-[11px] text-text-muted">
+          {crore && Number(crore) > 0
+            ? `₹${Number(crore).toLocaleString("en-IN")} crore = ₹${(Number(crore) * 1e7).toLocaleString("en-IN")}`
+            : "Enter the value in crores; the tool stores the full INR figure."}
+        </p>
+        {crore !== "" && Number(crore) > 0 && Number(crore) < 0.1 && (
+          <p className="mt-2 rounded-lg border border-[#f0a020]/30 bg-[#f0a020]/8 p-2.5 text-xs text-[#b54708]">
+            That is under ₹10 lakh of annual turnover, which is unusually low for a reporting entity.
+            If you meant ₹{Number(crore).toLocaleString("en-IN")} crore, the field is already in crores.
+          </p>
+        )}
+        {crore !== "" && Number(crore) > 500000 && (
+          <p className="mt-2 rounded-lg border border-[#f0a020]/30 bg-[#f0a020]/8 p-2.5 text-xs text-[#b54708]">
+            That is over ₹5 lakh crore, larger than India&apos;s biggest companies. If you pasted the raw
+            INR figure, divide by 1,00,00,000: enter {Number(crore) / 1e7 >= 0.01 ? (Number(crore) / 1e7).toLocaleString("en-IN") : "the value"} instead.
+          </p>
+        )}
+        {finNote && <p className="mt-2 text-[11px] text-text-muted">{finNote}</p>}
       </div>
 
       {anomalies.length > 0 && (

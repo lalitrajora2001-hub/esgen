@@ -109,7 +109,7 @@ export function Dashboard({
           label="GHG intensity"
           value={d.intensityPerCrore == null ? "—" : fmtNum(d.intensityPerCrore, 2)}
           unit="tCO2e / ₹ Cr"
-          sub={d.intensityPerCrorePpp != null ? `PPP-adjusted: ${fmtNum(d.intensityPerCrorePpp, 2)}` : "Add turnover for intensity"}
+          sub={d.intensityPerCrorePpp != null ? `PPP-adjusted: ${fmtNum(d.intensityPerCrorePpp, 2)}` : d.intensityPerCrore != null ? "Set PPP factor for PPP-adjusted" : "Add turnover for intensity"}
           icon={<GaugeIcon />} tone={VIOLET}
         />
         <Stat

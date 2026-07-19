@@ -47,7 +47,7 @@ function Shell({ children }: { children: React.ReactNode }) {
 
 const EMPTY = {
   email: "", period: "", scope1: "", scope2: "", scope3: "",
-  energy: "", renewable: "", basis: "Revenue share", pct: "", note: "",
+  energy: "", renewable: "", basis: "Revenue share", pct: "", note: "", share: false,
 };
 
 function SupplierForm() {
@@ -103,6 +103,7 @@ function SupplierForm() {
       allocation_basis: form.basis,
       allocation_pct: pct,
       method_note: form.note.trim() || undefined,
+      shared_details: form.share,
     };
     setBusy(true);
     try {
@@ -133,6 +134,9 @@ function SupplierForm() {
   }
 
   if (state === "done") {
+    const s1n = Number(form.scope1) || 0;
+    const s2n = Number(form.scope2) || 0;
+    const total = s1n + s2n;
     return (
       <Shell>
         <div className="card p-8 text-center">
@@ -144,6 +148,36 @@ function SupplierForm() {
             Thank you. {invite?.client_name} will review your submission. You can reopen this link to
             update the figures until they accept it.
           </p>
+
+          {total > 0 && (
+            <div className="mt-6 rounded-xl border border-border bg-surface-2/50 p-4 text-left">
+              <p className="text-xs font-semibold uppercase tracking-wide text-text-muted">Your footprint at a glance</p>
+              <div className="mt-3 grid grid-cols-3 gap-3 text-center">
+                <div>
+                  <p className="font-display text-xl font-semibold">{total.toLocaleString("en-IN")}</p>
+                  <p className="text-[10px] uppercase tracking-wide text-text-muted">Scope 1+2 tCO2e</p>
+                </div>
+                <div>
+                  <p className="font-display text-xl font-semibold">{form.energy ? Number(form.energy).toLocaleString("en-IN") : "—"}</p>
+                  <p className="text-[10px] uppercase tracking-wide text-text-muted">Energy GJ</p>
+                </div>
+                <div>
+                  <p className="font-display text-xl font-semibold">{form.renewable ? `${form.renewable}%` : "—"}</p>
+                  <p className="text-[10px] uppercase tracking-wide text-text-muted">Renewable</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div className="mt-6 rounded-xl border border-teal/25 bg-teal/8 p-4 text-left">
+            <p className="text-sm font-semibold">Put this data to work for your own business</p>
+            <p className="mt-1 text-xs leading-relaxed text-text-muted">
+              More customers will ask for these numbers. With a free ESGEN workspace you can track your
+              emissions, energy, water and waste in one dashboard and answer every request from the same
+              data.
+            </p>
+            <Button href="/app/signup" size="md" className="mt-3">Create your free workspace</Button>
+          </div>
         </div>
       </Shell>
     );
@@ -230,14 +264,32 @@ function SupplierForm() {
             <textarea value={form.note} onChange={set("note")} rows={2} placeholder="e.g. Fuel bills and electricity meters, CEA grid factor, FY totals" className="rounded-lg border border-border bg-surface px-3 py-2 text-sm" />
           </label>
 
+          <div className="rounded-xl border border-border bg-surface-2/50 p-3.5">
+            <p className="text-xs font-semibold">What {invite!.client_name} will see</p>
+            <p className="mt-1 text-[11px] leading-relaxed text-text-muted">
+              By default: only the allocated figure (your Scope 1+2 multiplied by the share you enter),
+              the basis, and your method note. Your emission totals, energy figures and the share
+              percentage stay private.
+            </p>
+            <label className="mt-2.5 flex items-start gap-2 text-[11px] leading-relaxed text-text-muted">
+              <input
+                type="checkbox"
+                checked={form.share}
+                onChange={(e) => setForm((f) => ({ ...f, share: e.target.checked }))}
+                className="mt-0.5 h-3.5 w-3.5 accent-[#059669]"
+              />
+              <span>Also share my underlying totals and share percentage with {invite!.client_name} (optional).</span>
+            </label>
+          </div>
+
           {error && <p className="rounded-xl border border-[#e5484d]/30 bg-[#e5484d]/8 p-3 text-sm text-[#b42318]" role="alert">{error}</p>}
 
           <Button type="submit" size="lg" className="w-full" disabled={busy}>
             {busy ? "Submitting..." : "Submit to " + invite!.client_name}
           </Button>
           <p className="text-center text-[11px] leading-relaxed text-text-muted">
-            Your data is shared only with {invite!.client_name} for sustainability reporting. Figures are
-            indicative until they verify them.
+            Used only for {invite!.client_name}&apos;s sustainability reporting. Figures are indicative
+            until verified.
           </p>
         </form>
       </div>

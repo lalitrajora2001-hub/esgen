@@ -138,6 +138,40 @@ function validateQuestion(q: QuestionDef, value: unknown): { errors: string[]; a
   return { errors, anomalies };
 }
 
+/** Cross-question physical plausibility checks (advisory). Real client entries
+ *  regularly contain these; catching them politely builds trust. */
+function sanityAnomalies(responses: ResponseMap, issues: Issue[]): void {
+  const read = (qKey: string, rowKey: string): number | null => {
+    const v = responses[qKey] as { current?: Record<string, RowValues> } | undefined;
+    const cell = v?.current?.[rowKey]?.["value"];
+    return cell == null || cell === "" ? null : num(cell as Scalar);
+  };
+  const push = (questionKey: string, message: string) =>
+    issues.push({ questionKey, moduleKey: "C.P6", code: questionKey, message, kind: "anomaly" });
+
+  // Water: consumption cannot exceed withdrawal.
+  const withdrawal = read("C.P6.EI.3", "wd_total");
+  const consumption = read("C.P6.EI.3", "consumption_total");
+  if (withdrawal != null && consumption != null && consumption > withdrawal * 1.005) {
+    push("C.P6.EI.3", `Water consumption (${consumption} kL) exceeds total withdrawal (${withdrawal} kL). Check the figures or units.`);
+  }
+
+  // Waste: recovered + disposed cannot exceed what was generated.
+  const generated = read("C.P6.EI.9", "gen_total");
+  const recovered = read("C.P6.EI.9", "recovered_total");
+  const disposed = read("C.P6.EI.9", "disposed_total");
+  if (generated != null && recovered != null && disposed != null && recovered + disposed > generated * 1.05) {
+    push("C.P6.EI.9", `Waste recovered + disposed (${recovered + disposed} MT) exceeds waste generated (${generated} MT). Check the figures.`);
+  }
+
+  // Energy: renewable share cannot exceed the total.
+  const renewTotal = read("C.P6.EI.1", "renew_total");
+  const energyTotal = read("C.P6.EI.1", "total_energy");
+  if (renewTotal != null && energyTotal != null && renewTotal > energyTotal * 1.005) {
+    push("C.P6.EI.1", `Renewable energy (${renewTotal}) exceeds total energy consumed (${energyTotal}). Check the figures or units.`);
+  }
+}
+
 /** All consistency issues across the report (errors + advisory anomalies). */
 export function validateReport(responses: ResponseMap): Issue[] {
   const issues: Issue[] = [];
@@ -154,5 +188,6 @@ export function validateReport(responses: ResponseMap): Issue[] {
       }
     }
   }
+  sanityAnomalies(responses, issues);
   return issues;
 }

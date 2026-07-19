@@ -24,6 +24,7 @@ import { SuppliersView } from "@/components/brsr/SuppliersView";
 import { EmissionsCalculator } from "@/components/brsr/EmissionsCalculator";
 import { WorkflowBar, STATE_LABELS } from "@/components/brsr/WorkflowBar";
 import { fetchSectionStatuses, fetchKpiStatuses, upsertKpiStatus, logAudit, fetchIsAdmin, type SectionStatus, type KpiStatus } from "@/lib/brsr/pro";
+import { EMISSION_FACTORS, getFactor, FACTORS_SOURCE_LABEL } from "@/lib/emissions/factors";
 import { cn } from "@/lib/cn";
 
 const DASH = "__dash__";
@@ -94,9 +95,18 @@ export function BrsrWorkspace() {
   if (error) return <div className="px-8 py-10"><p className="rounded-xl border border-[#e5484d]/30 bg-[#e5484d]/8 p-3 text-sm text-[#b42318]">{error}</p></div>;
 
   if (!report) {
+    const onCreated = (r: BrsrReport) => { setReports([r, ...reports]); setReport(r); };
     return (
       <div className="mx-auto max-w-7xl px-5 py-10 sm:px-8">
-        <CreateReport companyId={company!.id} onCreated={(r) => { setReports([r, ...reports]); setReport(r); }} />
+        <h1 className="text-2xl font-semibold sm:text-3xl">Set up your reporting year</h1>
+        <p className="mt-1 max-w-2xl text-sm text-text-muted">
+          Start with a 15-minute footprint from your bills, or go straight into the full BRSR setup.
+          Both create the same report; you can always add more data later.
+        </p>
+        <div className="mt-8 grid items-start gap-6 lg:grid-cols-2">
+          <QuickStart companyId={company!.id} onCreated={onCreated} />
+          <CreateReport companyId={company!.id} onCreated={onCreated} />
+        </div>
       </div>
     );
   }
@@ -108,6 +118,122 @@ export function BrsrWorkspace() {
       onSwitch={setReport}
       onNew={() => setReport(null)}
     />
+  );
+}
+
+// ---- quick footprint ------------------------------------------------------
+
+/**
+ * The 15-minute path: a few figures from bills -> report created with Scope 1
+ * and 2 computed (India factors, snapshot pinned) -> dashboard lights up. The
+ * antidote to the 143-question blank page.
+ */
+function QuickStart({ companyId, onCreated }: { companyId: string; onCreated: (r: BrsrReport) => void }) {
+  const [fy, setFy] = useState("2025-26");
+  const [electricity, setElectricity] = useState("");
+  const [diesel, setDiesel] = useState("");
+  const [petrol, setPetrol] = useState("");
+  const [lpg, setLpg] = useState("");
+  const [crore, setCrore] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const t3 = (kg: number) => Math.round(kg) / 1000;
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    const kwh = Number(electricity) || 0, d = Number(diesel) || 0, p = Number(petrol) || 0, g = Number(lpg) || 0;
+    if (kwh + d + p + g <= 0) { setError("Enter at least one figure, e.g. annual electricity units from your bills."); return; }
+    setBusy(true);
+    try {
+      const r = await createReport({
+        company_id: companyId,
+        financial_year: fy.trim() || "2025-26",
+        reporting_boundary: "Standalone",
+        turnover: crore ? Number(crore) * 1e7 : null,
+        ppp_factor: null,
+      });
+
+      const quantities: Record<string, number> = {
+        "s2-electricity-kwh": kwh, "s1-diesel-litre": d, "s1-petrol-litre": p, "s1-lpg-kg": g,
+      };
+      let s1kg = 0, s2kg = 0;
+      const entries: { factor_id: string; quantity: string }[] = [];
+      const usedFactors: Record<string, { activity: string; unit: string; kgco2ePerUnit: number; source: string; year: number }> = {};
+      for (const [id, q] of Object.entries(quantities)) {
+        if (q <= 0) continue;
+        const f = getFactor(id) ?? EMISSION_FACTORS.find((x) => x.id === id);
+        if (!f) continue;
+        const kg = q * f.kgco2ePerUnit;
+        if (f.scope === 1) s1kg += kg; else if (f.scope === 2) s2kg += kg;
+        entries.push({ factor_id: f.id, quantity: String(q) });
+        usedFactors[f.id] = { activity: f.activity, unit: f.unit, kgco2ePerUnit: f.kgco2ePerUnit, source: f.source, year: f.year };
+      }
+      const s1 = t3(s1kg), s2 = t3(s2kg);
+
+      const ghgCur: Record<string, { value: number; unit: string }> = {};
+      if (s1 > 0) ghgCur.scope1 = { value: s1, unit: "MT CO2e" };
+      if (s2 > 0) ghgCur.scope2 = { value: s2, unit: "MT CO2e" };
+      await saveResponse(r.id, "C.P6.EI.7", { current: ghgCur });
+      await saveResponse(r.id, "_emissions", {
+        entries,
+        applied: { at: new Date().toISOString(), source: FACTORS_SOURCE_LABEL, scope1: s1, scope2: s2, scope3: 0, factors: usedFactors },
+      });
+      onCreated(r);
+    } catch (e2) {
+      setError(e2 instanceof Error ? e2.message : "Could not create the report.");
+      setBusy(false);
+    }
+  };
+
+  return (
+    <form onSubmit={submit} className="card border-teal/30 p-6" style={{ borderWidth: 1.5 }}>
+      <div className="flex items-center justify-between gap-2">
+        <h2 className="font-display text-lg font-semibold">Quick footprint</h2>
+        <span className="rounded-full bg-teal/10 px-2.5 py-0.5 text-[11px] font-semibold text-teal">~15 minutes</span>
+      </div>
+      <p className="mt-1 text-sm text-text-muted">
+        Annual figures from your electricity and fuel bills. We compute Scope 1 and 2 with
+        India-specific factors and light up your dashboard.
+      </p>
+      <div className="mt-5 space-y-3.5">
+        <label className="flex flex-col gap-1">
+          <span className="text-xs font-medium">Financial year</span>
+          <input value={fy} onChange={(e) => setFy(e.target.value)} placeholder="2025-26" className="h-10 rounded-lg border border-border bg-surface px-3 text-sm" />
+        </label>
+        <label className="flex flex-col gap-1">
+          <span className="text-xs font-medium">Grid electricity for the year (kWh / units)</span>
+          <input value={electricity} onChange={(e) => setElectricity(e.target.value)} inputMode="decimal" placeholder="From your electricity bills, e.g. 250000" className="h-10 rounded-lg border border-border bg-surface px-3 text-sm" />
+        </label>
+        <div className="grid grid-cols-3 gap-3">
+          <label className="flex flex-col gap-1">
+            <span className="text-xs font-medium">Diesel (litres)</span>
+            <input value={diesel} onChange={(e) => setDiesel(e.target.value)} inputMode="decimal" placeholder="DG sets, vehicles" className="h-10 rounded-lg border border-border bg-surface px-3 text-sm" />
+          </label>
+          <label className="flex flex-col gap-1">
+            <span className="text-xs font-medium">Petrol (litres)</span>
+            <input value={petrol} onChange={(e) => setPetrol(e.target.value)} inputMode="decimal" placeholder="Optional" className="h-10 rounded-lg border border-border bg-surface px-3 text-sm" />
+          </label>
+          <label className="flex flex-col gap-1">
+            <span className="text-xs font-medium">LPG (kg)</span>
+            <input value={lpg} onChange={(e) => setLpg(e.target.value)} inputMode="decimal" placeholder="Optional" className="h-10 rounded-lg border border-border bg-surface px-3 text-sm" />
+          </label>
+        </div>
+        <label className="flex flex-col gap-1">
+          <span className="text-xs font-medium">Turnover (₹ crore, optional)</span>
+          <input value={crore} onChange={(e) => setCrore(e.target.value)} inputMode="decimal" placeholder="e.g. 300 — unlocks intensity figures" className="h-10 rounded-lg border border-border bg-surface px-3 text-sm" />
+          {crore && Number(crore) > 0 && (
+            <span className="text-[11px] text-text-muted">₹{Number(crore).toLocaleString("en-IN")} crore = ₹{(Number(crore) * 1e7).toLocaleString("en-IN")}</span>
+          )}
+        </label>
+      </div>
+      {error && <p className="mt-3 rounded-xl border border-[#e5484d]/30 bg-[#e5484d]/8 p-3 text-sm text-[#b42318]">{error}</p>}
+      <Button type="submit" className="mt-5 w-full" disabled={busy}>{busy ? "Building your dashboard..." : "Create my dashboard"}</Button>
+      <p className="mt-3 text-center text-[11px] leading-relaxed text-text-muted">
+        Indicative figures using {FACTORS_SOURCE_LABEL}. Refine everything later in Collect.
+      </p>
+    </form>
   );
 }
 
@@ -130,7 +256,8 @@ function CreateReport({ companyId, onCreated }: { companyId: string; onCreated: 
         company_id: companyId,
         financial_year: fy.trim(),
         reporting_boundary: boundary,
-        turnover: turnover ? Number(turnover) : null,
+        // Entered in ₹ crore; stored in INR (1 crore = 10^7).
+        turnover: turnover ? Number(turnover) * 1e7 : null,
         ppp_factor: ppp ? Number(ppp) : null,
       });
       onCreated(r);
@@ -141,13 +268,14 @@ function CreateReport({ companyId, onCreated }: { companyId: string; onCreated: 
   };
 
   return (
-    <div className="max-w-lg">
-      <h1 className="text-2xl font-semibold sm:text-3xl">Start a BRSR report</h1>
-      <p className="mt-1 text-sm text-text-muted">
-        The Business Responsibility and Sustainability Report (SEBI). Set up the reporting entity details, then feed in
-        data section by section.
-      </p>
-      <form onSubmit={submit} className="card mt-6 space-y-4 p-6">
+    <div>
+      <div className="card p-6">
+        <h2 className="font-display text-lg font-semibold">Full BRSR setup</h2>
+        <p className="mt-1 text-sm text-text-muted">
+          The Business Responsibility and Sustainability Report (SEBI). Set up the reporting entity
+          details, then feed in data section by section.
+        </p>
+      <form onSubmit={submit} className="mt-5 space-y-4">
         <label className="flex flex-col gap-1.5">
           <span className="text-sm font-medium">Financial year</span>
           <input value={fy} onChange={(e) => setFy(e.target.value)} placeholder="2024-25" className="h-11 rounded-xl border border-border bg-surface px-4 text-sm" />
@@ -161,9 +289,13 @@ function CreateReport({ companyId, onCreated }: { companyId: string; onCreated: 
         </label>
         <div className="grid grid-cols-2 gap-4">
           <label className="flex flex-col gap-1.5">
-            <span className="text-sm font-medium">Turnover (INR)</span>
-            <input value={turnover} onChange={(e) => setTurnover(e.target.value)} inputMode="decimal" placeholder="e.g. 5000000000" className="h-11 rounded-xl border border-border bg-surface px-4 text-sm" />
-            <span className="text-[11px] text-text-muted">Denominator for intensity ratios.</span>
+            <span className="text-sm font-medium">Turnover (₹ crore)</span>
+            <input value={turnover} onChange={(e) => setTurnover(e.target.value)} inputMode="decimal" placeholder="e.g. 300" className="h-11 rounded-xl border border-border bg-surface px-4 text-sm" />
+            <span className="text-[11px] text-text-muted">
+              {turnover && Number(turnover) > 0
+                ? `₹${Number(turnover).toLocaleString("en-IN")} crore = ₹${(Number(turnover) * 1e7).toLocaleString("en-IN")}`
+                : "Denominator for intensity ratios."}
+            </span>
           </label>
           <label className="flex flex-col gap-1.5">
             <span className="text-sm font-medium">PPP factor (USD/INR)</span>
@@ -174,6 +306,7 @@ function CreateReport({ companyId, onCreated }: { companyId: string; onCreated: 
         {error && <p className="text-sm text-[#b42318]">{error}</p>}
         <Button type="submit" className="w-full" disabled={busy}>{busy ? "Creating..." : "Create report"}</Button>
       </form>
+      </div>
     </div>
   );
 }
@@ -248,6 +381,11 @@ function ReportEditor({
   const onStatusChange = useCallback(async (status: string) => {
     const updated = await updateReport(report.id, { status });
     onSwitch(updated); // reflect the new status everywhere (gating, lock, badge)
+  }, [report.id, onSwitch]);
+
+  const onUpdateFinancials = useCallback(async (patch: { turnover: number | null; ppp_factor: number | null }) => {
+    const updated = await updateReport(report.id, patch);
+    onSwitch(updated);
   }, [report.id, onSwitch]);
 
   const onEvidenceChange = useCallback((key: string, files: EvidenceFile[]) => {
@@ -407,7 +545,7 @@ function ReportEditor({
           ) : activeKey === SETTINGS ? (
             <SettingsView />
           ) : activeKey === OVERVIEW ? (
-            <BrsrOverview report={report} responses={responses} kpis={kpis} onNavigate={setActiveKey} onStatusChange={onStatusChange} isAdmin={isAdmin} />
+            <BrsrOverview report={report} responses={responses} kpis={kpis} onNavigate={setActiveKey} onStatusChange={onStatusChange} onUpdateFinancials={onUpdateFinancials} isAdmin={isAdmin} />
           ) : activeKey === CALC ? (
             <div className={cn(locked && "pointer-events-none select-none opacity-70")}>
               <EmissionsCalculator responses={responses} onChangeAnswer={onChangeAnswer} onApplyUpdates={onApplyUpdates} />
