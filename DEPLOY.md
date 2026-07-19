@@ -54,11 +54,13 @@ These live in `supabase/` and are run in the **Supabase SQL Editor**. They are
 already applied to the current project; only re-run on a fresh project or when a
 new one is added:
 
-1. `schema.sql`        — companies, activity_entries + RLS
-2. `brsr.sql`          — brsr_reports, brsr_responses, brsr_evidence + storage bucket + RLS
-3. `brsr_pro.sql`      — company_members, brsr_section_status, brsr_audit + member RLS
-4. `brsr_collect.sql`  — company profile columns + brsr_kpi_status
-5. `brsr_export.sql`   — brsr_flatten() + brsr_export_view (data extraction)
+1. `schema.sql`         — companies, activity_entries + RLS
+2. `brsr.sql`           — brsr_reports, brsr_responses, brsr_evidence + storage bucket + RLS
+3. `brsr_pro.sql`       — company_members, brsr_section_status, brsr_audit + member RLS
+4. `brsr_collect.sql`   — company profile columns + brsr_kpi_status
+5. `brsr_export.sql`    — brsr_flatten() + brsr_export_view (data extraction)
+6. `brsr_ops.sql`       — custom emission factors, org units, collection tasks, member profiles
+7. `brsr_suppliers.sql` — supplier invites + submissions + token-scoped RPCs (anon submit)
 
 Also in Supabase Auth: **"Confirm email" is OFF** (self-serve signup logs in
 immediately). Turn on if you want email verification.

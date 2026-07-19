@@ -6,6 +6,7 @@ import type { BrsrReport, ResponseMap } from "@/lib/brsr/db";
 import {
   buildJson, parseJson, buildXml, buildCsvTemplate, buildFlatCsv, carryCurrentToPrevious, downloadText,
 } from "@/lib/brsr/exporters";
+import { buildXbrlInstance, buildMappingCsv } from "@/lib/brsr/xbrl";
 
 /**
  * Data portability: export the report (JSON backup, XBRL-style XML, CSV
@@ -44,6 +45,21 @@ export function BrsrTools({
     }
   };
 
+  const onXbrl = () => {
+    const res = buildXbrlInstance(company, report, responses);
+    if (res.factCount === 0) {
+      setNote("No quantitative BRSR Core data to export yet. Fill Principle 6 in Collect first.");
+      return;
+    }
+    downloadText(`brsr-${fy}-instance.xbrl.xml`, res.xml, "application/xml");
+    setNote(
+      `XBRL instance exported: ${res.factCount} facts against ${res.mappedCount} SEBI BRSR taxonomy concepts ` +
+      `(in-capmkt, DCYMain/DPYMain contexts, taxonomy units)` +
+      (res.extensionElements.length ? `, plus ${res.extensionElements.length} extension concepts` : "") +
+      `. Validate with the BSE/NSE XBRL utility before filing.`,
+    );
+  };
+
   const onCarry = async () => {
     setBusy(true);
     setNote(null);
@@ -66,10 +82,12 @@ export function BrsrTools({
   return (
     <div className="card p-6">
       <h3 className="font-display text-base font-semibold">Data &amp; export</h3>
-      <p className="mt-1 text-xs text-text-muted">Back up, move, and format the report. XBRL export uses ESGen keys ready to remap to SEBI&apos;s official taxonomy; it is not a filing-valid iXBRL.</p>
+      <p className="mt-1 text-xs text-text-muted">Back up, move, and format the report. The XBRL instance is a structured XBRL 2.1 document of your BRSR Core figures (CY/PY contexts, typed units); validate it with the BSE/NSE XBRL utility before filing.</p>
       <div className="mt-4 flex flex-wrap gap-2">
         <ToolButton onClick={() => downloadText(`brsr-${fy}-data.csv`, buildFlatCsv(responses), "text/csv")}>Export all data (CSV)</ToolButton>
         <ToolButton onClick={() => downloadText(`brsr-${fy}.json`, buildJson(report, responses), "application/json")}>Export JSON (backup)</ToolButton>
+        <ToolButton onClick={onXbrl}>Export XBRL instance</ToolButton>
+        <ToolButton onClick={() => downloadText(`brsr-xbrl-mapping.csv`, buildMappingCsv(), "text/csv")}>XBRL mapping report</ToolButton>
         <ToolButton onClick={() => downloadText(`brsr-${fy}.xml`, buildXml(company, report, responses), "application/xml")}>Export XBRL-style XML</ToolButton>
         <ToolButton onClick={() => downloadText(`brsr-data-dictionary.csv`, buildCsvTemplate(), "text/csv")}>Export CSV template</ToolButton>
         <ToolButton onClick={() => fileRef.current?.click()} disabled={busy}>Import JSON</ToolButton>

@@ -29,6 +29,7 @@ export function AppShell({ children, fullBleed = false }: { children: React.Reac
   return (
     <div className="app-light min-h-screen bg-canvas text-text">
       <header className="no-print sticky top-0 z-30 border-b border-border bg-surface/95 backdrop-blur">
+        <div aria-hidden className="h-[2px] w-full" style={{ background: "#059669" }} />
         <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between gap-4 px-5 sm:px-8">
           <div className="flex items-center gap-4">
             <Link href="/app/brsr" aria-label="ESGen home" className="transition-opacity hover:opacity-80">

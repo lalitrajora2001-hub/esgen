@@ -38,7 +38,7 @@ export default function ToolLoginPage() {
   return (
     <div>
       <h1 className="text-2xl font-semibold">Welcome back</h1>
-      <p className="mt-1.5 text-sm text-text-muted">Sign in to your BRSR reporting workspace.</p>
+      <p className="mt-1.5 text-sm text-text-muted">Sign in to your ESGEN workspace.</p>
 
       <form onSubmit={submit} noValidate aria-label="Sign in" className="mt-6 space-y-5">
         <Field id="email" label="Email" type="email" inputMode="email" required autoComplete="email" value={v.email} onChange={set("email")} error={errors.email} />

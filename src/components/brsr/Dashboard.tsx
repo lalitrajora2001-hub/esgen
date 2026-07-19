@@ -21,17 +21,18 @@ import { cn } from "@/lib/cn";
  * fabricated number.
  */
 
-const S1 = "#0f766e";
+const S1 = "#047857";
 const S2 = "#10b981";
 const S3 = "#6ee7b7";
-const PREV = "#cbd5e1";
-const BLUE = "#2f6fe0";
-const BLUE_LT = "#93b6f5";
+const PREV = "#c9d6cd";
+const BLUE = "#3b82f6";
+const BLUE_LT = "#93c5fd";
 const AMBER = "#f59e0b";
+const VIOLET = "#8b5cf6";
 const SLATE = "#64748b";
 const RED = "#b42318";
-const GRID = "#e4e7ec";
-const AXIS = "#667085";
+const GRID = "#e2ebe4";
+const AXIS = "#5b6f64";
 const tip = { background: "#ffffff", border: "1px solid #e4e7ec", borderRadius: 10, color: "#131820", fontSize: 12, boxShadow: "0 4px 14px -6px rgba(16,24,40,0.12)" } as const;
 
 type ScopeTab = "overview" | "s1" | "s2" | "s3";
@@ -103,18 +104,18 @@ export function Dashboard({
       {/* ---- KPI strip ---- */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-6">
         <Stat label="Total emissions" value={fmtNum(d.totalGhg)} unit="tCO2e" trend={d.ghgYoyPct} trendGoodDown icon={<CloudIcon />} tone={S1} />
-        <Stat label="Scope 1 + 2 (Core)" value={fmtNum(d.coreGhg)} unit="tCO2e" trend={d.coreYoyPct} trendGoodDown icon={<LayersIcon />} tone={BLUE} />
+        <Stat label="Scope 1 + 2 (Core)" value={fmtNum(d.coreGhg)} unit="tCO2e" trend={d.coreYoyPct} trendGoodDown icon={<LayersIcon />} tone="#0d9488" />
         <Stat
           label="GHG intensity"
           value={d.intensityPerCrore == null ? "—" : fmtNum(d.intensityPerCrore, 2)}
           unit="tCO2e / ₹ Cr"
           sub={d.intensityPerCrorePpp != null ? `PPP-adjusted: ${fmtNum(d.intensityPerCrorePpp, 2)}` : "Add turnover for intensity"}
-          icon={<GaugeIcon />} tone="#7c5cff"
+          icon={<GaugeIcon />} tone={VIOLET}
         />
         <Stat
           label="Energy consumed" value={fmtNum(d.energyTotal)} unit="GJ" trend={d.energyYoyPct} trendGoodDown
           sub={d.renewablePct != null ? `${Math.round(d.renewablePct)}% renewable` : undefined}
-          icon={<BoltIcon />} tone={S2}
+          icon={<BoltIcon />} tone="#22c55e"
         />
         <Stat label="Water consumed" value={fmtNum(d.waterConsumption)} unit="kL" trend={d.waterYoyPct} trendGoodDown icon={<DropIcon />} tone={BLUE} />
         <Stat
@@ -126,8 +127,8 @@ export function Dashboard({
 
       {/* ---- Emissions: scope tabs ---- */}
       <section className="card overflow-hidden">
-        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border px-5 pt-3">
-          <div className="flex gap-1">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-5 py-3">
+          <div className="inline-flex gap-1 rounded-full bg-surface-2 p-1">
             {([
               { k: "overview", label: "Emission overview" },
               { k: "s1", label: "Scope 1" },
@@ -137,17 +138,17 @@ export function Dashboard({
               <button
                 key={t.k}
                 onClick={() => setTab(t.k)}
+                aria-pressed={tab === t.k}
                 className={cn(
-                  "relative px-3.5 pb-3 pt-1.5 text-sm font-medium transition-colors",
-                  tab === t.k ? "text-text" : "text-text-muted hover:text-text",
+                  "rounded-full px-4 py-1.5 text-sm transition",
+                  tab === t.k ? "bg-white font-semibold text-text shadow-sm" : "font-medium text-text-muted hover:text-text",
                 )}
               >
                 {t.label}
-                {tab === t.k && <span className="absolute inset-x-1 -bottom-px h-0.5 rounded-full bg-teal" />}
               </button>
             ))}
           </div>
-          <p className="pb-2 text-[11px] text-text-muted">Scope 1 &amp; 2: EI.7 · Scope 3: LI.2</p>
+          <p className="text-[11px] text-text-muted">Scope 1 &amp; 2: EI.7 · Scope 3: LI.2</p>
         </div>
 
         <div className="p-5">
@@ -418,19 +419,19 @@ export function Dashboard({
           <div className="mt-3 flex h-2.5 w-full overflow-hidden rounded-full bg-surface-2">
             {trust.total > 0 && (
               <>
-                <div className="h-full bg-teal" style={{ width: `${(trust.validated / trust.total) * 100}%` }} />
-                <div className="h-full bg-[#10b981]/70" style={{ width: `${(trust.withEvidence / trust.total) * 100}%` }} />
-                <div className="h-full bg-[#2f6fe0]/60" style={{ width: `${(trust.answered / trust.total) * 100}%` }} />
-                <div className="h-full bg-[#f0a020]/60" style={{ width: `${(trust.inProgress / trust.total) * 100}%` }} />
+                <div className="h-full" style={{ background: "#047857", width: `${(trust.validated / trust.total) * 100}%` }} />
+                <div className="h-full" style={{ background: "#10b981", width: `${(trust.withEvidence / trust.total) * 100}%` }} />
+                <div className="h-full" style={{ background: BLUE, width: `${(trust.answered / trust.total) * 100}%` }} />
+                <div className="h-full" style={{ background: AMBER, width: `${(trust.inProgress / trust.total) * 100}%` }} />
               </>
             )}
           </div>
           <ul className="mt-3 space-y-1.5 text-xs">
-            <LegendRow color="#0f766e" label="Validated" value={String(trust.validated)} />
-            <LegendRow color="rgba(16,185,129,0.7)" label="Data + evidence" value={String(trust.withEvidence)} />
-            <LegendRow color="rgba(47,111,224,0.6)" label="Data entered" value={String(trust.answered)} />
-            <LegendRow color="rgba(240,160,32,0.6)" label="In progress" value={String(trust.inProgress)} />
-            <LegendRow color="#e4e7ec" label="Not started" value={String(trust.notStarted)} />
+            <LegendRow color="#047857" label="Validated" value={String(trust.validated)} />
+            <LegendRow color="#10b981" label="Data + evidence" value={String(trust.withEvidence)} />
+            <LegendRow color={BLUE} label="Data entered" value={String(trust.answered)} />
+            <LegendRow color={AMBER} label="In progress" value={String(trust.inProgress)} />
+            <LegendRow color="#dbe5de" label="Not started" value={String(trust.notStarted)} />
           </ul>
           <button onClick={() => onNavigate("__core__")} className="mt-4 text-xs font-semibold text-teal hover:underline">
             Continue collecting →
@@ -528,9 +529,12 @@ function DashHeader({ report }: { report: BrsrReport }) {
 
 function PanelTitle({ title, sub }: { title: string; sub?: string }) {
   return (
-    <div className="mb-3">
-      <h3 className="font-display text-base font-semibold">{title}</h3>
-      {sub && <p className="mt-0.5 text-[11px] text-text-muted">{sub}</p>}
+    <div className="mb-3 flex items-start gap-2.5">
+      <span aria-hidden className="mt-1 h-4 w-1 shrink-0 rounded-full" style={{ background: "#059669" }} />
+      <div>
+        <h3 className="font-display text-base font-semibold">{title}</h3>
+        {sub && <p className="mt-0.5 text-[11px] text-text-muted">{sub}</p>}
+      </div>
     </div>
   );
 }
@@ -540,12 +544,13 @@ function Stat({ label, value, unit, trend, trendGoodDown, sub, icon, tone }: {
 }) {
   const up = trend != null && trend > 0;
   const good = trend == null ? false : trendGoodDown ? trend < 0 : trend > 0;
+  const t = tone ?? "#667085";
   return (
     <div className="card p-4">
       <div className="flex items-start justify-between gap-2">
         <p className="text-[11px] uppercase tracking-wide text-text-muted">{label}</p>
         {icon && (
-          <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg" style={{ background: `${tone ?? "#667085"}14`, color: tone ?? "#667085" }}>
+          <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg text-white shadow-sm" style={{ background: t }}>
             {icon}
           </span>
         )}

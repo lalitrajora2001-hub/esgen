@@ -62,7 +62,7 @@ export default function ToolSignupPage() {
   return (
     <div>
       <h1 className="text-2xl font-semibold">Create your account</h1>
-      <p className="mt-1.5 text-sm text-text-muted">Set up your organisation&apos;s BRSR reporting workspace.</p>
+      <p className="mt-1.5 text-sm text-text-muted">Set up your organisation&apos;s reporting workspace.</p>
 
       <form onSubmit={submit} noValidate aria-label="Create account" className="mt-6 space-y-5">
         <Field id="email" label="Work email" type="email" inputMode="email" required autoComplete="email" value={v.email} onChange={set("email")} error={errors.email} />

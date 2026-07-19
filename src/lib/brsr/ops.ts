@@ -157,3 +157,81 @@ export async function deleteTask(id: string): Promise<void> {
   const { error } = await db().from("collection_tasks").delete().eq("id", id);
   if (error) throw error;
 }
+
+// ---- value-chain suppliers ------------------------------------------------
+
+export type InviteStatus = "invited" | "submitted" | "accepted" | "declined";
+
+export interface SupplierPayload {
+  period?: string;
+  scope1?: number | null;
+  scope2?: number | null;
+  scope3?: number | null;
+  energy_total_gj?: number | null;
+  renewable_pct?: number | null;
+  allocation_basis?: string;
+  allocation_pct?: number | null;
+  method_note?: string;
+}
+
+export interface SupplierInvite {
+  id: string;
+  company_id: string;
+  token: string;
+  supplier_name: string;
+  contact_email: string | null;
+  financial_year: string;
+  message: string | null;
+  status: InviteStatus;
+  created_at: string;
+  submitted_at: string | null;
+  supplier_submissions?: { id: string; payload: SupplierPayload; submitted_by: string | null; created_at: string }[];
+}
+
+export async function listSupplierInvites(companyId: string): Promise<SupplierInvite[]> {
+  const { data, error } = await db()
+    .from("supplier_invites")
+    .select("*, supplier_submissions(*)")
+    .eq("company_id", companyId)
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return (data as SupplierInvite[]) ?? [];
+}
+
+export async function createSupplierInvite(input: {
+  company_id: string;
+  supplier_name: string;
+  contact_email: string | null;
+  financial_year: string;
+  message: string | null;
+}): Promise<SupplierInvite> {
+  const { data, error } = await db().from("supplier_invites").insert(input).select("*, supplier_submissions(*)").single();
+  if (error) throw error;
+  return data as SupplierInvite;
+}
+
+export async function setSupplierInviteStatus(id: string, status: InviteStatus): Promise<void> {
+  const { error } = await db().from("supplier_invites").update({ status }).eq("id", id);
+  if (error) throw error;
+}
+
+export async function deleteSupplierInvite(id: string): Promise<void> {
+  const { error } = await db().from("supplier_invites").delete().eq("id", id);
+  if (error) throw error;
+}
+
+/** Supplier-side (token, no auth): what the invite link shows. */
+export async function fetchInviteByToken(token: string): Promise<{
+  supplier_name: string; client_name: string; financial_year: string; message: string | null; status: InviteStatus;
+} | null> {
+  const { data, error } = await db().rpc("esgen_supplier_invite", { p_token: token });
+  if (error) throw error;
+  return (data as never) ?? null;
+}
+
+/** Supplier-side (token, no auth): submit or replace the data. */
+export async function submitSupplierData(token: string, payload: SupplierPayload, email: string): Promise<{ ok: boolean; error?: string }> {
+  const { data, error } = await db().rpc("esgen_supplier_submit", { p_token: token, p_payload: payload, p_email: email });
+  if (error) throw error;
+  return data as { ok: boolean; error?: string };
+}

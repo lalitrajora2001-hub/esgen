@@ -29,18 +29,18 @@ export function SettingsView() {
         <p className="mt-1 text-sm text-text-muted">Your reporting entity and workspace configuration.</p>
       </header>
 
-      <div className="mb-6 flex gap-1 border-b border-border">
+      <div className="mb-6 inline-flex gap-1 rounded-full bg-surface-2 p-1">
         {tabs.map((t) => (
           <button
             key={t.key}
             onClick={() => setActive(t.key)}
+            aria-pressed={t.key === active}
             className={cn(
-              "relative px-4 py-2.5 text-sm font-medium transition-colors",
-              t.key === active ? "text-text" : "text-text-muted hover:text-text",
+              "rounded-full px-4 py-1.5 text-sm transition",
+              t.key === active ? "bg-white font-semibold text-text shadow-sm" : "font-medium text-text-muted hover:text-text",
             )}
           >
             {t.label}
-            {t.key === active && <span className="absolute inset-x-0 -bottom-px h-0.5 rounded-full bg-teal" />}
           </button>
         ))}
       </div>
