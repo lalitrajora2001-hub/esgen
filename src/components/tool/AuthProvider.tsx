@@ -17,6 +17,10 @@ interface AuthState {
   signIn: (email: string, password: string) => Promise<{ error: string | null }>;
   signUp: (email: string, password: string) => Promise<{ error: string | null; needsConfirmation: boolean }>;
   signOut: () => Promise<void>;
+  /** Send a password-reset email linking to /app/reset. */
+  resetPassword: (email: string) => Promise<{ error: string | null }>;
+  /** Set a new password for the signed-in (or recovery) session. */
+  updatePassword: (password: string) => Promise<{ error: string | null }>;
   enterDemo: () => void;
   exitDemo: () => void;
 }
@@ -79,6 +83,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setSession(null);
   }, []);
 
+  const resetPassword = useCallback(async (email: string) => {
+    const supabase = getSupabase();
+    if (!supabase) return { error: "Backend is not configured." };
+    const redirectTo = `${window.location.origin}/app/reset/`;
+    const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo });
+    return { error: error?.message ?? null };
+  }, []);
+
+  const updatePassword = useCallback(async (password: string) => {
+    const supabase = getSupabase();
+    if (!supabase) return { error: "Backend is not configured." };
+    const { error } = await supabase.auth.updateUser({ password });
+    return { error: error?.message ?? null };
+  }, []);
+
   const enterDemo = useCallback(() => {
     setDemoActive(true);
     setDemo(true);
@@ -100,6 +119,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     signIn,
     signUp,
     signOut,
+    resetPassword,
+    updatePassword,
     enterDemo,
     exitDemo,
   };

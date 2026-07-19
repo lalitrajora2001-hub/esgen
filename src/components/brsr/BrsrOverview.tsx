@@ -7,16 +7,15 @@ import { moduleCompletion, isAnswered, type Kpi } from "@/lib/brsr/calc";
 import { validateReport } from "@/lib/brsr/validate";
 import type { ModuleDef, QuestionDef } from "@/lib/brsr/types";
 
-const STATUSES = ["draft", "in_review", "final"] as const;
-
 export function BrsrOverview({
-  report, responses, kpis, onNavigate, onStatusChange,
+  report, responses, kpis, onNavigate, onStatusChange, isAdmin = false,
 }: {
   report: BrsrReport;
   responses: ResponseMap;
   kpis: Kpi[];
   onNavigate: (moduleKey: string) => void;
   onStatusChange: (status: string) => Promise<void>;
+  isAdmin?: boolean;
 }) {
   const [status, setStatus] = useState(report.status);
   const [savingStatus, setSavingStatus] = useState(false);
@@ -51,9 +50,17 @@ export function BrsrOverview({
       setStatusError("Resolve the data checks and complete all BRSR Core items before marking the report final.");
       return;
     }
+    const prev = status;
     setStatus(s);
     setSavingStatus(true);
-    try { await onStatusChange(s); } finally { setSavingStatus(false); }
+    try {
+      await onStatusChange(s);
+    } catch (e) {
+      setStatus(prev);
+      setStatusError(e instanceof Error ? e.message : "Could not change the status.");
+    } finally {
+      setSavingStatus(false);
+    }
   };
 
   function missingCoreCount(): number {
@@ -71,17 +78,41 @@ export function BrsrOverview({
             <p className="mt-1 font-display text-3xl font-semibold">{pct}%</p>
             <p className="text-xs text-text-muted">{answered} of {total} questions started</p>
           </div>
-          <label className="flex flex-col gap-1.5 text-sm">
+          <div className="flex flex-col items-end gap-1.5 text-sm">
             <span className="text-xs text-text-muted">Report status</span>
-            <select
-              value={status}
-              onChange={(e) => changeStatus(e.target.value)}
-              disabled={savingStatus}
-              className="h-10 rounded-lg border border-border bg-surface px-3 text-sm"
-            >
-              {STATUSES.map((s) => <option key={s} value={s}>{s.replace("_", " ")}</option>)}
-            </select>
-          </label>
+            <div className="flex items-center gap-2">
+              <span className={
+                "rounded-full px-3 py-1 text-xs font-medium " +
+                (status === "final" ? "bg-teal/10 text-teal" : status === "in_review" ? "bg-[#f0a020]/12 text-[#92600a]" : "bg-surface-2 text-text-muted")
+              }>
+                {status === "final" ? "Released" : status === "in_review" ? "Under ESGEN review" : "Draft"}
+              </span>
+              {/* Clients move draft <-> in_review; only ESGEN releases or reopens. */}
+              {status === "draft" && (
+                <button onClick={() => changeStatus("in_review")} disabled={savingStatus} className="rounded-lg bg-accent px-3 py-1.5 text-xs font-medium text-white disabled:opacity-50">
+                  Submit for review
+                </button>
+              )}
+              {status === "in_review" && (
+                <button onClick={() => changeStatus("draft")} disabled={savingStatus} className="rounded-lg border border-border px-3 py-1.5 text-xs text-text-muted transition hover:border-teal hover:text-text disabled:opacity-50">
+                  Back to draft
+                </button>
+              )}
+              {isAdmin && status === "in_review" && (
+                <button onClick={() => changeStatus("final")} disabled={savingStatus} className="rounded-lg bg-teal px-3 py-1.5 text-xs font-medium text-white disabled:opacity-50">
+                  Release report (ESGEN)
+                </button>
+              )}
+              {isAdmin && status === "final" && (
+                <button onClick={() => changeStatus("in_review")} disabled={savingStatus} className="rounded-lg border border-border px-3 py-1.5 text-xs text-text-muted disabled:opacity-50">
+                  Reopen (ESGEN)
+                </button>
+              )}
+            </div>
+            {status === "in_review" && !isAdmin && (
+              <span className="text-[11px] text-text-muted">ESGEN reviews the data and releases the report.</span>
+            )}
+          </div>
         </div>
         <div className="mt-4 h-2 overflow-hidden rounded-full bg-surface-2">
           <div className="h-full rounded-full bg-accent transition-all" style={{ width: `${pct}%` }} />

@@ -75,6 +75,12 @@ export default function ToolSignupPage() {
         <Button type="submit" size="lg" className="w-full" disabled={busy}>
           {busy ? "Creating account..." : "Create account"}
         </Button>
+        <p className="text-center text-[11px] leading-relaxed text-text-muted">
+          By creating an account you agree to our{" "}
+          <Link href="/legal/terms" className="underline hover:text-text">Terms</Link> and{" "}
+          <Link href="/legal/privacy-policy" className="underline hover:text-text">Privacy Policy</Link>.
+          Your data is stored securely and used only for your reporting.
+        </p>
       </form>
 
       <p className="mt-6 text-center text-sm text-text-muted">

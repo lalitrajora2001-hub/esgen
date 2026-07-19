@@ -2,6 +2,7 @@ import { num } from "@/lib/brsr/calc";
 import type { ResponseMap, BrsrReport } from "@/lib/brsr/db";
 import type { Company } from "@/lib/tool/types";
 import { EMISSION_FACTORS, getFactor, type Scope } from "@/lib/emissions/factors";
+import { toBaseUnit } from "@/lib/brsr/units";
 
 /**
  * Client-facing dashboard metrics, derived from the BRSR data entered in
@@ -13,8 +14,13 @@ type Period = "current" | "previous";
 
 function readVal(responses: ResponseMap, qKey: string, rowKey: string, period: Period = "current", col = "value"): number | null {
   const v = responses[qKey] as { current?: Record<string, Record<string, unknown>>; previous?: Record<string, Record<string, unknown>> } | undefined;
-  const cell = v?.[period]?.[rowKey]?.[col];
-  return cell == null || cell === "" ? null : num(cell as never);
+  const row = v?.[period]?.[rowKey];
+  const cell = row?.[col];
+  if (cell == null || cell === "") return null;
+  const n = num(cell as never);
+  // Normalise to the question family's base unit (GJ / kL / tCO2e / MT) using
+  // the unit the client selected on that row.
+  return col === "value" ? toBaseUnit(qKey, row?.unit, n) : n;
 }
 
 function pctChange(cur: number | null, prev: number | null): number | null {

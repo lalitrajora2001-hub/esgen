@@ -1,6 +1,7 @@
 import type { ResponseMap, BrsrReport } from "@/lib/brsr/db";
 import type { Company } from "@/lib/tool/types";
 import { num } from "@/lib/brsr/calc";
+import { toBaseUnit } from "@/lib/brsr/units";
 
 /**
  * XBRL 2.1 instance generator for the BRSR quantitative disclosures, mapped to
@@ -107,10 +108,13 @@ function esc(s: string): string {
 
 function readCell(responses: ResponseMap, qKey: string, rowKey: string, period: "current" | "previous"): number | null {
   const v = responses[qKey] as { current?: Record<string, Record<string, unknown>>; previous?: Record<string, Record<string, unknown>> } | undefined;
-  const cell = v?.[period]?.[rowKey]?.["value"];
+  const row = v?.[period]?.[rowKey];
+  const cell = row?.["value"];
   if (cell == null || cell === "") return null;
   const n = num(cell as never);
-  return Number.isFinite(n) ? n : null;
+  if (!Number.isFinite(n)) return null;
+  // Normalise to the taxonomy unit (GJ / kL / tCO2e / MT) from the row's unit.
+  return toBaseUnit(qKey, row?.unit, n);
 }
 
 /** "2026-27" -> {start:"2026-04-01", end:"2027-03-31"} (Indian FY). */

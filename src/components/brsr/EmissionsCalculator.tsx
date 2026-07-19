@@ -64,13 +64,14 @@ export function EmissionsCalculator({
       const updates: Record<string, unknown> = {};
       const ghg = (responses["C.P6.EI.7"] as { current?: Record<string, Record<string, Scalar>> }) ?? {};
       const ghgCur = { ...(ghg.current ?? {}) };
-      ghgCur.scope1 = { ...(ghgCur.scope1 ?? {}), value: s1 };
-      ghgCur.scope2 = { ...(ghgCur.scope2 ?? {}), value: s2 };
+      // The calculator works in tonnes, so stamp the unit alongside the value.
+      ghgCur.scope1 = { ...(ghgCur.scope1 ?? {}), value: s1, unit: "MT CO2e" };
+      ghgCur.scope2 = { ...(ghgCur.scope2 ?? {}), value: s2, unit: "MT CO2e" };
       updates["C.P6.EI.7"] = { ...ghg, current: ghgCur };
       if (s3 > 0) {
         const li2 = (responses["C.P6.LI.2"] as { current?: Record<string, Record<string, Scalar>> }) ?? {};
         const li2Cur = { ...(li2.current ?? {}) };
-        li2Cur.scope3 = { ...(li2Cur.scope3 ?? {}), value: s3 };
+        li2Cur.scope3 = { ...(li2Cur.scope3 ?? {}), value: s3, unit: "MT CO2e" };
         updates["C.P6.LI.2"] = { ...li2, current: li2Cur };
       }
       await onApplyUpdates(updates);

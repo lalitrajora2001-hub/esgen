@@ -23,7 +23,7 @@ import { TasksView } from "@/components/brsr/TasksView";
 import { SuppliersView } from "@/components/brsr/SuppliersView";
 import { EmissionsCalculator } from "@/components/brsr/EmissionsCalculator";
 import { WorkflowBar, STATE_LABELS } from "@/components/brsr/WorkflowBar";
-import { fetchSectionStatuses, fetchKpiStatuses, upsertKpiStatus, logAudit, type SectionStatus, type KpiStatus } from "@/lib/brsr/pro";
+import { fetchSectionStatuses, fetchKpiStatuses, upsertKpiStatus, logAudit, fetchIsAdmin, type SectionStatus, type KpiStatus } from "@/lib/brsr/pro";
 import { cn } from "@/lib/cn";
 
 const DASH = "__dash__";
@@ -73,6 +73,10 @@ export function BrsrWorkspace() {
 
   useEffect(() => {
     if (!company) return;
+    // Reset while switching companies so nothing saves against the old one.
+    setLoading(true);
+    setReports([]);
+    setReport(null);
     (async () => {
       try {
         const rs = await listReports(company.id);
@@ -194,7 +198,15 @@ function ReportEditor({
   const [showExport, setShowExport] = useState(false);
   const [loading, setLoading] = useState(true);
   const [savingKeys, setSavingKeys] = useState<Set<string>>(new Set());
+  const [isAdmin, setIsAdmin] = useState(false);
   const timers = useRef<Record<string, ReturnType<typeof setTimeout>>>({});
+
+  useEffect(() => {
+    fetchIsAdmin().then(setIsAdmin).catch(() => setIsAdmin(false));
+  }, []);
+
+  // A released report is read-only for clients; ESGEN staff can still edit.
+  const locked = report.status === "final" && !isAdmin;
 
   useEffect(() => {
     setLoading(true);
@@ -217,6 +229,7 @@ function ReportEditor({
   const area = areaOf(activeKey);
 
   const onChangeAnswer = useCallback((key: string, value: unknown) => {
+    if (locked) return;
     setResponses((prev) => ({ ...prev, [key]: value }));
     setSavingKeys((s) => new Set(s).add(key));
     clearTimeout(timers.current[key]);
@@ -228,19 +241,21 @@ function ReportEditor({
         setSavingKeys((s) => { const n = new Set(s); n.delete(key); return n; });
       }
     }, 600);
-  }, [report.id, user?.email]);
+  }, [report.id, user?.email, locked]);
 
   const kpis = useMemo(() => computeCoreKpis(responses, report), [responses, report]);
 
   const onStatusChange = useCallback(async (status: string) => {
-    await updateReport(report.id, { status });
-  }, [report.id]);
+    const updated = await updateReport(report.id, { status });
+    onSwitch(updated); // reflect the new status everywhere (gating, lock, badge)
+  }, [report.id, onSwitch]);
 
   const onEvidenceChange = useCallback((key: string, files: EvidenceFile[]) => {
     setEvidence((prev) => [...prev.filter((e) => e.question_key !== key), ...files]);
   }, []);
 
   const onKpiStatusChange = useCallback((key: string, patch: Partial<Pick<KpiStatus, "status" | "assignee_email" | "validated_by" | "validated_at">>) => {
+    if (locked) return;
     setKpiStatuses((prev) => {
       const base = prev[key] ?? { question_key: key, report_id: report.id, status: "not_started", assignee_email: null, validated_by: null, validated_at: null };
       const merged = { ...base, ...patch } as KpiStatus;
@@ -254,16 +269,17 @@ function ReportEditor({
       });
       return { ...prev, [key]: merged };
     });
-  }, [report.id]);
+  }, [report.id, locked]);
 
   // Bulk-apply answer changes (JSON import, carry-forward) and persist each.
   const onApplyUpdates = useCallback(async (updates: Record<string, unknown>) => {
+    if (locked) throw new Error("This report has been released and is locked.");
     setResponses((prev) => ({ ...prev, ...updates }));
     for (const [k, v] of Object.entries(updates)) {
       await saveResponse(report.id, k, v);
       void logAudit(report.id, k, user?.email ?? null, v);
     }
-  }, [report.id, user?.email]);
+  }, [report.id, user?.email, locked]);
 
   if (showExport && company) {
     return (
@@ -354,23 +370,34 @@ function ReportEditor({
             </div>
           </div>
 
+          {/* Released-report lock notice */}
+          {locked && (
+            <p className="mb-5 flex items-center gap-2.5 rounded-xl border border-teal/25 bg-teal/8 p-3 text-xs leading-relaxed text-teal">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-4 w-4 shrink-0"><rect x="5" y="11" width="14" height="10" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" strokeLinecap="round" /></svg>
+              This report has been reviewed and released. The data is locked; contact ESGEN if something
+              needs correcting and we will reopen it.
+            </p>
+          )}
+
           {/* Active view */}
           {loading ? (
             <p className="text-sm text-text-muted">Loading...</p>
           ) : activeKey === DASH ? (
             <Dashboard report={report} company={company} responses={responses} evidence={evidence} kpiStatuses={kpiStatuses} onNavigate={setActiveKey} />
           ) : activeKey === CORE ? (
-            <CollectScreen
-              reportId={report.id}
-              responses={responses}
-              evidence={evidence}
-              statuses={kpiStatuses}
-              savingKeys={savingKeys}
-              deadline={null}
-              onChangeAnswer={onChangeAnswer}
-              onEvidenceChange={onEvidenceChange}
-              onKpiStatusChange={onKpiStatusChange}
-            />
+            <div className={cn(locked && "pointer-events-none select-none opacity-70")}>
+              <CollectScreen
+                reportId={report.id}
+                responses={responses}
+                evidence={evidence}
+                statuses={kpiStatuses}
+                savingKeys={savingKeys}
+                deadline={null}
+                onChangeAnswer={onChangeAnswer}
+                onEvidenceChange={onEvidenceChange}
+                onKpiStatusChange={onKpiStatusChange}
+              />
+            </div>
           ) : activeKey === TASKS ? (
             <TasksView report={report} />
           ) : activeKey === SUPPLIERS ? (
@@ -380,9 +407,11 @@ function ReportEditor({
           ) : activeKey === SETTINGS ? (
             <SettingsView />
           ) : activeKey === OVERVIEW ? (
-            <BrsrOverview report={report} responses={responses} kpis={kpis} onNavigate={setActiveKey} onStatusChange={onStatusChange} />
+            <BrsrOverview report={report} responses={responses} kpis={kpis} onNavigate={setActiveKey} onStatusChange={onStatusChange} isAdmin={isAdmin} />
           ) : activeKey === CALC ? (
-            <EmissionsCalculator responses={responses} onChangeAnswer={onChangeAnswer} onApplyUpdates={onApplyUpdates} />
+            <div className={cn(locked && "pointer-events-none select-none opacity-70")}>
+              <EmissionsCalculator responses={responses} onChangeAnswer={onChangeAnswer} onApplyUpdates={onApplyUpdates} />
+            </div>
           ) : activeKey === TEAM ? (
             company && <BrsrTeam companyId={company.id} reportId={report.id} />
           ) : activeKey === TOOLS ? (
@@ -425,7 +454,7 @@ function ReportEditor({
                 onChange={(s) => setStatuses((prev) => ({ ...prev, [activeModule.key]: s }))}
               />
 
-              <div className="space-y-8">
+              <div className={cn("space-y-8", locked && "pointer-events-none select-none opacity-70")}>
                 {activeModule.subsections.map((sub) => (
                   <section key={sub.key}>
                     <h3 className="mb-3 border-b border-border pb-2 font-display text-base font-semibold">{sub.title}</h3>

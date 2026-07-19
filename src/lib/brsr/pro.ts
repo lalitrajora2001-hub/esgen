@@ -168,6 +168,20 @@ export async function removeMember(id: string): Promise<void> {
   if (error) throw error;
 }
 
+/** True when the signed-in user is ESGEN staff (row in esgen_admins, RLS lets
+ *  each user see only their own row). False when the table is missing. */
+export async function fetchIsAdmin(): Promise<boolean> {
+  const supabase = getSupabase();
+  if (!supabase) return false;
+  try {
+    const { data, error } = await supabase.from("esgen_admins").select("email").limit(1);
+    if (error) return false;
+    return (data?.length ?? 0) > 0;
+  } catch {
+    return false;
+  }
+}
+
 /** After sign-in, link any membership invitations addressed to this email. */
 export async function claimMemberships(email: string): Promise<void> {
   const supabase = getSupabase();

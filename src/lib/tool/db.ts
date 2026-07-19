@@ -29,6 +29,16 @@ export async function fetchCompany(): Promise<Company | null> {
   return (data as Company) ?? null;
 }
 
+/** Every company visible to this user: owned, member of, or (ESGEN staff) all. */
+export async function fetchCompanies(): Promise<Company[]> {
+  const { data, error } = await db()
+    .from("companies")
+    .select("*")
+    .order("name", { ascending: true });
+  if (error) throw error;
+  return (data as Company[]) ?? [];
+}
+
 export async function createCompany(input: {
   name: string;
   sector: string;

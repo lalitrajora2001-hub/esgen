@@ -14,7 +14,7 @@ import { Logo } from "@/components/logo/Logo";
 export function AppShell({ children, fullBleed = false }: { children: React.ReactNode; fullBleed?: boolean }) {
   const router = useRouter();
   const { user, signOut, isDemo, exitDemo } = useAuth();
-  const { company } = useCompany();
+  const { company, companies, switchCompany } = useCompany();
 
   const onSignOut = async () => {
     if (isDemo) {
@@ -40,7 +40,18 @@ export function AppShell({ children, fullBleed = false }: { children: React.Reac
             </span>
           </div>
           <div className="flex items-center gap-3 text-sm">
-            {company && <span className="hidden max-w-[200px] truncate text-text-muted md:inline">{company.name}</span>}
+            {companies.length > 1 ? (
+              <select
+                value={company?.id ?? ""}
+                onChange={(e) => switchCompany(e.target.value)}
+                aria-label="Switch company"
+                className="hidden h-9 max-w-[220px] rounded-lg border border-border bg-surface px-2 text-xs md:block"
+              >
+                {companies.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+              </select>
+            ) : (
+              company && <span className="hidden max-w-[200px] truncate text-text-muted md:inline">{company.name}</span>
+            )}
             {isDemo && <span className="rounded bg-accent/12 px-2 py-0.5 text-xs text-accent-3">Demo</span>}
             {!isDemo && user?.email && <span className="hidden text-text-muted lg:inline">{user.email}</span>}
             <button

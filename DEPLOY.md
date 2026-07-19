@@ -61,6 +61,9 @@ new one is added:
 5. `brsr_export.sql`    — brsr_flatten() + brsr_export_view (data extraction)
 6. `brsr_ops.sql`       — custom emission factors, org units, collection tasks, member profiles
 7. `brsr_suppliers.sql` — supplier invites + submissions + token-scoped RPCs (anon submit)
+8. `brsr_admin.sql`     — esgen_admins (operator role), admin read access, final-report
+                          locking triggers, supplier-link 90-day expiry. Add staff with:
+                          insert into esgen_admins (email, note) values ('x@esgen.co.uk', 'role');
 
 Also in Supabase Auth: **"Confirm email" is OFF** (self-serve signup logs in
 immediately). Turn on if you want email verification.

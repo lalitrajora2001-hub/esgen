@@ -7,6 +7,7 @@ import {
   buildJson, parseJson, buildXml, buildCsvTemplate, buildFlatCsv, carryCurrentToPrevious, downloadText,
 } from "@/lib/brsr/exporters";
 import { buildXbrlInstance, buildMappingCsv } from "@/lib/brsr/xbrl";
+import { buildIntensityUpdates } from "@/lib/brsr/intensity";
 
 /**
  * Data portability: export the report (JSON backup, XBRL-style XML, CSV
@@ -60,6 +61,24 @@ export function BrsrTools({
     );
   };
 
+  const onIntensities = async () => {
+    setBusy(true);
+    setNote(null);
+    try {
+      const { updates, filled } = buildIntensityUpdates(responses, report);
+      if (filled === 0) {
+        setNote("Nothing to compute. Enter totals (energy, water, waste, GHG) in Collect and set the report's turnover first.");
+      } else {
+        await onApplyUpdates(updates);
+        setNote(`Filled ${filled} intensity blocks (per rupee of turnover${report.ppp_factor ? " + PPP-adjusted" : ""}) from your totals and turnover.`);
+      }
+    } catch (err) {
+      setNote(err instanceof Error ? err.message : "Could not compute intensities.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
   const onCarry = async () => {
     setBusy(true);
     setNote(null);
@@ -92,6 +111,7 @@ export function BrsrTools({
         <ToolButton onClick={() => downloadText(`brsr-data-dictionary.csv`, buildCsvTemplate(), "text/csv")}>Export CSV template</ToolButton>
         <ToolButton onClick={() => fileRef.current?.click()} disabled={busy}>Import JSON</ToolButton>
         <ToolButton onClick={onCarry} disabled={busy}>Carry forward to previous year</ToolButton>
+        <ToolButton onClick={onIntensities} disabled={busy}>Auto-compute intensity rows</ToolButton>
         <input ref={fileRef} type="file" accept="application/json,.json" className="hidden" onChange={onImport} />
       </div>
       {note && <p className="mt-3 rounded-lg border border-border bg-surface-2/60 p-2.5 text-xs text-text-muted">{note}</p>}
