@@ -11,7 +11,7 @@ import { Logo } from "@/components/logo/Logo";
  * wordmark to match esgen.co.uk. The BRSR workspace supplies its own section
  * navigation below.
  */
-export function AppShell({ children }: { children: React.ReactNode }) {
+export function AppShell({ children, fullBleed = false }: { children: React.ReactNode; fullBleed?: boolean }) {
   const router = useRouter();
   const { user, signOut, isDemo, exitDemo } = useAuth();
   const { company } = useCompany();
@@ -57,7 +57,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         )}
       </header>
 
-      <main className="mx-auto max-w-7xl px-5 py-8 sm:px-8">{children}</main>
+      {fullBleed ? <main>{children}</main> : <main className="mx-auto max-w-7xl px-5 py-8 sm:px-8">{children}</main>}
     </div>
   );
 }

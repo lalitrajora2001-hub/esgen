@@ -80,7 +80,7 @@ export function MobileMenu({ open, onClose, onSearch }: { open: boolean; onClose
           </nav>
 
           <div className="border-t border-border p-4">
-            <Link href="/login" onClick={onClose} className="mb-3 block text-center text-sm text-text-muted">Sign in</Link>
+            <Link href="/app/login" onClick={onClose} className="mb-3 block text-center text-sm text-text-muted">Sign in</Link>
             <Link href="/demo" onClick={onClose} className="flex h-12 items-center justify-center gap-2 rounded-xl bg-accent font-semibold text-white">
               Book a demo
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="h-4 w-4"><path d="M5 12h14M13 6l6 6-6 6" /></svg>

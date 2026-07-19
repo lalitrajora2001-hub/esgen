@@ -12,7 +12,7 @@ const ROUTES: Route[] = [
   { k: "I need to report to a framework", icon: "M4 5a2 2 0 0 1 2-2h9l5 5v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zM14 3v6h6", blurb: "Tell us which frameworks you are preparing for and how you are structured. We will scope the right setup and walk you through the platform.", to: "contactus@esgen.co.uk", cta: "Book a demo", href: "/demo" },
   { k: "I want to understand pricing", icon: "M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6", blurb: "Pricing is scoped to your reporting needs. Configure a setup on the pricing page, then send it over and we will quote against it.", to: "contactus@esgen.co.uk", cta: "Open the configurator", href: "/pricing" },
   { k: "I'm a consultant or advisor", icon: "M9 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM3 20a6 6 0 0 1 12 0M17 11a2.5 2.5 0 1 0 0-5M16 20h5a5 5 0 0 0-5-5", blurb: "The partner program lets you refer, deliver, or run your whole practice on ESGen. Kunj handles partnership conversations directly.", to: "kunjpatel@esgen.co.uk", cta: "See the partner program", href: "/partner-program" },
-  { k: "I'm an existing client", icon: "M12 3l8 4v5c0 5-3.5 8.5-8 9-4.5-.5-8-4-8-9V7z", blurb: "For support with your workspace, reach the operations team and we will get you to the right person.", to: "janvi@esgen.co.uk", cta: "Sign in", href: "/login" },
+  { k: "I'm an existing client", icon: "M12 3l8 4v5c0 5-3.5 8.5-8 9-4.5-.5-8-4-8-9V7z", blurb: "For support with your workspace, reach the operations team and we will get you to the right person.", to: "janvi@esgen.co.uk", cta: "Sign in", href: "/app/login" },
 ];
 
 export function EnquiryRouter() {

@@ -32,6 +32,18 @@ export interface Member {
   user_id: string | null;
   role: string;
   created_at: string;
+  // Profile columns from brsr_ops.sql; absent until that migration runs.
+  first_name?: string | null;
+  last_name?: string | null;
+  phone?: string | null;
+  org_unit?: string | null;
+}
+
+export interface MemberProfile {
+  first_name?: string | null;
+  last_name?: string | null;
+  phone?: string | null;
+  org_unit?: string | null;
 }
 
 function db() {
@@ -137,12 +149,16 @@ export async function fetchMembers(companyId: string): Promise<Member[]> {
   return (data as Member[]) ?? [];
 }
 
-export async function addMember(companyId: string, email: string, role: string): Promise<Member> {
-  const { data, error } = await db()
-    .from("company_members")
-    .insert({ company_id: companyId, email: email.trim().toLowerCase(), role })
-    .select("*")
-    .single();
+export async function addMember(companyId: string, email: string, role: string, profile?: MemberProfile): Promise<Member> {
+  const base = { company_id: companyId, email: email.trim().toLowerCase(), role };
+  // Try with the profile columns (brsr_ops.sql); fall back to the base insert
+  // when that migration has not been run yet.
+  if (profile && Object.values(profile).some((v) => v)) {
+    const { data, error } = await db().from("company_members").insert({ ...base, ...profile }).select("*").single();
+    if (!error) return data as Member;
+    if (!/column|schema cache/i.test(error.message ?? "")) throw error;
+  }
+  const { data, error } = await db().from("company_members").insert(base).select("*").single();
   if (error) throw error;
   return data as Member;
 }

@@ -40,5 +40,6 @@ export default function WorkspaceLayout({ children }: { children: React.ReactNod
     return <FullLoader label="Setting up your workspace" />;
   }
 
-  return <AppShell>{children}</AppShell>;
+  // The BRSR workspace manages its own rail + panel layout edge to edge.
+  return <AppShell fullBleed={normalized === "/app/brsr"}>{children}</AppShell>;
 }

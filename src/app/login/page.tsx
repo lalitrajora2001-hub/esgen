@@ -1,25 +1,26 @@
-import type { Metadata } from "next";
-import { LoginForm } from "@/components/forms/LoginForm";
-import { Logo } from "@/components/logo/Logo";
+"use client";
 
-export const metadata: Metadata = {
-  title: "Sign in",
-  description: "Sign in to your ESGen workspace. Client access is available for invited users.",
-};
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
-export default function LoginPage() {
+/**
+ * The real sign-in lives at /app/login (the BRSR tool). This route only exists
+ * so old links and bookmarks land in the right place.
+ */
+export default function LoginRedirect() {
+  const router = useRouter();
+  useEffect(() => {
+    router.replace("/app/login");
+  }, [router]);
   return (
-    <section className="relative flex min-h-screen items-center justify-center overflow-hidden px-5 py-32">
-      <div aria-hidden className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(600px 380px at 50% 0%, rgba(77,139,245,0.14), transparent 60%)" }} />
-      <div className="relative w-full max-w-md">
-        <div className="mb-8 flex flex-col items-center text-center">
-          <Logo />
-          <h1 className="mt-6 text-2xl font-semibold">Sign in to your workspace</h1>
-          <p className="mt-2 text-sm text-text-muted">Client access is available for invited users.</p>
-        </div>
-        <div className="card p-6 sm:p-8">
-          <LoginForm />
-        </div>
+    <section className="grid min-h-screen place-items-center px-5">
+      <div className="flex flex-col items-center gap-4 text-center">
+        <span className="h-8 w-8 animate-spin rounded-full border-2 border-border border-t-accent" />
+        <p className="text-sm text-text-muted">Taking you to sign in</p>
+        <p className="text-sm text-text-muted">
+          Not redirected? <Link href="/app/login" className="text-accent-3 underline">Continue to sign in</Link>.
+        </p>
       </div>
     </section>
   );

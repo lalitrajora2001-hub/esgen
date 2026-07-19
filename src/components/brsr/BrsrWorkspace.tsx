@@ -12,12 +12,14 @@ import {
 } from "@/lib/brsr/db";
 import { QuestionRenderer } from "@/components/brsr/QuestionRenderer";
 import { CollectScreen } from "@/components/brsr/CollectScreen";
-import { CompanyProfile } from "@/components/brsr/CompanyProfile";
 import { Dashboard } from "@/components/brsr/Dashboard";
 import { BrsrOverview } from "@/components/brsr/BrsrOverview";
 import { BrsrExport } from "@/components/brsr/BrsrExport";
 import { BrsrTools } from "@/components/brsr/BrsrTools";
 import { BrsrTeam } from "@/components/brsr/BrsrTeam";
+import { FrameworksHub } from "@/components/brsr/FrameworksHub";
+import { SettingsView } from "@/components/brsr/SettingsView";
+import { TasksView } from "@/components/brsr/TasksView";
 import { EmissionsCalculator } from "@/components/brsr/EmissionsCalculator";
 import { WorkflowBar, STATE_LABELS } from "@/components/brsr/WorkflowBar";
 import { fetchSectionStatuses, fetchKpiStatuses, upsertKpiStatus, logAudit, type SectionStatus, type KpiStatus } from "@/lib/brsr/pro";
@@ -29,10 +31,34 @@ const OVERVIEW = "__overview__";
 const TEAM = "__team__";
 const TOOLS = "__tools__";
 const CALC = "__calc__";
-const PROFILE = "__profile__";
+const FRAMEWORKS = "__frameworks__";
+const SETTINGS = "__settings__";
+const TASKS = "__tasks__";
 
 const SECTION_MODULES = BRSR.modules.filter((m) => m.section !== "C");
 const PRINCIPLE_MODULES = BRSR.modules.filter((m) => m.section === "C");
+
+/** Which rail area a view key belongs to. Module keys fall under "collect". */
+type Area = "dashboard" | "collect" | "tasks" | "frameworks" | "team" | "reports" | "settings";
+function areaOf(key: string): Area {
+  if (key === DASH) return "dashboard";
+  if (key === TASKS) return "tasks";
+  if (key === FRAMEWORKS) return "frameworks";
+  if (key === TEAM) return "team";
+  if (key === TOOLS) return "reports";
+  if (key === SETTINGS) return "settings";
+  return "collect"; // CORE, OVERVIEW, CALC and every module key
+}
+
+const AREA_HOME: Record<Area, string> = {
+  dashboard: DASH,
+  collect: CORE,
+  tasks: TASKS,
+  frameworks: FRAMEWORKS,
+  team: TEAM,
+  reports: TOOLS,
+  settings: SETTINGS,
+};
 
 export function BrsrWorkspace() {
   const { company } = useCompany();
@@ -56,11 +82,15 @@ export function BrsrWorkspace() {
     })();
   }, [company]);
 
-  if (loading) return <p className="text-sm text-text-muted">Loading BRSR module...</p>;
-  if (error) return <p className="rounded-xl border border-[#e5484d]/30 bg-[#e5484d]/8 p-3 text-sm text-[#b42318]">{error}</p>;
+  if (loading) return <div className="px-8 py-10"><p className="text-sm text-text-muted">Loading BRSR module...</p></div>;
+  if (error) return <div className="px-8 py-10"><p className="rounded-xl border border-[#e5484d]/30 bg-[#e5484d]/8 p-3 text-sm text-[#b42318]">{error}</p></div>;
 
   if (!report) {
-    return <CreateReport companyId={company!.id} onCreated={(r) => { setReports([r, ...reports]); setReport(r); }} />;
+    return (
+      <div className="mx-auto max-w-7xl px-5 py-10 sm:px-8">
+        <CreateReport companyId={company!.id} onCreated={(r) => { setReports([r, ...reports]); setReport(r); }} />
+      </div>
+    );
   }
 
   return (
@@ -180,6 +210,7 @@ function ReportEditor({
   }, [report.id]);
 
   const activeModule = useMemo(() => BRSR.modules.find((m) => m.key === activeKey), [activeKey]);
+  const area = areaOf(activeKey);
 
   const onChangeAnswer = useCallback((key: string, value: unknown) => {
     setResponses((prev) => ({ ...prev, [key]: value }));
@@ -232,106 +263,97 @@ function ReportEditor({
 
   if (showExport && company) {
     return (
-      <BrsrExport
-        report={report}
-        company={company}
-        responses={responses}
-        evidence={evidence}
-        onBack={() => setShowExport(false)}
-      />
+      <div className="mx-auto max-w-7xl px-5 py-8 sm:px-8">
+        <BrsrExport
+          report={report}
+          company={company}
+          responses={responses}
+          evidence={evidence}
+          onBack={() => setShowExport(false)}
+        />
+      </div>
     );
   }
 
-  const navBtn = (key: string, label: string, right?: React.ReactNode, extraLeft?: React.ReactNode) => {
-    const active = key === activeKey;
-    return (
-      <button
-        onClick={() => setActiveKey(key)}
-        className={cn(
-          "flex w-full items-center justify-between gap-2 rounded-lg px-3 py-2 text-left text-sm transition",
-          active ? "bg-accent/8 font-medium text-accent" : "text-text-muted hover:bg-surface-2 hover:text-text",
-        )}
-      >
-        <span className="flex min-w-0 items-center gap-2">
-          {extraLeft}
-          <span className="truncate">{label}</span>
-        </span>
-        {right}
-      </button>
-    );
-  };
-
-  const moduleBtn = (m: (typeof BRSR.modules)[number]) => {
-    const { answered, total } = moduleCompletion(moduleQuestions(m), responses);
-    const st = statuses[m.key]?.state;
-    const done = answered === total && total > 0;
-    return (
-      <li key={m.key}>
-        {navBtn(
-          m.key,
-          m.navLabel,
-          <span className={cn("shrink-0 rounded-full px-1.5 text-[10px]", done ? "bg-teal/15 text-teal" : "bg-surface-2 text-text-muted")}>{answered}/{total}</span>,
-          <span
-            className={cn("h-1.5 w-1.5 shrink-0 rounded-full", st && st !== "not_started" ? DOT_COLORS[st] : "bg-transparent ring-1 ring-border")}
-            title={st ? STATE_LABELS[st] : "Not started"}
-          />,
-        )}
-      </li>
-    );
-  };
+  const viewTitle =
+    activeKey === DASH ? "Dashboard"
+    : activeKey === CORE ? "Collect · BRSR Core"
+    : activeKey === OVERVIEW ? "Progress & checks"
+    : activeKey === CALC ? "Emissions calculator"
+    : activeKey === TASKS ? "Collection tasks"
+    : activeKey === FRAMEWORKS ? "Frameworks"
+    : activeKey === TEAM ? "Team & activity"
+    : activeKey === TOOLS ? "Reports & data"
+    : activeKey === SETTINGS ? "Settings"
+    : activeModule?.navLabel ?? "";
 
   return (
-    <div>
-      <div className="grid gap-6 lg:grid-cols-[260px_1fr]">
-        {/* Sidebar */}
-        <nav className="h-fit rounded-xl border border-border bg-surface p-3 lg:sticky lg:top-20">
-          {/* Company profile on top (Greenly-style) */}
-          <button onClick={() => setActiveKey(PROFILE)} className="group mb-2 flex w-full items-center gap-3 rounded-lg border border-border bg-surface-2/40 p-3 text-left transition hover:border-accent/40">
-            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-accent/10 font-display text-sm font-bold text-accent">
-              {(company?.name ?? "?").slice(0, 1).toUpperCase()}
-            </span>
-            <span className="min-w-0 flex-1">
-              <span className="block truncate text-sm font-semibold">{company?.name}</span>
-              <span className="block truncate text-xs text-text-muted">{company?.sector ?? "Company profile"}</span>
-            </span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-4 w-4 shrink-0 text-text-muted opacity-0 transition group-hover:opacity-100">
-              <path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </button>
-          <div className="mb-3 flex items-center gap-2">
-            <select
-              value={report.id}
-              onChange={(e) => onSwitch(reports.find((r) => r.id === e.target.value)!)}
-              className="h-9 flex-1 rounded-lg border border-border bg-surface px-2 text-xs"
-            >
-              {reports.map((r) => <option key={r.id} value={r.id}>FY {r.financial_year}</option>)}
-            </select>
-            <button onClick={onNew} title="New report" className="grid h-9 w-9 shrink-0 place-items-center rounded-lg border border-border text-text-muted hover:border-accent hover:text-text">+</button>
-          </div>
+    <div className="flex min-h-[calc(100vh-72px)]">
+      {/* Icon rail */}
+      <Rail area={area} onGo={(a) => setActiveKey(AREA_HOME[a])} />
 
+      {/* Secondary panel: BRSR structure, only in the collect area */}
+      {area === "collect" && (
+        <aside className="sticky top-[72px] hidden h-[calc(100vh-72px)] w-[248px] shrink-0 overflow-y-auto border-r border-border bg-surface p-3 lg:block">
+          <p className="mb-2 mt-1 px-3 text-[11px] font-semibold uppercase tracking-wider text-text-muted/70">Data collection</p>
           <ul className="space-y-1">
-            <li>{navBtn(DASH, "Dashboard")}</li>
-            <li>{navBtn(CORE, "Collect (BRSR Core)")}</li>
-            <li>{navBtn(OVERVIEW, "Progress & checks")}</li>
+            <li><NavBtn active={activeKey === CORE} onClick={() => setActiveKey(CORE)} label="Collect (BRSR Core)" /></li>
+            <li><NavBtn active={activeKey === OVERVIEW} onClick={() => setActiveKey(OVERVIEW)} label="Progress & checks" /></li>
+            <li><NavBtn active={activeKey === CALC} onClick={() => setActiveKey(CALC)} label="Emissions calculator" /></li>
           </ul>
           <NavGroup label="Sections" />
-          <ul className="space-y-1">{SECTION_MODULES.map(moduleBtn)}</ul>
+          <ul className="space-y-1">{SECTION_MODULES.map((m) => <ModuleBtn key={m.key} m={m} activeKey={activeKey} responses={responses} statuses={statuses} onClick={() => setActiveKey(m.key)} />)}</ul>
           <NavGroup label="Principles" />
-          <ul className="space-y-1">{PRINCIPLE_MODULES.map(moduleBtn)}</ul>
-          <NavGroup label="Tools" />
-          <ul className="space-y-1">
-            <li>{navBtn(CALC, "Emissions calculator")}</li>
-            <li>{navBtn(TEAM, "Team & activity")}</li>
-            <li>{navBtn(TOOLS, "Data & export")}</li>
-          </ul>
-        </nav>
+          <ul className="space-y-1">{PRINCIPLE_MODULES.map((m) => <ModuleBtn key={m.key} m={m} activeKey={activeKey} responses={responses} statuses={statuses} onClick={() => setActiveKey(m.key)} />)}</ul>
+        </aside>
+      )}
 
-        {/* Active view */}
-        <div className="min-w-0">
+      {/* Main column */}
+      <div className="min-w-0 flex-1">
+        {/* Mobile rail (horizontal) */}
+        <MobileRail area={area} onGo={(a) => setActiveKey(AREA_HOME[a])} />
+
+        <div className="mx-auto max-w-[1440px] px-5 py-6 sm:px-8">
+          {/* Toolbar: breadcrumb + FY switcher */}
+          <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+            <div className="flex min-w-0 items-center gap-2 text-sm">
+              <span className="truncate font-medium text-text-muted">{company?.name}</span>
+              <span className="text-text-muted/50">/</span>
+              <span className="truncate font-semibold">{viewTitle}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              {/* Mobile jump control for the collect area */}
+              {area === "collect" && (
+                <select
+                  value={activeKey}
+                  onChange={(e) => setActiveKey(e.target.value)}
+                  className="h-9 rounded-lg border border-border bg-surface px-2 text-xs lg:hidden"
+                  aria-label="Jump to section"
+                >
+                  <option value={CORE}>Collect (BRSR Core)</option>
+                  <option value={OVERVIEW}>Progress &amp; checks</option>
+                  <option value={CALC}>Emissions calculator</option>
+                  {SECTION_MODULES.map((m) => <option key={m.key} value={m.key}>{m.navLabel}</option>)}
+                  {PRINCIPLE_MODULES.map((m) => <option key={m.key} value={m.key}>{m.navLabel}</option>)}
+                </select>
+              )}
+              <select
+                value={report.id}
+                onChange={(e) => onSwitch(reports.find((r) => r.id === e.target.value)!)}
+                className="h-9 rounded-lg border border-border bg-surface px-2 text-xs"
+                aria-label="Financial year"
+              >
+                {reports.map((r) => <option key={r.id} value={r.id}>FY {r.financial_year}</option>)}
+              </select>
+              <button onClick={onNew} title="New reporting year" className="grid h-9 w-9 shrink-0 place-items-center rounded-lg border border-border text-text-muted hover:border-accent hover:text-text">+</button>
+            </div>
+          </div>
+
+          {/* Active view */}
           {loading ? (
             <p className="text-sm text-text-muted">Loading...</p>
           ) : activeKey === DASH ? (
-            <Dashboard report={report} company={company} responses={responses} onNavigate={setActiveKey} />
+            <Dashboard report={report} company={company} responses={responses} evidence={evidence} kpiStatuses={kpiStatuses} onNavigate={setActiveKey} />
           ) : activeKey === CORE ? (
             <CollectScreen
               reportId={report.id}
@@ -344,8 +366,12 @@ function ReportEditor({
               onEvidenceChange={onEvidenceChange}
               onKpiStatusChange={onKpiStatusChange}
             />
-          ) : activeKey === PROFILE ? (
-            <CompanyProfile />
+          ) : activeKey === TASKS ? (
+            <TasksView report={report} />
+          ) : activeKey === FRAMEWORKS ? (
+            <FrameworksHub report={report} company={company} responses={responses} onNavigate={setActiveKey} />
+          ) : activeKey === SETTINGS ? (
+            <SettingsView />
           ) : activeKey === OVERVIEW ? (
             <BrsrOverview report={report} responses={responses} kpis={kpis} onNavigate={setActiveKey} onStatusChange={onStatusChange} />
           ) : activeKey === CALC ? (
@@ -426,6 +452,115 @@ function ReportEditor({
         </div>
       </div>
     </div>
+  );
+}
+
+// ---- navigation chrome ----------------------------------------------------
+
+const RAIL_ITEMS: { area: Area; label: string; icon: React.ReactNode }[] = [
+  { area: "dashboard", label: "Dashboard", icon: <><rect x="3" y="3" width="7" height="9" rx="1.5" /><rect x="14" y="3" width="7" height="5" rx="1.5" /><rect x="14" y="12" width="7" height="9" rx="1.5" /><rect x="3" y="16" width="7" height="5" rx="1.5" /></> },
+  { area: "collect", label: "Collect", icon: <><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" /><rect x="9" y="3" width="6" height="4" rx="1" /><path d="M9 12l2 2 4-4" strokeLinecap="round" strokeLinejoin="round" /></> },
+  { area: "tasks", label: "Tasks", icon: <><path d="M8 6h13M8 12h13M8 18h13" strokeLinecap="round" /><path d="M3 6l1 1 2-2M3 12l1 1 2-2M3 18l1 1 2-2" strokeLinecap="round" strokeLinejoin="round" /></> },
+  { area: "frameworks", label: "Frameworks", icon: <path d="M12 3l9 5-9 5-9-5 9-5zM3 13l9 5 9-5" strokeLinecap="round" strokeLinejoin="round" /> },
+  { area: "team", label: "Team", icon: <><circle cx="9" cy="8" r="3.5" /><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 5a3.5 3.5 0 0 1 0 7M21.5 20a6.5 6.5 0 0 0-4.5-6.2" strokeLinecap="round" /></> },
+  { area: "reports", label: "Reports", icon: <><path d="M14 3v5h5M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5z" strokeLinejoin="round" /><path d="M9 13h6M9 17h6" strokeLinecap="round" /></> },
+  { area: "settings", label: "Settings", icon: <><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" strokeLinecap="round" strokeLinejoin="round" /></> },
+];
+
+function Rail({ area, onGo }: { area: Area; onGo: (a: Area) => void }) {
+  return (
+    <aside className="sticky top-[72px] hidden h-[calc(100vh-72px)] w-[84px] shrink-0 flex-col items-center gap-1.5 border-r border-border bg-surface py-4 md:flex">
+      {RAIL_ITEMS.map((it) => {
+        const active = it.area === area;
+        return (
+          <button
+            key={it.area}
+            onClick={() => onGo(it.area)}
+            aria-current={active ? "page" : undefined}
+            className={cn(
+              "flex w-[68px] flex-col items-center gap-1 rounded-xl py-2.5 transition",
+              active ? "bg-teal/10 text-teal" : "text-text-muted hover:bg-surface-2 hover:text-text",
+            )}
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" className="h-5 w-5">{it.icon}</svg>
+            <span className="text-[10px] font-medium leading-none">{it.label}</span>
+          </button>
+        );
+      })}
+    </aside>
+  );
+}
+
+function MobileRail({ area, onGo }: { area: Area; onGo: (a: Area) => void }) {
+  return (
+    <div className="sticky top-[72px] z-20 border-b border-border bg-surface/95 backdrop-blur md:hidden">
+      <div className="flex gap-1 overflow-x-auto px-3 py-2">
+        {RAIL_ITEMS.map((it) => {
+          const active = it.area === area;
+          return (
+            <button
+              key={it.area}
+              onClick={() => onGo(it.area)}
+              className={cn(
+                "flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition",
+                active ? "bg-teal/10 text-teal" : "text-text-muted hover:bg-surface-2 hover:text-text",
+              )}
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" className="h-4 w-4">{it.icon}</svg>
+              {it.label}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function NavBtn({ active, onClick, label, right, left }: { active: boolean; onClick: () => void; label: string; right?: React.ReactNode; left?: React.ReactNode }) {
+  return (
+    <button
+      onClick={onClick}
+      className={cn(
+        "flex w-full items-center justify-between gap-2 rounded-lg px-3 py-2 text-left text-sm transition",
+        active ? "bg-teal/10 font-medium text-teal" : "text-text-muted hover:bg-surface-2 hover:text-text",
+      )}
+    >
+      <span className="flex min-w-0 items-center gap-2">
+        {left}
+        <span className="truncate">{label}</span>
+      </span>
+      {right}
+    </button>
+  );
+}
+
+function ModuleBtn({
+  m, activeKey, responses, statuses, onClick,
+}: {
+  m: (typeof BRSR.modules)[number];
+  activeKey: string;
+  responses: ResponseMap;
+  statuses: Record<string, SectionStatus>;
+  onClick: () => void;
+}) {
+  const { answered, total } = moduleCompletion(moduleQuestions(m), responses);
+  const st = statuses[m.key]?.state;
+  const done = answered === total && total > 0;
+  return (
+    <li>
+      <NavBtn
+        active={m.key === activeKey}
+        onClick={onClick}
+        label={m.navLabel}
+        right={<span className={cn("shrink-0 rounded-full px-1.5 text-[10px]", done ? "bg-teal/15 text-teal" : "bg-surface-2 text-text-muted")}>{answered}/{total}</span>}
+        left={
+          <span
+            className={cn("h-1.5 w-1.5 shrink-0 rounded-full", st && st !== "not_started" ? DOT_COLORS[st] : "bg-transparent ring-1 ring-border")}
+            title={st ? STATE_LABELS[st] : "Not started"}
+          />
+        }
+      />
+    </li>
   );
 }
 

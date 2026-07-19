@@ -1,0 +1,51 @@
+"use client";
+
+import { useState } from "react";
+import { CompanyProfile } from "@/components/brsr/CompanyProfile";
+import { FactorSettings } from "@/components/brsr/FactorSettings";
+import { OrgUnitSettings } from "@/components/brsr/OrgUnitSettings";
+import { cn } from "@/lib/cn";
+
+/**
+ * Settings area with tabbed sections, mirroring the company / unit / categories
+ * pattern of leading ESG tools. Tabs register here as their sections are built.
+ */
+
+type TabDef = { key: string; label: string; render: () => React.ReactNode };
+
+export function SettingsView() {
+  const tabs: TabDef[] = [
+    { key: "company", label: "Company settings", render: () => <CompanyProfile /> },
+    { key: "factors", label: "Emission factors", render: () => <FactorSettings /> },
+    { key: "units", label: "Organisation units", render: () => <OrgUnitSettings /> },
+  ];
+  const [active, setActive] = useState(tabs[0].key);
+  const tab = tabs.find((t) => t.key === active) ?? tabs[0];
+
+  return (
+    <div>
+      <header className="mb-5">
+        <h2 className="text-lg font-semibold">Settings</h2>
+        <p className="mt-1 text-sm text-text-muted">Your reporting entity and workspace configuration.</p>
+      </header>
+
+      <div className="mb-6 flex gap-1 border-b border-border">
+        {tabs.map((t) => (
+          <button
+            key={t.key}
+            onClick={() => setActive(t.key)}
+            className={cn(
+              "relative px-4 py-2.5 text-sm font-medium transition-colors",
+              t.key === active ? "text-text" : "text-text-muted hover:text-text",
+            )}
+          >
+            {t.label}
+            {t.key === active && <span className="absolute inset-x-0 -bottom-px h-0.5 rounded-full bg-teal" />}
+          </button>
+        ))}
+      </div>
+
+      {tab.render()}
+    </div>
+  );
+}
