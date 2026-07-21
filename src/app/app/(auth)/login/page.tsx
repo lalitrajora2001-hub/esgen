@@ -15,6 +15,14 @@ export default function ToolLoginPage() {
   const [formError, setFormError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [mode, setMode] = useState<"signin" | "forgot" | "sent">("signin");
+  // Which workspace to land in after sign-in (remembered per browser).
+  const [dest, setDest] = useState<"esg" | "events">(() => {
+    try { return localStorage.getItem("esgen-workspace") === "events" ? "events" : "esg"; } catch { return "esg"; }
+  });
+  const pickDest = (d: "esg" | "events") => {
+    setDest(d);
+    try { localStorage.setItem("esgen-workspace", d); } catch { /* fine */ }
+  };
   const set = (k: keyof typeof v) => (val: string) => setV((s) => ({ ...s, [k]: val }));
 
   const submit = async (e: React.FormEvent) => {
@@ -33,7 +41,7 @@ export default function ToolLoginPage() {
       setFormError(error);
       return;
     }
-    router.replace("/app");
+    router.replace(dest === "events" ? "/app/events" : "/app");
   };
 
   const sendReset = async (e: React.FormEvent) => {
@@ -94,8 +102,21 @@ export default function ToolLoginPage() {
 
   return (
     <div>
+      {/* Workspace selector: company ESG reporting vs the events-industry toolkit */}
+      <div className="mb-5 grid grid-cols-2 gap-1 rounded-full bg-surface-2 p-1">
+        <button type="button" onClick={() => pickDest("esg")} aria-pressed={dest === "esg"} className={dest === "esg" ? "rounded-full bg-white px-3 py-1.5 text-sm font-semibold shadow-sm" : "rounded-full px-3 py-1.5 text-sm font-medium text-text-muted hover:text-text"}>
+          ESG reporting
+        </button>
+        <button type="button" onClick={() => pickDest("events")} aria-pressed={dest === "events"} className={dest === "events" ? "rounded-full bg-white px-3 py-1.5 text-sm font-semibold shadow-sm" : "rounded-full px-3 py-1.5 text-sm font-medium text-text-muted hover:text-text"}>
+          Events industry
+        </button>
+      </div>
       <h1 className="text-2xl font-semibold">Welcome back</h1>
-      <p className="mt-1.5 text-sm text-text-muted">Sign in to your ESGEN workspace.</p>
+      <p className="mt-1.5 text-sm text-text-muted">
+        {dest === "events"
+          ? "Sign in to the events-industry ESG toolkit (ISO 20121-aligned)."
+          : "Sign in to your ESGEN workspace."}
+      </p>
 
       <form onSubmit={submit} noValidate aria-label="Sign in" className="mt-6 space-y-5">
         <Field id="email" label="Email" type="email" inputMode="email" required autoComplete="email" value={v.email} onChange={set("email")} error={errors.email} />

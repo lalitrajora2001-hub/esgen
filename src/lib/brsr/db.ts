@@ -41,12 +41,15 @@ function db() {
 
 // ---- Reports --------------------------------------------------------------
 
-export async function listReports(companyId: string): Promise<BrsrReport[]> {
-  const { data, error } = await db()
+/** List reports; framework "EVENTS" lists the events-toolkit reports, "BRSR" (default) everything else. */
+export async function listReports(companyId: string, framework: "BRSR" | "EVENTS" = "BRSR"): Promise<BrsrReport[]> {
+  let q = db()
     .from("brsr_reports")
     .select("*")
     .eq("company_id", companyId)
     .order("created_at", { ascending: false });
+  q = framework === "EVENTS" ? q.like("framework_version", "EVENTS%") : q.not("framework_version", "like", "EVENTS%");
+  const { data, error } = await q;
   if (error) throw error;
   return (data as BrsrReport[]) ?? [];
 }
@@ -57,6 +60,7 @@ export async function createReport(input: {
   reporting_boundary: string;
   turnover: number | null;
   ppp_factor: number | null;
+  framework_version?: string;
 }): Promise<BrsrReport> {
   const { data, error } = await db().from("brsr_reports").insert(input).select("*").single();
   if (error) throw error;
