@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useAuth } from "@/components/tool/AuthProvider";
 import { FullLoader, NotConfigured } from "@/components/tool/AppStates";
 import { Logo } from "@/components/logo/Logo";
+import { workspaceHomePath } from "@/lib/tool/workspaceDest";
 
 /**
  * Centered premium auth screen for the ESGEN workspace. Deliberately generic:
@@ -16,7 +17,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
   const router = useRouter();
 
   useEffect(() => {
-    if (session || isDemo) router.replace("/app");
+    if (session || isDemo) router.replace(workspaceHomePath());
   }, [session, isDemo, router]);
 
   if (!configured && !isDemo) return <NotConfigured />;

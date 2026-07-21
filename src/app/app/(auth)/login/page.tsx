@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/tool/AuthProvider";
 import { Button } from "@/components/ui/Button";
 import { Field, isEmail } from "@/components/forms/fields";
+import { workspaceHomePath } from "@/lib/tool/workspaceDest";
 
 export default function ToolLoginPage() {
   const { signIn, resetPassword } = useAuth();
@@ -41,7 +42,7 @@ export default function ToolLoginPage() {
       setFormError(error);
       return;
     }
-    router.replace(dest === "events" ? "/app/events" : "/app");
+    router.replace(workspaceHomePath());
   };
 
   const sendReset = async (e: React.FormEvent) => {
@@ -105,7 +106,7 @@ export default function ToolLoginPage() {
       {/* Workspace selector: company ESG reporting vs the events-industry toolkit */}
       <div className="mb-5 grid grid-cols-2 gap-1 rounded-full bg-surface-2 p-1">
         <button type="button" onClick={() => pickDest("esg")} aria-pressed={dest === "esg"} className={dest === "esg" ? "rounded-full bg-white px-3 py-1.5 text-sm font-semibold shadow-sm" : "rounded-full px-3 py-1.5 text-sm font-medium text-text-muted hover:text-text"}>
-          ESG reporting
+          Manufacturing industry
         </button>
         <button type="button" onClick={() => pickDest("events")} aria-pressed={dest === "events"} className={dest === "events" ? "rounded-full bg-white px-3 py-1.5 text-sm font-semibold shadow-sm" : "rounded-full px-3 py-1.5 text-sm font-medium text-text-muted hover:text-text"}>
           Events industry
@@ -115,7 +116,7 @@ export default function ToolLoginPage() {
       <p className="mt-1.5 text-sm text-text-muted">
         {dest === "events"
           ? "Sign in to the events-industry ESG toolkit (ISO 20121-aligned)."
-          : "Sign in to your ESGEN workspace."}
+          : "Sign in to your manufacturing ESG workspace."}
       </p>
 
       <form onSubmit={submit} noValidate aria-label="Sign in" className="mt-6 space-y-5">
