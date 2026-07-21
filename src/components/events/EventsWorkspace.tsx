@@ -4,7 +4,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useCompany } from "@/components/tool/CompanyProvider";
 import { useAuth } from "@/components/tool/AuthProvider";
 import { Button } from "@/components/ui/Button";
-import { EVENTS, EVENTS_VERSION, eventsData } from "@/lib/events/framework";
+import { EVENTS, EVENTS_VERSION, eventsData, type AreaStatus } from "@/lib/events/framework";
+import { buildDisclosure } from "@/lib/events/disclosure";
 import { moduleCompletion } from "@/lib/brsr/calc";
 import { moduleQuestions } from "@/lib/brsr/framework";
 import {
@@ -21,13 +22,20 @@ import { cn } from "@/lib/cn";
  */
 
 const DASH = "__dash__";
+const DISCLOSURE = "__disclosure__";
 
 const STATUS_META = {
-  not_ready: { label: "Not ready", cls: "bg-[#e5484d]/10 text-[#b42318]" },
-  internal_draft: { label: "Internal draft only", cls: "bg-[#f0a020]/12 text-[#92600a]" },
-  ready_for_review: { label: "Ready for review", cls: "bg-[#2f6fe0]/10 text-[#2f6fe0]" },
-  copy_safe: { label: "Copy-safe draft", cls: "bg-teal/10 text-teal" },
+  not_ready: { label: "Not ready", dot: "#e5484d", cls: "bg-[#e5484d]/10 text-[#b42318]", desc: "Complete the red items before using any outputs." },
+  internal_draft: { label: "Internal draft only", dot: "#f0a020", cls: "bg-[#f0a020]/12 text-[#92600a]", desc: "Usable internally. Do not share externally yet." },
+  ready_for_review: { label: "Ready for review", dot: "#2f6fe0", cls: "bg-[#2f6fe0]/10 text-[#2f6fe0]", desc: "Ready for management or adviser review before external use." },
+  copy_safe: { label: "Copy-safe draft", dot: "#059669", cls: "bg-teal/10 text-teal", desc: "Final Readiness Gate is clear." },
 } as const;
+
+const AREA_STATUS_META: Record<AreaStatus, { label: string; cls: string; dot: string }> = {
+  complete: { label: "Complete", cls: "text-teal", dot: "#059669" },
+  partial: { label: "In progress", cls: "text-[#92600a]", dot: "#f0a020" },
+  missing: { label: "Not started", cls: "text-[#b42318]", dot: "#e5484d" },
+};
 
 export function EventsWorkspace() {
   const { company } = useCompany();
@@ -151,6 +159,7 @@ function Editor({ report, reports, onSwitch, onNew }: {
         </div>
         <ul className="space-y-1">
           <li><NavBtn active={activeKey === DASH} onClick={() => setActiveKey(DASH)} label="Dashboard" /></li>
+          <li><NavBtn active={activeKey === DISCLOSURE} onClick={() => setActiveKey(DISCLOSURE)} label="Disclosure builder" /></li>
           {EVENTS.modules.map((m) => {
             const { answered, total } = moduleCompletion(moduleQuestions(m), responses);
             return (
@@ -179,8 +188,26 @@ function Editor({ report, reports, onSwitch, onNew }: {
                   {d.eventType ? `${d.eventType} · ` : ""}Year {report.financial_year}. Indicative figures, aligned with ISO 20121.
                 </p>
               </div>
-              <span className={cn("rounded-full px-3 py-1 text-xs font-medium", STATUS_META[d.status].cls)}>{STATUS_META[d.status].label}</span>
             </header>
+
+            {/* Final readiness gate */}
+            <div className="card overflow-hidden">
+              <div className="flex flex-wrap items-center justify-between gap-3 p-5">
+                <div className="flex items-center gap-3">
+                  <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: STATUS_META[d.status].dot }} />
+                  <div>
+                    <p className="text-[11px] uppercase tracking-wide text-text-muted">Final readiness gate</p>
+                    <p className="font-display text-lg font-semibold">{STATUS_META[d.status].label}</p>
+                  </div>
+                </div>
+                <span className={cn("rounded-full px-3 py-1 text-xs font-medium", STATUS_META[d.status].cls)}>{STATUS_META[d.status].desc}</span>
+              </div>
+              {d.status !== "copy_safe" && (
+                <p className="border-t border-border bg-[#f0a020]/8 px-5 py-2.5 text-xs text-[#92600a]">
+                  ⚠ Do not use Disclosure Builder text externally until this status is Copy-safe draft.
+                </p>
+              )}
+            </div>
 
             {!d.eventType && (
               <div className="card flex flex-wrap items-center justify-between gap-3 p-5">
@@ -189,7 +216,54 @@ function Editor({ report, reports, onSwitch, onNew }: {
               </div>
             )}
 
-            {/* Readiness */}
+            {/* Area status + blocking issues */}
+            <div className="grid gap-4 lg:grid-cols-[1.4fr_1fr]">
+              <div className="card overflow-hidden">
+                <p className="border-b border-border px-5 py-3 text-sm font-semibold">Report status by area</p>
+                <ul className="divide-y divide-border">
+                  {d.areas.map((a) => (
+                    <li key={a.key}>
+                      <button onClick={() => setActiveKey(a.jump)} className="flex w-full items-center justify-between gap-3 px-5 py-2.5 text-left hover:bg-surface-2">
+                        <span className="flex items-center gap-2.5">
+                          <span className="h-2 w-2 shrink-0 rounded-full" style={{ background: AREA_STATUS_META[a.status].dot }} />
+                          <span className="text-sm">{a.label}</span>
+                        </span>
+                        <span className="flex items-center gap-2 text-right">
+                          <span className={cn("text-xs font-medium", AREA_STATUS_META[a.status].cls)}>{AREA_STATUS_META[a.status].label}</span>
+                        </span>
+                      </button>
+                      <p className="px-5 pb-2 text-[11px] text-text-muted">{a.message}</p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="space-y-4">
+                <div className="card p-5">
+                  <p className="text-sm font-semibold">⚠ Key blocking issues</p>
+                  {d.blockers.length === 0 ? (
+                    <p className="mt-2 text-xs text-text-muted">No blocking issues. Everything has at least been started.</p>
+                  ) : (
+                    <ul className="mt-2 space-y-1.5 text-xs">
+                      {d.blockers.map((b) => (
+                        <li key={b.key}>
+                          <button onClick={() => setActiveKey(b.jump)} className="text-left text-[#b42318] hover:underline">{b.label} - {b.message}</button>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+                {(d.weakestTopic || d.strongestTopic) && (
+                  <div className="card p-5">
+                    <p className="text-sm font-semibold">Topic strength</p>
+                    {d.weakestTopic && <p className="mt-2 text-xs text-text-muted">Weakest: <b className="text-text">{d.weakestTopic.label}</b> ({Math.round(d.weakestTopic.pct)}%)</p>}
+                    {d.strongestTopic && <p className="mt-1 text-xs text-text-muted">Strongest: <b className="text-text">{d.strongestTopic.label}</b> ({Math.round(d.strongestTopic.pct)}%)</p>}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Readiness pillars */}
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
               <div className="card p-4">
                 <p className="text-[11px] uppercase tracking-wide text-text-muted">Overall readiness</p>
@@ -254,12 +328,31 @@ function Editor({ report, reports, onSwitch, onNew }: {
               </div>
             </div>
 
+            {/* Evidence */}
+            <div className="card p-5">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <h3 className="font-display text-base font-semibold">Data & evidence availability</h3>
+                <button onClick={() => setActiveKey("EV.DATAE")} className="text-xs font-semibold text-teal hover:underline">Open evidence tracker →</button>
+              </div>
+              <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
+                <EvTile label="Available" v={d.evidence.available} color="#059669" />
+                <EvTile label="Partial" v={d.evidence.partial} color="#f0a020" />
+                <EvTile label="Not available" v={d.evidence.notAvailable} color="#e5484d" />
+                <EvTile label="Not yet assessed" v={d.evidence.notAssessed} color="#94a3b8" />
+              </div>
+              {d.evidence.mostAffectedTopic && (
+                <p className="mt-3 text-xs text-text-muted">Most affected topic: <b className="text-text">{d.evidence.mostAffectedTopic}</b></p>
+              )}
+            </div>
+
             <p className="rounded-xl border border-border bg-surface-2/60 p-3 text-xs leading-relaxed text-text-muted">
               Figures are indicative and computed from the data you enter, using the toolkit&apos;s
               indicative UK conversion factors. Do not use externally without management review and
               evidence confirmation.
             </p>
           </div>
+        ) : activeKey === DISCLOSURE ? (
+          <DisclosureView data={d} responses={responses} onNavigate={setActiveKey} />
         ) : activeModule ? (
           <>
             <div className="mb-4">
@@ -310,5 +403,63 @@ function Row({ dot, label, v }: { dot: string; label: string; v: number }) {
       <span className="flex items-center gap-2 text-text-muted"><span className="h-2 w-2 rounded-full" style={{ background: dot }} />{label}</span>
       <span className="font-medium">{v}</span>
     </li>
+  );
+}
+
+function EvTile({ label, v, color }: { label: string; v: number; color: string }) {
+  return (
+    <div className="rounded-lg border border-border p-3 text-center">
+      <p className="font-display text-xl font-semibold" style={{ color }}>{v}</p>
+      <p className="mt-0.5 text-[10px] uppercase tracking-wide text-text-muted">{label}</p>
+    </div>
+  );
+}
+
+const LEVEL_META = {
+  missing: { label: "Not available", cls: "bg-[#e5484d]/10 text-[#b42318]" },
+  draft: { label: "Draft only", cls: "bg-[#f0a020]/12 text-[#92600a]" },
+  internal: { label: "Internal review only", cls: "bg-[#f0a020]/12 text-[#92600a]" },
+  ready: { label: "Ready for review", cls: "bg-teal/10 text-teal" },
+} as const;
+
+function DisclosureView({ data, responses, onNavigate }: {
+  data: ReturnType<typeof eventsData>; responses: ResponseMap; onNavigate: (key: string) => void;
+}) {
+  const disc = useMemo(() => buildDisclosure(data, responses), [data, responses]);
+  return (
+    <div className="space-y-5">
+      <div>
+        <h2 className="text-lg font-semibold">Disclosure builder</h2>
+        <p className="mt-1 text-sm text-text-muted">Draft reporting text, computed live from your data. Internal use only until the gate is clear.</p>
+      </div>
+
+      <div className={cn("card p-4 text-sm", disc.externalUseOk ? "border-teal/30 bg-teal/5" : "border-[#e5484d]/25 bg-[#e5484d]/5")}>
+        <p className={disc.externalUseOk ? "text-teal" : "text-[#b42318]"}>
+          {disc.externalUseOk ? "✓" : "⛔"} {disc.gateMessage}
+        </p>
+        {!disc.externalUseOk && (
+          <button onClick={() => onNavigate("__dash__")} className="mt-2 text-xs font-semibold text-teal hover:underline">See blocking issues on the dashboard →</button>
+        )}
+      </div>
+
+      <div className="space-y-3">
+        {disc.paragraphs.map((p) => (
+          <div key={p.id} className="card p-5">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <h3 className="font-display text-sm font-semibold">{p.title}</h3>
+              <span className={cn("rounded-full px-2.5 py-0.5 text-[10px] font-medium", LEVEL_META[p.level].cls)}>{LEVEL_META[p.level].label}</span>
+            </div>
+            <p className="mt-2 text-sm leading-relaxed text-text-muted">{p.text}</p>
+          </div>
+        ))}
+      </div>
+
+      <p className="rounded-xl border border-border bg-surface-2/60 p-3 text-xs leading-relaxed text-text-muted">
+        Plain-English safety rules: no data means &ldquo;Data not yet available&rdquo;; optional-only carbon
+        data is not a minimum estimate; partial minimum data is draft only; complete data without
+        confirmed evidence is internal review only; complete data with confirmed evidence is ready for
+        supervised management review. Final external use still requires management/legal review.
+      </p>
+    </div>
   );
 }

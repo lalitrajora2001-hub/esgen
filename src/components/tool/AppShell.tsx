@@ -1,18 +1,23 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useAuth } from "@/components/tool/AuthProvider";
 import { useCompany } from "@/components/tool/CompanyProvider";
 import { Logo } from "@/components/logo/Logo";
 
 /**
- * Professional top-bar shell for the BRSR reporting tool. Uses the real ESGen
- * wordmark to match esgen.co.uk. The BRSR workspace supplies its own section
- * navigation below.
+ * Professional top-bar shell shared by every workspace (BRSR and Events). Uses
+ * the real ESGen wordmark to match esgen.co.uk. The label and home link are
+ * derived from the URL, not a stored preference, so they are always correct
+ * regardless of how the user arrived here.
  */
 export function AppShell({ children, fullBleed = false }: { children: React.ReactNode; fullBleed?: boolean }) {
   const router = useRouter();
+  const pathname = usePathname() ?? "";
+  const isEvents = pathname.replace(/\/+$/, "").startsWith("/app/events");
+  const homeHref = isEvents ? "/app/events" : "/app/brsr";
+  const workspaceLabel = isEvents ? "Events ESG Reporting" : "BRSR Reporting";
   const { user, signOut, isDemo, exitDemo } = useAuth();
   const { company, companies, switchCompany } = useCompany();
 
@@ -32,11 +37,11 @@ export function AppShell({ children, fullBleed = false }: { children: React.Reac
         <div aria-hidden className="h-[2px] w-full" style={{ background: "#059669" }} />
         <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between gap-4 px-5 sm:px-8">
           <div className="flex items-center gap-4">
-            <Link href="/app/brsr" aria-label="ESGen home" className="transition-opacity hover:opacity-80">
+            <Link href={homeHref} aria-label="ESGen home" className="transition-opacity hover:opacity-80">
               <Logo className="h-11 text-[#101828]" />
             </Link>
             <span className="hidden border-l border-border pl-4 text-sm font-medium tracking-wide text-text-muted sm:inline">
-              BRSR Reporting
+              {workspaceLabel}
             </span>
           </div>
           <div className="flex items-center gap-3 text-sm">
