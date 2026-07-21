@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useCompany } from "@/components/tool/CompanyProvider";
 import { useAuth } from "@/components/tool/AuthProvider";
 import { Button } from "@/components/ui/Button";
-import { EVENTS, EVENTS_VERSION, eventsData, type AreaStatus } from "@/lib/events/framework";
+import { EVENTS, EVENTS_VERSION, eventsData, diagnosePriorities, type AreaStatus, type Timing } from "@/lib/events/framework";
 import { buildDisclosure } from "@/lib/events/disclosure";
 import { moduleCompletion } from "@/lib/brsr/calc";
 import { moduleQuestions } from "@/lib/brsr/framework";
@@ -355,6 +355,7 @@ function Editor({ report, reports, onSwitch, onNew }: {
           <DisclosureView data={d} responses={responses} onNavigate={setActiveKey} />
         ) : activeModule ? (
           <>
+            {activeKey === "EV.ACT" && <DiagnosedPriorities data={d} onNavigate={setActiveKey} />}
             <div className="mb-4">
               <h2 className="text-lg font-semibold">{activeModule.title}</h2>
               {activeModule.intro && <p className="mt-1 text-sm text-text-muted">{activeModule.intro}</p>}
@@ -403,6 +404,47 @@ function Row({ dot, label, v }: { dot: string; label: string; v: number }) {
       <span className="flex items-center gap-2 text-text-muted"><span className="h-2 w-2 rounded-full" style={{ background: dot }} />{label}</span>
       <span className="font-medium">{v}</span>
     </li>
+  );
+}
+
+const TIMING_META: Record<Timing, { cls: string; dot: string }> = {
+  Urgent: { cls: "bg-[#e5484d]/10 text-[#b42318]", dot: "#e5484d" },
+  Soon: { cls: "bg-[#f0a020]/12 text-[#92600a]", dot: "#f0a020" },
+  Later: { cls: "bg-surface-2 text-text-muted", dot: "#94a3b8" },
+};
+
+function DiagnosedPriorities({ data, onNavigate }: { data: ReturnType<typeof eventsData>; onNavigate: (key: string) => void }) {
+  const items = useMemo(() => diagnosePriorities(data), [data]);
+  return (
+    <div className="mb-6">
+      <div className="mb-2 flex items-center gap-2">
+        <h2 className="text-lg font-semibold">📊 Auto-diagnosed priorities</h2>
+        <span className="rounded-full bg-surface-2 px-2 py-0.5 text-[10px] font-medium text-text-muted">{items.length}</span>
+      </div>
+      <p className="mb-3 text-sm text-text-muted">Driven live from your readiness scores, carbon data, supplier assessment and evidence. Add your own actions below.</p>
+      {items.length === 0 ? (
+        <div className="card p-5 text-sm text-text-muted">No auto-diagnosed gaps right now - nice work. Add your own follow-ups below.</div>
+      ) : (
+        <div className="card overflow-hidden">
+          <ul className="divide-y divide-border">
+            {items.map((it, i) => (
+              <li key={i} className="p-4">
+                <div className="flex flex-wrap items-start justify-between gap-2">
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold">{it.area} <span className="font-normal text-text-muted">· {it.pillar}</span></p>
+                    <p className="mt-0.5 text-sm text-text-muted">{it.issue}</p>
+                  </div>
+                  <span className={cn("shrink-0 rounded-full px-2.5 py-0.5 text-[10px] font-medium", TIMING_META[it.timing].cls)}>{it.timing}</span>
+                </div>
+                <p className="mt-2 text-sm"><b>Recommended:</b> {it.action}</p>
+                <p className="mt-1 text-xs text-text-muted"><b>Why it matters:</b> {it.why}</p>
+                <button onClick={() => onNavigate(it.jump)} className="mt-2 text-xs font-semibold text-teal hover:underline">Go fix this →</button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
   );
 }
 

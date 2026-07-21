@@ -579,3 +579,64 @@ export function eventsData(responses: ResponseMap, _report: BrsrReport): EventsD
     areas, blockers, weakestTopic, strongestTopic,
   };
 }
+
+// ---- auto-diagnosed action priorities (mirrors the toolkit's live-diagnosed section) ----
+
+export type Timing = "Urgent" | "Soon" | "Later";
+export interface DiagnosedAction { area: string; pillar: string; issue: string; action: string; why: string; timing: Timing; jump: string }
+
+const TIMING_ORDER: Record<Timing, number> = { Urgent: 0, Soon: 1, Later: 2 };
+
+export function diagnosePriorities(d: EventsData): DiagnosedAction[] {
+  const items: DiagnosedAction[] = [];
+
+  const owner = d.areas.find((a) => a.key === "owner");
+  if (owner?.status !== "complete") {
+    items.push({ area: "Reporting ownership", pillar: "Governance", issue: "No named sustainability reporting owner", action: "Assign a real named person or role in Profile", why: "Without an owner, nothing else can be reviewed, signed off or trusted.", timing: "Urgent", jump: "EV.PROFILE" });
+  }
+
+  const scope = d.areas.find((a) => a.key === "scope");
+  if (scope?.status !== "complete") {
+    items.push({ area: "Scope boundary", pillar: "Process", issue: scope?.status === "missing" ? "Reporting boundary not defined" : "Reporting boundary not confirmed", action: "Define what is included/excluded in Scope_Boundary and confirm it", why: "Every KPI and disclosure assumes a defined, confirmed boundary.", timing: "Urgent", jump: "EV.SCOPE" });
+  }
+
+  for (const p of d.pillars) {
+    if (p.relevant === 0) continue;
+    if (p.answered === 0) {
+      items.push({ area: `${p.label} readiness`, pillar: p.label, issue: `No ${p.label.toLowerCase()} readiness questions answered`, action: `Work through Readiness_${p.key} for your event type`, why: "This pillar currently contributes nothing to your overall readiness score.", timing: "Urgent", jump: `EV.R${p.key}` });
+    } else if (p.answered < p.relevant) {
+      items.push({ area: `${p.label} readiness`, pillar: p.label, issue: `${p.relevant - p.answered} ${p.label.toLowerCase()} question(s) unanswered`, action: `Finish the remaining Readiness_${p.key} questions`, why: "Partial answers understate your true readiness.", timing: "Soon", jump: `EV.R${p.key}` });
+    }
+  }
+
+  if (d.carbon.missingMinimum > 0) {
+    items.push({ area: "Carbon data", pillar: "Environment", issue: `${d.carbon.missingMinimum} minimum carbon input(s) still empty`, action: "Complete the minimum Carbon_Calculator rows or mark them Not available", why: "Blocks a valid carbon estimate and the E1 disclosure paragraph.", timing: "Urgent", jump: "EV.CARBON" });
+  }
+
+  if (d.suppliers.total === 0) {
+    items.push({ area: "Suppliers", pillar: "Environment / Social", issue: "No suppliers assessed", action: "Assess your 3-5 most critical suppliers", why: "Supplier risk is a Core readiness item and feeds the supply-chain disclosure.", timing: "Soon", jump: "EV.SUP" });
+  } else if (d.suppliers.high > 0) {
+    items.push({ area: "Suppliers", pillar: "Environment / Social", issue: `${d.suppliers.high} supplier(s) flagged high risk`, action: "Follow up on missing labour/environmental data from flagged suppliers", why: "High-risk suppliers are the biggest disclosure liability.", timing: "Urgent", jump: "EV.SUP" });
+  }
+
+  if (d.evidence.notAssessed > 0) {
+    items.push({
+      area: "Data & evidence", pillar: "All", issue: `${d.evidence.notAssessed} of ${d.evidence.total} evidence items not yet assessed`,
+      action: `Work through Data & Evidence, starting with ${d.evidence.mostAffectedTopic ?? "the most affected topic"}`,
+      why: "Evidence is what turns a claimed figure into a disclosure an assurer or funder can trust.",
+      timing: d.evidence.notAssessed > d.evidence.total * 0.6 ? "Urgent" : "Soon", jump: "EV.DATAE",
+    });
+  }
+
+  if (d.kpis.onTrack + d.kpis.offTrack === 0) {
+    items.push({ area: "KPIs", pillar: "All", issue: "No KPI current-year figures entered", action: "Enter current-year values for at least the Core KPIs", why: "KPIs are the quantified evidence behind every disclosure paragraph.", timing: "Soon", jump: "EV.KPIE" });
+  } else if (d.kpis.offTrack > 0) {
+    items.push({ area: "KPIs", pillar: "All", issue: `${d.kpis.offTrack} KPI(s) off track against target`, action: "Review off-track KPIs and log a corrective action", why: "Off-track KPIs are exactly what a funder or board will ask about.", timing: "Soon", jump: "EV.KPIE" });
+  }
+
+  if (d.weakestTopic && d.weakestTopic.pct < 50) {
+    items.push({ area: "Weakest topic", pillar: "-", issue: `${d.weakestTopic.label} is your weakest topic (${Math.round(d.weakestTopic.pct)}%)`, action: `Prioritise ${d.weakestTopic.label} in your next data-collection push`, why: "This single topic is dragging down your overall readiness score the most.", timing: "Later", jump: "EV.RE" });
+  }
+
+  return items.sort((a, b) => TIMING_ORDER[a.timing] - TIMING_ORDER[b.timing]);
+}
