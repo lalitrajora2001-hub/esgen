@@ -64,27 +64,51 @@ function PhotoCard({ img, alt, title, desc, href, cta }: { img: string; alt: str
   );
 }
 
-/* What ESGen helps you do, image-led (no CTA by design). */
+/* Image-led card with a solid action button (card itself is not a link). */
+function PhotoActionCard({ img, alt, title, desc, href }: { img: string; alt: string; title: string; desc: string; href: string }) {
+  return (
+    <Reveal className="h-full">
+      <div className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-surface transition-all duration-300 hover:-translate-y-1 hover:border-white/25">
+        <div className="relative overflow-hidden">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={img} alt={alt} className="aspect-[16/10] w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]" />
+        </div>
+        <div className="flex flex-1 flex-col p-7">
+          <h3 className="font-display text-xl font-bold leading-snug">{title}</h3>
+          <p className="mt-3 flex-1 text-sm leading-relaxed text-text-muted">{desc}</p>
+          <Link href={href} className="mt-6 inline-flex w-fit items-center gap-2 rounded-xl bg-accent px-5 py-2.5 text-sm font-bold text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-accent-2">
+            Find out more <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
+      </div>
+    </Reveal>
+  );
+}
+
+/* What ESGen helps you do, image-led with action buttons. */
 export function ValueCards() {
   return (
-    <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-      <PhotoCard
+    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <PhotoActionCard
+        href="/solutions/reporting"
         img="/images/home-reporting.jpg"
         alt="Team reviewing performance data and charts around a desk"
         title="Collect once, report many times"
         desc="Bring activity data, supplier responses, and evidence into one workspace, then reuse the same figures across every framework you report to."
       />
-      <PhotoCard
+      <PhotoActionCard
+        href="/solutions/supply-chain"
         img="/images/home-supplychain.jpg"
         alt="Warehouse aisle with racking and a forklift"
-        title="Strengthen your supply chain"
+        title="Reduce supply chain risk"
         desc="Invite suppliers, collect primary data, and close the estimate-heavy gaps that weaken Scope 3 across your value chain."
       />
-      <PhotoCard
+      <PhotoActionCard
+        href="/platform/ecovadis"
         img="/images/home-trust.jpg"
         alt="Colleagues in a meeting reviewing documents in a modern office"
-        title="Answer customers and tenders"
-        desc="Respond to buyer questionnaires and tender requirements with figures you can trace back to their source, method, and owner."
+        title="Win customer and tender trust"
+        desc="Answer buyer questionnaires and tender requirements with figures you can trace back to their source, method, and owner."
       />
     </div>
   );

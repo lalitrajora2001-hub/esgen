@@ -1,8 +1,8 @@
 import { Section, SectionHead } from "@/components/ui/Section";
 import { ScrollStat } from "@/components/ui/ScrollStat";
 import { CTASection } from "@/components/sections/blocks";
-import { ProductTabs } from "@/components/sections/ProductTabs";
 import { ValueCards, ServiceCards, IndustryCards } from "@/components/sections/HomeSections";
+import { ComplianceCards, PlatformShowcase } from "@/components/sections/HomeFeatures";
 import { ProcessFlow } from "@/components/sections/ProcessFlow";
 import { HomeHero } from "@/components/sections/HomeHero";
 
@@ -14,8 +14,14 @@ export default function Home() {
 
       {/* 2. What ESGen helps you do, image-led */}
       <Section>
-        <SectionHead title="What ESGen helps you do" intro="Turn scattered activity data into reporting you can stand behind, and reuse it everywhere it is asked for." center />
+        <SectionHead title="Where ESGen makes the difference" intro="Turn scattered activity data into reporting you can stand behind, and reuse it everywhere it is asked for." center />
         <div className="mt-12"><ValueCards /></div>
+      </Section>
+
+      {/* 2b. Compliance + effort, two feature cards */}
+      <Section className="section-blend" size="sm">
+        <SectionHead title="ESGen helps you to" center />
+        <div className="mt-12"><ComplianceCards /></div>
       </Section>
 
       {/* 3. Scale, the impact band */}
@@ -34,10 +40,13 @@ export default function Home() {
         </div>
       </Section>
 
-      {/* 4. How it works, the workflow */}
+      {/* 4. Our platform */}
       <Section>
-        <SectionHead title="See how the workflow fits together" center />
-        <div className="mt-10"><ProductTabs /></div>
+        <div className="mx-auto max-w-2xl text-center">
+          <p className="font-mono text-[0.72rem] uppercase tracking-[0.2em] text-text-muted">Our platform</p>
+          <h2 className="mt-3 text-balance text-3xl font-semibold sm:text-4xl">Streamline your sustainability data in one platform</h2>
+        </div>
+        <div className="mt-14"><PlatformShowcase /></div>
       </Section>
 
       {/* 5. How it works, the journey */}
