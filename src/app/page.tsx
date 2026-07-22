@@ -1,10 +1,9 @@
 import { Section, SectionHead } from "@/components/ui/Section";
 import { ScrollStat } from "@/components/ui/ScrollStat";
 import { CTASection } from "@/components/sections/blocks";
-import { ValueCards, ServiceCards, IndustryCards } from "@/components/sections/HomeSections";
-import { ComplianceCards, PlatformShowcase } from "@/components/sections/HomeFeatures";
 import { ProcessFlow } from "@/components/sections/ProcessFlow";
 import { HomeHero } from "@/components/sections/HomeHero";
+import { LightHead, ValueCards, ComplianceCards, PlatformShowcase, TeamCards, SectorCards } from "@/components/sections/HomeFeatures";
 
 export default function Home() {
   return (
@@ -12,19 +11,41 @@ export default function Home() {
       {/* 1. Full-viewport hero */}
       <HomeHero />
 
-      {/* 2. What ESGen helps you do, image-led */}
-      <Section>
-        <SectionHead title="Where ESGen makes the difference" intro="Turn scattered activity data into reporting you can stand behind, and reuse it everywhere it is asked for." center />
-        <div className="mt-12"><ValueCards /></div>
+      {/* ---------- light content band ---------- */}
+
+      {/* 2. Outcome cards */}
+      <Section className="bg-white">
+        <LightHead title="Where ESGen makes the difference" intro="Turn scattered activity data into reporting you can stand behind, and reuse it everywhere it is asked for." />
+        <div className="mt-14"><ValueCards /></div>
       </Section>
 
-      {/* 2b. Compliance + effort, two feature cards */}
-      <Section className="section-blend" size="sm">
-        <SectionHead title="ESGen helps you to" center />
-        <div className="mt-12"><ComplianceCards /></div>
+      {/* 3. Compliance and effort */}
+      <Section className="bg-[#f6f7f9]">
+        <LightHead title="ESGen helps you to" />
+        <div className="mt-14"><ComplianceCards /></div>
       </Section>
 
-      {/* 3. Scale, the impact band */}
+      {/* 4. Our platform */}
+      <Section className="bg-white">
+        <LightHead eyebrow="Our platform" title="Streamline your sustainability data in one platform" />
+        <div className="mt-16"><PlatformShowcase /></div>
+      </Section>
+
+      {/* 5. Solutions for every team */}
+      <Section className="bg-[#f6f7f9]">
+        <LightHead title="Solutions for every team" intro="ESGen fits the way each team already works, from finance and procurement to product and reporting." />
+        <div className="mt-14"><TeamCards /></div>
+      </Section>
+
+      {/* 6. Shaped around your sector */}
+      <Section className="bg-white">
+        <LightHead title="Shaped around your sector" intro="Sector-specific guidance built around how your operations actually generate emissions." />
+        <div className="mt-14"><SectorCards /></div>
+      </Section>
+
+      {/* ---------- back to the dark theme ---------- */}
+
+      {/* 7. Scale, the impact band */}
       <Section className="section-blend" size="sm">
         <div className="rounded-3xl border border-border bg-gradient-to-b from-surface to-canvas p-8 sm:p-14">
           <h2 className="max-w-3xl font-display text-3xl font-bold leading-[1.12] text-white sm:text-4xl">
@@ -40,34 +61,13 @@ export default function Home() {
         </div>
       </Section>
 
-      {/* 4. Our platform */}
-      <Section>
-        <div className="mx-auto max-w-2xl text-center">
-          <p className="font-mono text-[0.72rem] uppercase tracking-[0.2em] text-text-muted">Our platform</p>
-          <h2 className="mt-3 text-balance text-3xl font-semibold sm:text-4xl">Streamline your sustainability data in one platform</h2>
-        </div>
-        <div className="mt-14"><PlatformShowcase /></div>
-      </Section>
-
-      {/* 5. How it works, the journey */}
+      {/* 8. How ESGen works */}
       <Section className="section-blend">
         <SectionHead title="How ESGen works" intro="A clear path from first assessment through to audit-ready assurance." center />
         <div className="mt-16"><ProcessFlow /></div>
       </Section>
 
-      {/* 6. Who it's for, teams */}
-      <Section>
-        <SectionHead title="Solutions for every team" intro="ESGen fits the way each team already works, from finance and procurement to product and reporting." center />
-        <div className="mt-12"><ServiceCards /></div>
-      </Section>
-
-      {/* 7. Who it's for, sectors */}
-      <Section className="section-blend">
-        <SectionHead title="Shaped around your sector" center />
-        <div className="mt-12"><IndustryCards /></div>
-      </Section>
-
-      {/* 8. Final CTA */}
+      {/* 9. Final CTA */}
       <CTASection />
     </>
   );
