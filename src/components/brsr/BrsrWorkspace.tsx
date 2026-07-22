@@ -222,7 +222,7 @@ function QuickStart({ companyId, onCreated }: { companyId: string; onCreated: (r
         </div>
         <label className="flex flex-col gap-1">
           <span className="text-xs font-medium">Turnover (₹ crore, optional)</span>
-          <input value={crore} onChange={(e) => setCrore(e.target.value)} inputMode="decimal" placeholder="e.g. 300 — unlocks intensity figures" className="h-10 rounded-lg border border-border bg-surface px-3 text-sm" />
+          <input value={crore} onChange={(e) => setCrore(e.target.value)} inputMode="decimal" placeholder="e.g. 300, unlocks intensity figures" className="h-10 rounded-lg border border-border bg-surface px-3 text-sm" />
           {crore && Number(crore) > 0 && (
             <span className="text-[11px] text-text-muted">₹{Number(crore).toLocaleString("en-IN")} crore = ₹{(Number(crore) * 1e7).toLocaleString("en-IN")}</span>
           )}

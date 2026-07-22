@@ -27,7 +27,7 @@ export function ContactForm() {
   if (sent) {
     return (
       <div className="rounded-2xl border border-teal/40 bg-[rgba(67,198,183,0.1)] p-8" role="status" aria-live="polite">
-        <p className="font-display text-lg font-semibold text-white">Thank you for getting in touch.</p>
+        <p className="font-display text-lg font-semibold text-[#101318]">Thank you for getting in touch.</p>
         <p className="mt-2 text-text-muted">We will reply as soon as we can. You can also email us directly at <a href={`mailto:${site.email}`} className="text-accent-3">{site.email}</a>.</p>
       </div>
     );

@@ -42,10 +42,10 @@ export function EnquiryRouter() {
         </div>
         <motion.div key={r.k} initial={{ opacity: 0, x: 8 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.24 }}
           className="flex flex-col border-t border-border bg-gradient-to-br from-surface-2 to-surface p-6 md:border-l md:border-t-0">
-          <p className="text-[0.92rem] leading-relaxed text-white">{r.blurb}</p>
+          <p className="text-[0.92rem] leading-relaxed text-[#101318]">{r.blurb}</p>
           <div className="mt-5 rounded-xl border border-border bg-canvas p-3.5">
             <div className="font-mono text-[0.6rem] uppercase tracking-wide text-text-muted">Best contact</div>
-            <a href={`mailto:${r.to}`} className="mt-1 block font-display text-sm font-medium text-white hover:text-accent-3">{r.to}</a>
+            <a href={`mailto:${r.to}`} className="mt-1 block font-display text-sm font-medium text-[#101318] hover:text-accent">{r.to}</a>
           </div>
           <a href={r.href} className="mt-auto inline-flex items-center gap-2 pt-5 text-sm font-semibold text-accent-3 hover:underline">
             {r.cta} <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg>

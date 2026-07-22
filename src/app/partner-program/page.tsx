@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
-import { Section, SectionHead } from "@/components/ui/Section";
+import Link from "next/link";
 import { Reveal } from "@/components/ui/Reveal";
-import { CTASection } from "@/components/sections/blocks";
-import { Button, ArrowRight } from "@/components/ui/Button";
+import { LightHead, LightCta } from "@/components/sections/HomeFeatures";
+import { ArrowRight } from "@/components/ui/Button";
 
 export const metadata: Metadata = {
   title: "Partner Program",
   description: "Join the ESGen partner ecosystem. Combine your client relationships with our ESG expertise and reporting software to deliver audit-ready sustainability outcomes.",
 };
+
+const INK = "#101318";
+const MUTED = "#565d68";
 
 type Benefit = { icon: React.ReactNode; title: string; desc: string };
 
@@ -46,78 +49,98 @@ const PARTNERS: { name: string; img: string }[] = [
 
 export default function PartnerProgramPage() {
   return (
-    <>
-      {/* Full-viewport photo hero */}
-      <section className="relative flex min-h-[100svh] items-center overflow-hidden">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/images/partnership.jpg" alt="Two professionals shaking hands to mark a new partnership" className="absolute inset-0 h-full w-full object-cover" />
-        <div aria-hidden className="absolute inset-0" style={{ background: "linear-gradient(100deg, rgba(4,5,9,0.94) 0%, rgba(4,5,9,0.8) 38%, rgba(4,5,9,0.42) 72%, rgba(4,5,9,0.25) 100%)" }} />
-        <div className="relative mx-auto w-full max-w-6xl px-5 sm:px-6">
-          <div className="max-w-xl">
-            <p className="font-mono text-[0.72rem] uppercase tracking-[0.18em] text-accent-3">Partner ecosystem</p>
-            <h1 className="mt-4 text-balance text-4xl font-semibold leading-[1.04] text-white sm:text-6xl">The ESGen Partner Ecosystem</h1>
-            <p className="mt-5 text-xl text-white/85">Powering the next generation of ESG execution.</p>
-            <p className="mt-5 max-w-lg text-base leading-relaxed text-white/70">
-              Combine your trusted client relationships with our ESG expertise and reporting software, and deliver audit-ready, financial-grade sustainability outcomes without building the infrastructure yourself.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Button href="/contact" size="lg">Join our partner network <ArrowRight /></Button>
-              <Button href="/demo" variant="ghost" size="lg">See the platform</Button>
-            </div>
+    <div className="bg-white">
+      {/* Hero: copy left, photo right, matching the homepage treatment. */}
+      <section className="relative overflow-hidden pt-28 pb-16 sm:pt-36">
+        <div className="mx-auto grid max-w-6xl items-center gap-12 px-5 sm:px-6 lg:grid-cols-[1.05fr_1fr]">
+          <div>
+            <Reveal>
+              <p className="font-mono text-[0.72rem] uppercase tracking-[0.2em]" style={{ color: MUTED }}>Partner ecosystem</p>
+            </Reveal>
+            <Reveal>
+              <h1 className="mt-4 text-balance font-display text-4xl font-bold leading-[1.05] tracking-tight sm:text-5xl lg:text-[3.4rem]" style={{ color: INK }}>
+                The ESGen Partner Ecosystem
+              </h1>
+            </Reveal>
+            <Reveal>
+              <p className="mt-5 text-xl" style={{ color: INK }}>Powering the next generation of ESG execution.</p>
+            </Reveal>
+            <Reveal>
+              <p className="mt-4 max-w-lg text-base leading-relaxed" style={{ color: MUTED }}>
+                Combine your trusted client relationships with our ESG expertise and reporting software, and deliver audit-ready, financial-grade sustainability outcomes without building the infrastructure yourself.
+              </p>
+            </Reveal>
+            <Reveal>
+              <div className="mt-9 flex flex-wrap gap-3">
+                <Link href="/contact" className="inline-flex items-center gap-2 bg-[#0b0d11] px-6 py-3.5 text-sm font-bold text-white transition-transform hover:-translate-y-0.5">
+                  Join our partner network <ArrowRight className="h-4 w-4" />
+                </Link>
+                <Link href="/demo" className="inline-flex items-center border border-[#d5d9e0] px-6 py-3.5 text-sm font-bold transition-colors hover:bg-[#f2f4f7]" style={{ color: INK }}>
+                  See the platform
+                </Link>
+              </div>
+            </Reveal>
           </div>
-        </div>
-        {/* scroll cue */}
-        <div aria-hidden className="absolute inset-x-0 bottom-6 flex justify-center">
-          <svg viewBox="0 0 24 24" className="h-6 w-6 animate-bounce text-white/55" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6" /></svg>
+
+          <Reveal>
+            <div className="relative overflow-hidden rounded-3xl border border-[#e6e8ec] shadow-[0_36px_80px_-52px_rgba(15,23,42,0.55)]">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/images/partnership.jpg" alt="Two professionals shaking hands to mark a new partnership" className="h-[420px] w-full object-cover" />
+            </div>
+          </Reveal>
         </div>
       </section>
 
       {/* Intro */}
-      <Section>
+      <section className="px-5 py-16 sm:px-6">
         <Reveal>
           <div className="mx-auto max-w-3xl text-center">
-            <h2 className="text-balance font-display text-3xl font-bold sm:text-4xl">One ecosystem for scalable ESG delivery</h2>
-            <p className="mt-5 text-lg leading-relaxed text-text-muted">
+            <h2 className="text-balance font-display text-3xl font-bold tracking-tight sm:text-4xl" style={{ color: INK }}>One ecosystem for scalable ESG delivery</h2>
+            <p className="mt-5 text-lg leading-relaxed" style={{ color: MUTED }}>
               The transition to sustainable business is too complex for any single firm to tackle alone. The ESGen Partner Ecosystem is built for forward-thinking agencies, consultancies, and systems integrators who want to elevate their client offerings, working with our team and platform rather than reinventing the reporting stack from scratch.
             </p>
           </div>
         </Reveal>
-      </Section>
+      </section>
 
       {/* Why partner */}
-      <Section className="section-blend">
-        <SectionHead title="Why partner with ESGen" center />
+      <section className="bg-[#f6f7f9] px-5 py-20 sm:px-6">
+        <LightHead title="Why partner with ESGen" />
         <div className="mx-auto mt-12 grid max-w-4xl gap-5 sm:grid-cols-2">
-          {BENEFITS.map((b, i) => (
+          {BENEFITS.map((b) => (
             <Reveal key={b.title}>
-              <div className="card h-full p-7" style={{ transitionDelay: `${i * 40}ms` }}>
-                <span className="grid h-11 w-11 place-items-center rounded-xl border border-accent/25 bg-accent/10 text-accent-3">
+              <div className="h-full rounded-3xl border border-[#e6e8ec] bg-white p-7">
+                <span className="grid h-11 w-11 place-items-center rounded-xl border border-[#e6e8ec] bg-[#f6f7f9]" style={{ color: INK }}>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">{b.icon}</svg>
                 </span>
-                <h3 className="mt-5 font-display text-lg font-semibold">{b.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-text-muted">{b.desc}</p>
+                <h3 className="mt-5 font-display text-lg font-semibold" style={{ color: INK }}>{b.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed" style={{ color: MUTED }}>{b.desc}</p>
               </div>
             </Reveal>
           ))}
         </div>
-      </Section>
+      </section>
 
-      {/* Trusted partners */}
-      <Section>
-        <SectionHead title="Our trusted partners" intro="We work alongside organisations who share our belief that sustainability should be practical and within reach of every business." center />
+      {/* Trusted partners. The supplied artwork is light-on-dark, so it keeps its
+          own dark chip rather than being recoloured. */}
+      <section className="px-5 py-20 sm:px-6">
+        <LightHead title="Our trusted partners" intro="We work alongside organisations who share our belief that sustainability should be practical and within reach of every business." />
         <div className="mx-auto mt-12 grid max-w-3xl gap-6 sm:grid-cols-2">
           {PARTNERS.map((p) => (
             <Reveal key={p.name}>
-              <div className="group flex h-44 items-center justify-center rounded-2xl border border-border px-10 transition-all duration-300 hover:-translate-y-1.5 hover:border-accent/50 hover:shadow-[0_24px_60px_-28px_rgba(77,139,245,0.55)]" style={{ background: "#000" }}>
+              <div className="group flex h-44 items-center justify-center rounded-3xl bg-[#0b0d11] px-10 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_28px_60px_-30px_rgba(15,23,42,0.6)]">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={p.img} alt={`${p.name} logo`} className="max-h-24 w-auto max-w-full object-contain transition-transform duration-300 group-hover:scale-110" />
               </div>
             </Reveal>
           ))}
         </div>
-      </Section>
+      </section>
 
-      <CTASection title="Ready to grow with ESGen?" intro="Join our partner ecosystem and deliver scalable, audit-ready ESG solutions to your clients." primary={{ label: "Become a partner", href: "/contact" }} secondary={{ label: "Book a demo", href: "/demo" }} />
-    </>
+      <LightCta
+        title="Ready to grow with ESGen?"
+        intro="Join our partner ecosystem and deliver scalable, audit-ready ESG solutions to your clients."
+      />
+    </div>
   );
 }

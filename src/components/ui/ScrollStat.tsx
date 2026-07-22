@@ -69,14 +69,14 @@ export function ScrollStat({
 
   return (
     <div ref={ref}>
-      <div className="font-display text-5xl font-bold leading-none tracking-tight tabular-nums text-white sm:text-6xl">
+      <div className="font-display text-5xl leading-none tracking-tight tabular-nums sm:text-6xl" style={{ color: "#101318", fontWeight: 450 }}>
         {prefix}
         {display.toLocaleString("en-GB", { minimumFractionDigits: decimals, maximumFractionDigits: decimals })}
         {suffix}
       </div>
-      <div className="mt-4 h-px w-12 bg-white/25" />
-      <p className="mt-4 text-sm font-medium text-text">{label}</p>
-      {note && <p className="mt-1 text-xs text-text-muted">{note}</p>}
+      <div className="mt-4 h-px w-12" style={{ background: "#d7dbe1" }} />
+      <p className="mt-4 text-sm font-medium" style={{ color: "#101318" }}>{label}</p>
+      {note && <p className="mt-1 text-xs" style={{ color: "#565d68" }}>{note}</p>}
     </div>
   );
 }

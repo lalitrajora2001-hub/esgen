@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Reveal } from "@/components/ui/Reveal";
-import { INK, BODY, GREEN, GREENDK, GPrimaryBtn, GH2, GFaq, GreenCTA } from "@/components/platform/greenParts";
+import { INK, BODY, GREEN, GREENDK, GCheck, GPrimaryBtn, GH2, GFaq, GreenCTA } from "@/components/platform/greenParts";
 import { SupplierDashboard } from "@/components/platform/SupplierVisuals";
 import { AppReductionTrajectory, AppScenario, AppExports, AppSuppliersDashboard, QuestionnaireScores, FactorIconGrid, AppSbtiTable, AppCsrdUpload, AppCbamQuestionnaire } from "@/components/platform/AppShots";
 
@@ -58,6 +58,37 @@ function Check() {
   return <svg viewBox="0 0 24 24" className="mt-0.5 h-5 w-5 shrink-0" fill="none"><circle cx="12" cy="12" r="10" fill={GREEN} /><path d="M7.5 12.5l3 3 6-6.5" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" /></svg>;
 }
 
+const PHOTO_CARDS: { step: string; t: string; d: string; img: string; alt: string }[] = [
+  {
+    step: "Collect",
+    t: "Ask once, in a form suppliers can answer",
+    d: "Sector-specific questionnaires go out from one workspace, with reminders handled for you, so responses come back structured rather than as loose attachments.",
+    img: "/images/home-supplychain.jpg",
+    alt: "Warehouse operator checking goods against a handheld scanner",
+  },
+  {
+    step: "Identify",
+    t: "See which suppliers actually move the number",
+    d: "Rank your value chain by emissions and spend together, so effort goes to the handful of relationships that decide your Scope 3 total.",
+    img: "/images/container-port.jpg",
+    alt: "Freight containers stacked at a shipping terminal",
+  },
+  {
+    step: "Engage",
+    t: "Work with them, not at them",
+    d: "Share scorecards, track progress over time, and give suppliers a clear view of what improving looks like for their own reporting.",
+    img: "/images/team-product.jpg",
+    alt: "Two colleagues reviewing product data together at a desk",
+  },
+];
+
+const PROCUREMENT: string[] = [
+  "Compare suppliers on emissions intensity, not just unit price",
+  "Flag high-impact categories before the next sourcing round",
+  "Track whether supplier commitments turn into measured reductions",
+  "Carry the same evidence straight into CSRD and CDP disclosures",
+];
+
 export default function SuppliersEngagementPage() {
   return (
     <div className="bg-white" style={{ color: BODY }}>
@@ -106,6 +137,65 @@ export default function SuppliersEngagementPage() {
           </div>
         </section>
       ))}
+
+      {/* Three photo cards: the shape of a supplier programme */}
+      <section className="py-16 sm:py-24">
+        <div className="mx-auto max-w-6xl px-5 sm:px-6">
+          <h2 className="mx-auto max-w-2xl text-center font-display text-2xl font-bold tracking-tight sm:text-3xl" style={{ color: INK }}>
+            A supplier programme that actually runs
+          </h2>
+          <div className="mt-12 grid gap-6 sm:grid-cols-3">
+            {PHOTO_CARDS.map((c, i) => (
+              <Reveal key={c.t}>
+                <div className="group flex h-full flex-col overflow-hidden rounded-3xl border border-[#e6ece7] bg-white" style={{ transitionDelay: `${i * 40}ms` }}>
+                  <div className="relative h-52 overflow-hidden">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={c.img} alt={c.alt} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                    <span className="absolute left-4 top-4 rounded-full bg-white/90 px-2.5 py-1 font-mono text-[0.6rem] font-bold uppercase tracking-[0.14em]" style={{ color: GREENDK }}>
+                      {c.step}
+                    </span>
+                  </div>
+                  <div className="flex flex-1 flex-col p-6">
+                    <h3 className="font-display text-lg font-bold" style={{ color: INK }}>{c.t}</h3>
+                    <p className="mt-2.5 flex-1 text-sm leading-relaxed" style={{ color: BODY }}>{c.d}</p>
+                  </div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Split panel: photo one side, the decisions it unlocks on the other */}
+      <section className="py-16 sm:py-24" style={{ background: "#f6fbf7" }}>
+        <div className="mx-auto grid max-w-6xl items-center gap-12 px-5 sm:px-6 lg:grid-cols-2">
+          <Reveal>
+            <div className="overflow-hidden rounded-3xl border border-[#e6ece7]">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/images/container-port.jpg" alt="Containers stacked at a freight port" className="h-[420px] w-full object-cover" />
+            </div>
+          </Reveal>
+          <Reveal>
+            <div>
+              <h2 className="font-display text-2xl font-bold tracking-tight sm:text-3xl" style={{ color: INK }}>
+                Turn supplier data into procurement decisions
+              </h2>
+              <p className="mt-4 text-base leading-relaxed" style={{ color: BODY }}>
+                Once primary data is in, the same figures that satisfy your reporting also tell you where to buy differently. No second exercise, no separate spreadsheet.
+              </p>
+              <ul className="mt-7 space-y-4">
+                {PROCUREMENT.map((p) => (
+                  <li key={p} className="flex gap-3">
+                    <GCheck />
+                    <span className="text-sm leading-relaxed" style={{ color: BODY }}>{p}</span>
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-9"><GPrimaryBtn href="/demo">Request a demo</GPrimaryBtn></div>
+            </div>
+          </Reveal>
+        </div>
+      </section>
 
       {/* Procurement mosaic */}
       <section className="py-16 sm:py-24">

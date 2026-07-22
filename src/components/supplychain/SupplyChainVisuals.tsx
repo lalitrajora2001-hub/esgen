@@ -233,3 +233,125 @@ export function SupplierDetail() {
     </div>
   );
 }
+
+/* ---------- supplier hierarchy ---------- */
+
+const TREE: { region: string; flag: string; total: string; suppliers: { name: string; t: number; pct: number }[] }[] = [
+  {
+    region: "United Kingdom",
+    flag: "GB",
+    total: "18,240",
+    suppliers: [
+      { name: "Steel components", t: 9840, pct: 82 },
+      { name: "Packaging", t: 5120, pct: 46 },
+      { name: "Inbound logistics", t: 3280, pct: 29 },
+    ],
+  },
+  {
+    region: "France",
+    flag: "FR",
+    total: "11,460",
+    suppliers: [
+      { name: "Aluminium castings", t: 6310, pct: 58 },
+      { name: "Electronics", t: 3290, pct: 31 },
+      { name: "Contract assembly", t: 1860, pct: 18 },
+    ],
+  },
+];
+
+function SupplierCard({ s, play, delay }: { s: { name: string; t: number; pct: number }; play: boolean; delay: number }) {
+  return (
+    <motion.div
+      className="rounded-xl border border-[#e5eaf3] bg-white p-3 shadow-[0_8px_20px_-16px_rgba(15,23,42,0.5)]"
+      initial={{ opacity: 0, y: 10 }}
+      animate={play ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.42, delay, ease: [0.16, 1, 0.3, 1] }}
+    >
+      <div className="flex items-baseline justify-between gap-2">
+        <span className="truncate text-[0.72rem] font-semibold" style={{ color: "#12224f" }}>{s.name}</span>
+        <span className="shrink-0 font-mono text-[0.66rem]" style={{ color: "#5b6472" }}>
+          <Count to={s.t} play={play} /> t
+        </span>
+      </div>
+      <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-[#eef2fb]">
+        <motion.div
+          className="h-full rounded-full"
+          style={{ background: "#2f6fe0" }}
+          initial={{ width: 0 }}
+          animate={play ? { width: `${s.pct}%` } : {}}
+          transition={{ duration: 0.8, delay: delay + 0.12, ease: "easeOut" }}
+        />
+      </div>
+    </motion.div>
+  );
+}
+
+/**
+ * Supplier hierarchy: parent company, its sourcing regions, and the supplier
+ * groups underneath each. Connectors are plain borders so the tree stays put at
+ * any width. Figures are illustrative.
+ */
+export function SupplierHierarchy() {
+  const { ref, inView } = useReveal();
+
+  return (
+    <div ref={ref} className="w-full rounded-2xl border border-[#e5eaf3] bg-[#f8fafc] p-5 sm:p-6">
+      {/* Root */}
+      <motion.div
+        className="mx-auto w-fit rounded-xl border border-[#e5eaf3] bg-white px-5 py-3 text-center shadow-[0_12px_28px_-20px_rgba(15,23,42,0.55)]"
+        initial={{ opacity: 0, y: -8 }}
+        animate={inView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+      >
+        <div className="flex items-center justify-center gap-2">
+          <EsgenMark className="h-4 w-4" />
+          <span className="font-display text-sm font-bold" style={{ color: "#12224f" }}>Your company</span>
+        </div>
+        <p className="mt-1 font-mono text-[0.68rem]" style={{ color: "#5b6472" }}>
+          <Count to={29700} play={inView} /> tCO<sub>2</sub>e purchased goods
+        </p>
+      </motion.div>
+
+      {/* Trunk */}
+      <div className="mx-auto h-5 w-px" style={{ background: "#d6deeb" }} />
+
+      {/* Branch bar across the two regions */}
+      <div className="grid grid-cols-2">
+        <div className="h-px justify-self-end" style={{ width: "50%", background: "#d6deeb" }} />
+        <div className="h-px justify-self-start" style={{ width: "50%", background: "#d6deeb" }} />
+      </div>
+
+      <div className="grid grid-cols-2 gap-4 sm:gap-5">
+        {TREE.map((r, ri) => (
+          <div key={r.region} className="flex flex-col items-center">
+            <div className="h-5 w-px" style={{ background: "#d6deeb" }} />
+            <motion.div
+              className="w-full rounded-xl border border-[#e5eaf3] bg-white px-3 py-2.5 text-center"
+              initial={{ opacity: 0, y: 8 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.4, delay: 0.16 + ri * 0.08, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <div className="flex items-center justify-center gap-1.5">
+                <span className="rounded border border-[#e5eaf3] px-1 font-mono text-[0.58rem] font-bold" style={{ color: "#2f6fe0" }}>{r.flag}</span>
+                <span className="text-[0.74rem] font-semibold" style={{ color: "#12224f" }}>{r.region}</span>
+              </div>
+              <p className="mt-0.5 font-mono text-[0.64rem]" style={{ color: "#5b6472" }}>{r.total} t</p>
+            </motion.div>
+
+            <div className="h-4 w-px" style={{ background: "#d6deeb" }} />
+
+            <div className="w-full space-y-2 border-l-0 pl-0">
+              {r.suppliers.map((s, si) => (
+                <SupplierCard key={s.name} s={s} play={inView} delay={0.3 + ri * 0.06 + si * 0.09} />
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <p className="mt-4 text-center font-mono text-[0.6rem]" style={{ color: "#8b93a1" }}>
+        Illustrative supplier structure
+      </p>
+    </div>
+  );
+}

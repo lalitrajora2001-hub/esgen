@@ -1,9 +1,7 @@
-import { Section, SectionHead } from "@/components/ui/Section";
+import { Section } from "@/components/ui/Section";
 import { ScrollStat } from "@/components/ui/ScrollStat";
-import { CTASection } from "@/components/sections/blocks";
-import { ProcessFlow } from "@/components/sections/ProcessFlow";
 import { HomeHero } from "@/components/sections/HomeHero";
-import { LightHead, ValueCards, ComplianceCards, PlatformShowcase, TeamCards, SectorCards } from "@/components/sections/HomeFeatures";
+import { LightHead, ValueCards, ComplianceCards, PlatformShowcase, TeamCards, SectorCards, ProcessSteps, LightCta } from "@/components/sections/HomeFeatures";
 
 export default function Home() {
   return (
@@ -43,16 +41,14 @@ export default function Home() {
         <div className="mt-14"><SectorCards /></div>
       </Section>
 
-      {/* ---------- back to the dark theme ---------- */}
-
       {/* 7. Scale, the impact band */}
-      <Section className="section-blend" size="sm">
-        <div className="rounded-3xl border border-border bg-gradient-to-b from-surface to-canvas p-8 sm:p-14">
-          <h2 className="max-w-3xl font-display text-3xl font-bold leading-[1.12] text-white sm:text-4xl">
-            Measure everything. Report once. <span className="text-text-muted">Stay ahead of every mandate.</span>
+      <Section className="bg-[#f6f7f9]" size="sm">
+        <div className="rounded-3xl bg-white p-8 sm:p-14" style={{ border: "1px solid #e6e8ec" }}>
+          <h2 className="max-w-3xl font-display text-[clamp(1.8rem,3.2vw,2.6rem)] leading-[1.12]" style={{ color: "#101318", fontWeight: 450 }}>
+            Measure everything. Report once. <span style={{ color: "#8a919c" }}>Stay ahead of every mandate.</span>
           </h2>
-          <p className="mt-4 max-w-xl text-text-muted">One workspace that turns raw activity data into audit-ready disclosure across the frameworks that matter.</p>
-          <div className="mt-12 grid grid-cols-2 gap-x-6 gap-y-10 border-t border-border pt-12 sm:grid-cols-4">
+          <p className="mt-4 max-w-xl" style={{ color: "#565d68" }}>One workspace that turns raw activity data into audit-ready disclosure across the frameworks that matter.</p>
+          <div className="mt-12 grid grid-cols-2 gap-x-6 gap-y-10 pt-12 sm:grid-cols-4" style={{ borderTop: "1px solid #e6e8ec" }}>
             <ScrollStat value={3} label="Emission scopes covered" note="Scope 1, 2 and 3" />
             <ScrollStat value={15} label="Scope 3 categories" note="Full GHG Protocol value chain" />
             <ScrollStat value={6} suffix="+" label="Reporting frameworks supported" note="CSRD, ISSB, SECR, CDP and more" />
@@ -62,13 +58,13 @@ export default function Home() {
       </Section>
 
       {/* 8. How ESGen works */}
-      <Section className="section-blend">
-        <SectionHead title="How ESGen works" intro="A clear path from first assessment through to audit-ready assurance." center />
-        <div className="mt-16"><ProcessFlow /></div>
+      <Section className="bg-white">
+        <LightHead title="How ESGen works" intro="A clear path from first assessment through to audit-ready assurance." />
+        <div className="mt-16"><ProcessSteps /></div>
       </Section>
 
       {/* 9. Final CTA */}
-      <CTASection />
+      <LightCta />
     </>
   );
 }

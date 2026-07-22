@@ -1,45 +1,42 @@
-import { Button, ArrowRight } from "@/components/ui/Button";
+import Link from "next/link";
+import { Reveal } from "@/components/ui/Reveal";
+import { HeroShowcase } from "@/components/sections/HeroShowcase";
 
-/* Full-viewport homepage hero: a living aurora backdrop with the headline
-   anchored top-left, mirroring the industries heroes. */
+const INK = "#101318";
+const MUTED = "#565d68";
+
 export function HomeHero() {
   return (
-    <section className="relative flex min-h-[100svh] items-start overflow-hidden bg-canvas">
-      <video
-        className="absolute inset-0 h-full w-full object-cover"
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="auto"
-        style={{ filter: "saturate(1.15) contrast(1.04)" }}
-      >
-        <source src="/videos/forest.mp4" type="video/mp4" />
-      </video>
-
-      {/* colour-preserving scrims: dark top-left for legibility, a soft vignette, and a blend into the page */}
-      <div aria-hidden className="pointer-events-none absolute inset-0" style={{ background: "linear-gradient(to bottom right, rgba(4,6,12,0.9) 0%, rgba(4,6,12,0.5) 36%, rgba(4,6,12,0.12) 68%, rgba(4,6,12,0) 100%)" }} />
-      <div aria-hidden className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(125% 120% at 28% 18%, transparent 42%, rgba(2,4,9,0.55) 100%)" }} />
-      <div aria-hidden className="pointer-events-none absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(4,6,12,0.3) 0%, transparent 24%, transparent 60%, rgba(6,7,11,0.72) 92%, #06070b 100%)" }} />
-
-      <div className="relative mx-auto w-full max-w-6xl px-5 pb-24 pt-32 sm:px-6 sm:pt-40">
-        <div className="max-w-2xl" style={{ textShadow: "0 1px 30px rgba(2,4,9,0.82), 0 1px 5px rgba(2,4,9,0.7)" }}>
-          <h1 className="text-balance font-display text-5xl font-semibold leading-[1.02] text-white sm:text-6xl lg:text-7xl">
-            Turn ESG mandates into your competitive advantage.
-          </h1>
-          <p className="mt-6 max-w-xl text-lg leading-relaxed text-white/85">
-            ESGen evaluates your operational footprint and maps a precise, actionable pathway to meet industry-specific ESG standards, so reporting becomes a foundation for growth rather than an administrative burden.
-          </p>
-          <div className="mt-9 flex flex-wrap gap-3">
-            <Button href="/demo" size="lg">Book a demo <ArrowRight /></Button>
-            <Button href="/platform/carbon-assessment" variant="ghost" size="lg">Explore the platform</Button>
-          </div>
+    <section className="relative overflow-hidden bg-white">
+      <div className="mx-auto grid max-w-6xl items-center gap-20 px-5 pb-28 pt-28 sm:px-6 sm:pt-36 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14">
+        {/* Heading and CTA sit in front of the composition */}
+        <div className="relative z-20">
+          <Reveal>
+            <h1 className="text-balance font-display text-4xl font-bold leading-[1.05] tracking-tight sm:text-5xl lg:text-[3.4rem]" style={{ color: INK }}>
+              Turn ESG mandates into your competitive advantage.
+            </h1>
+          </Reveal>
+          <Reveal delay={0.08}>
+            <p className="mt-6 max-w-xl text-lg leading-relaxed" style={{ color: MUTED }}>
+              ESGen measures your operational footprint and maps a precise, actionable pathway to the standards your customers, tenders and lenders ask about, so reporting becomes a foundation for growth rather than an administrative burden.
+            </p>
+          </Reveal>
+          <Reveal delay={0.16}>
+            <div className="mt-9 flex flex-wrap items-center gap-3">
+              <Link href="/demo" className="inline-flex items-center gap-2 px-6 py-3.5 text-sm font-bold text-white transition-transform duration-300 hover:-translate-y-0.5" style={{ background: "#0b0d11" }}>
+                Book a demo
+                <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+              </Link>
+              <Link href="/platform/carbon-assessment" className="inline-flex items-center px-6 py-3.5 text-sm font-bold transition-colors duration-300 hover:bg-[#f2f4f7]" style={{ border: `1px solid ${INK}`, color: INK }}>
+                Explore the platform
+              </Link>
+            </div>
+          </Reveal>
         </div>
-      </div>
 
-      {/* scroll cue */}
-      <div aria-hidden className="absolute inset-x-0 bottom-6 flex justify-center">
-        <svg viewBox="0 0 24 24" className="h-6 w-6 animate-bounce text-white/55" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6" /></svg>
+        <Reveal delay={0.12} className="relative z-10 min-w-0">
+          <HeroShowcase />
+        </Reveal>
       </div>
     </section>
   );

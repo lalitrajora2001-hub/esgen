@@ -26,7 +26,7 @@ export default function KnowledgeHubPage() {
         <div className="relative mx-auto max-w-6xl px-5 sm:px-6">
           <RBreadcrumb trail={[{ label: "Home", href: "/" }, { label: "Resources", href: "/resources" }, { label: "Knowledge Hub" }]} />
           <div className="max-w-2xl">
-            <h1 className="text-balance text-4xl font-semibold leading-[1.05] text-[#101318] sm:text-5xl">The fundamentals, laid out as a path</h1>
+            <h1 className="text-balance font-display text-4xl font-bold leading-[1.05] tracking-tight text-[#101318] sm:text-5xl">The fundamentals, laid out as a path</h1>
             <p className="mt-5 max-w-xl text-lg text-[#565d68]">Not a pile of articles. A route through ESG and carbon reporting, from first principles to the parts of ESGen that put them to work.</p>
           </div>
         </div>

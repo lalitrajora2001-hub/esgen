@@ -13,20 +13,20 @@ export function MobileMenu({ open, onClose, onSearch }: { open: boolean; onClose
     <AnimatePresence>
       {open && (
         <motion.div
-          className="fixed inset-0 z-[190] flex flex-col bg-canvas lg:hidden"
+          className="fixed inset-0 z-[190] flex flex-col bg-white lg:hidden"
           initial={{ opacity: 0, x: "100%" }}
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: "100%" }}
           transition={{ type: "spring", stiffness: 320, damping: 34 }}
           aria-label="Menu"
         >
-          <div className="flex h-16 items-center justify-between border-b border-border px-5">
+          <div className="flex h-16 items-center justify-between border-b border-[#e6e8ec] px-5">
             <Logo />
             <div className="flex items-center gap-1">
-              <button aria-label="Search" onClick={onSearch} className="flex h-10 w-10 items-center justify-center rounded-lg text-text-muted hover:text-white">
+              <button aria-label="Search" onClick={onSearch} className="flex h-10 w-10 items-center justify-center rounded-lg text-[#565d68] hover:text-[#101318]">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-5 w-5"><circle cx="11" cy="11" r="7" /><path d="M21 21l-4.3-4.3" /></svg>
               </button>
-              <button aria-label="Close menu" onClick={onClose} className="flex h-10 w-10 items-center justify-center rounded-lg text-white">
+              <button aria-label="Close menu" onClick={onClose} className="flex h-10 w-10 items-center justify-center rounded-lg text-[#101318]">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="h-6 w-6"><path d="M6 6l12 12M18 6L6 18" /></svg>
               </button>
             </div>
@@ -36,7 +36,7 @@ export function MobileMenu({ open, onClose, onSearch }: { open: boolean; onClose
             {mainNav.map((entry) => {
               if (!hasItems(entry) && !hasGroups(entry)) {
                 return (
-                  <Link key={entry.label} href={entry.href} onClick={onClose} className="block rounded-xl px-3 py-3 font-display text-lg font-medium text-white hover:bg-surface">
+                  <Link key={entry.label} href={entry.href} onClick={onClose} className="block rounded-xl px-3 py-3 font-display text-lg font-medium text-[#101318] hover:bg-[#f2f4f7]">
                     {entry.label}
                   </Link>
                 );
@@ -45,7 +45,7 @@ export function MobileMenu({ open, onClose, onSearch }: { open: boolean; onClose
               return (
                 <div key={entry.label}>
                   <button
-                    className="flex w-full items-center justify-between rounded-xl px-3 py-3 font-display text-lg font-medium text-white hover:bg-surface"
+                    className="flex w-full items-center justify-between rounded-xl px-3 py-3 font-display text-lg font-medium text-[#101318] hover:bg-[#f2f4f7]"
                     aria-expanded={isOpen}
                     onClick={() => setExpanded(isOpen ? null : entry.label)}
                   >
@@ -58,16 +58,16 @@ export function MobileMenu({ open, onClose, onSearch }: { open: boolean; onClose
                         {hasGroups(entry)
                           ? entry.groups.map((g) => (
                               <div key={g.heading} className="mb-1">
-                                <p className="px-3 pb-1 pt-2 font-mono text-[0.65rem] uppercase tracking-[0.12em] text-text-muted/60">{g.heading}</p>
+                                <p className="px-3 pb-1 pt-2 font-mono text-[0.65rem] uppercase tracking-[0.12em] text-[#6b7280]">{g.heading}</p>
                                 {g.items.map((l) => (
-                                  <Link key={l.href} href={l.href} onClick={onClose} className="block rounded-lg px-3 py-2 text-sm text-text-muted hover:text-white">
+                                  <Link key={l.href} href={l.href} onClick={onClose} className="block rounded-lg px-3 py-2 text-sm text-[#565d68] hover:text-[#101318]">
                                     {l.label}
                                   </Link>
                                 ))}
                               </div>
                             ))
                           : entry.items.map((l) => (
-                              <Link key={l.href} href={l.href} onClick={onClose} className="block rounded-lg px-3 py-2 text-sm text-text-muted hover:text-white">
+                              <Link key={l.href} href={l.href} onClick={onClose} className="block rounded-lg px-3 py-2 text-sm text-[#565d68] hover:text-[#101318]">
                                 {l.label}
                               </Link>
                             ))}
@@ -79,9 +79,9 @@ export function MobileMenu({ open, onClose, onSearch }: { open: boolean; onClose
             })}
           </nav>
 
-          <div className="border-t border-border p-4">
-            <Link href="/app/login" onClick={onClose} className="mb-3 block text-center text-sm text-text-muted">Sign in</Link>
-            <Link href="/demo" onClick={onClose} className="flex h-12 items-center justify-center gap-2 rounded-xl bg-accent font-semibold text-white">
+          <div className="border-t border-[#e6e8ec] p-4">
+            <Link href="/app/login" onClick={onClose} className="mb-3 block text-center text-sm text-[#565d68]">Sign in</Link>
+            <Link href="/demo" onClick={onClose} className="flex h-12 items-center justify-center gap-2 bg-[#0b0d11] font-bold text-white">
               Book a demo
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="h-4 w-4"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
             </Link>

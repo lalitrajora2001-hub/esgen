@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import { Breadcrumb } from "@/components/sections/blocks";
 import { Section } from "@/components/ui/Section";
+import { Reveal } from "@/components/ui/Reveal";
 import { DemoForm } from "@/components/forms/DemoForm";
+import { RBreadcrumb } from "@/components/resources/light";
 
 export const metadata: Metadata = {
   title: "Book a Demo",
@@ -16,49 +17,51 @@ const STEPS: [string, string][] = [
 
 export default function DemoPage() {
   return (
-    <>
-      {/* Hero */}
+    <div className="bg-white">
       <section className="relative overflow-hidden pt-28 pb-6 sm:pt-36">
-        <div aria-hidden className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(900px 460px at 30% -10%, rgba(255,255,255,0.07), transparent 60%)" }} />
-        <div className="grid-texture pointer-events-none absolute inset-0 opacity-60" aria-hidden />
+        <div aria-hidden className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(900px 460px at 30% -10%, rgba(16,19,24,0.05), transparent 60%)" }} />
         <div className="relative mx-auto max-w-6xl px-5 sm:px-6">
-          <Breadcrumb trail={[{ label: "Home", href: "/" }, { label: "Book a demo" }]} />
+          <RBreadcrumb trail={[{ label: "Home", href: "/" }, { label: "Book a demo" }]} />
           <div className="max-w-2xl">
-            <h1 className="text-balance text-4xl font-semibold leading-[1.05] sm:text-5xl">See ESGen against your own reporting</h1>
-            <p className="mt-5 max-w-xl text-lg text-text-muted">Tell us what you report to and we will build the walkthrough around it. Thirty minutes, tailored, no obligation.</p>
+            <h1 className="text-balance font-display text-4xl font-bold leading-[1.05] tracking-tight text-[#101318] sm:text-5xl">See ESGen against your own reporting</h1>
+            <p className="mt-5 max-w-xl text-lg text-[#565d68]">Tell us what you report to and we will build the walkthrough around it. Thirty minutes, tailored, no obligation.</p>
           </div>
         </div>
       </section>
 
       <Section size="sm">
         <div className="grid gap-12 lg:grid-cols-[1fr_1.15fr] lg:items-start">
-          {/* What to expect, connected timeline */}
           <div>
-            <h2 className="text-2xl font-semibold sm:text-3xl">What to expect</h2>
+            <Reveal>
+              <h2 className="font-display text-2xl font-bold tracking-tight text-[#101318] sm:text-3xl">What to expect</h2>
+            </Reveal>
             <ol className="relative mt-8">
-              <div aria-hidden className="absolute bottom-4 left-[19px] top-3 w-px bg-border" />
+              <div aria-hidden className="absolute bottom-4 left-[19px] top-3 w-px bg-[#e6e8ec]" />
               {STEPS.map(([t, d], i) => (
-                <li key={t} className="relative flex gap-5 pb-8 last:pb-0">
-                  <span className="relative z-10 grid h-10 w-10 shrink-0 place-items-center rounded-full border border-accent/25 bg-accent/10 font-display text-sm font-bold text-accent-3">{i + 1}</span>
-                  <div className="pt-1.5">
-                    <h3 className="font-display text-lg font-semibold text-white">{t}</h3>
-                    <p className="mt-1.5 text-sm leading-relaxed text-text-muted">{d}</p>
-                  </div>
-                </li>
+                <Reveal key={t}>
+                  <li className="relative flex gap-5 pb-8 last:pb-0">
+                    <span className="relative z-10 grid h-10 w-10 shrink-0 place-items-center rounded-full border border-[#e6e8ec] bg-[#f6f7f9] font-display text-sm font-bold text-[#101318]">{i + 1}</span>
+                    <div className="pt-1.5">
+                      <h3 className="font-display text-lg font-semibold text-[#101318]">{t}</h3>
+                      <p className="mt-1.5 text-sm leading-relaxed text-[#565d68]">{d}</p>
+                    </div>
+                  </li>
+                </Reveal>
               ))}
             </ol>
-            <div className="mt-4 rounded-2xl border border-border bg-surface p-5">
-              <p className="text-sm text-text-muted">Not ready for a demo? <a href="/contact" className="text-accent-3 hover:underline">Ask us anything by email</a> and we will get back to you.</p>
+            <div className="mt-4 rounded-2xl border border-[#e6e8ec] bg-[#f6f7f9] p-5">
+              <p className="text-sm text-[#565d68]">Not ready for a demo? <a href="/contact" className="font-semibold text-[#101318] hover:underline">Ask us anything by email</a> and we will get back to you.</p>
             </div>
           </div>
 
-          {/* Form */}
-          <div className="rounded-3xl border border-border bg-surface p-6 shadow-float sm:p-8">
-            <h2 className="mb-6 font-display text-xl font-semibold">Request a demo</h2>
-            <DemoForm />
-          </div>
+          <Reveal>
+            <div className="rounded-3xl border border-[#e6e8ec] bg-white p-6 shadow-[0_24px_60px_-40px_rgba(15,23,42,0.45)] sm:p-8">
+              <h2 className="mb-6 font-display text-xl font-bold tracking-tight text-[#101318]">Request a demo</h2>
+              <DemoForm />
+            </div>
+          </Reveal>
         </div>
       </Section>
-    </>
+    </div>
   );
 }

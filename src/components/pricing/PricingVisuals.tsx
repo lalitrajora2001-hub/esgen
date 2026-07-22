@@ -65,7 +65,7 @@ export function PlanConfigurator() {
         <div className="border-b border-border p-6 sm:p-8 lg:border-b-0 lg:border-r">
           <p className="font-mono text-[0.68rem] uppercase tracking-[0.16em] text-text-muted">Configure your setup</p>
 
-          <h3 className="mt-5 text-sm font-semibold text-white">What do you need to report to?</h3>
+          <h3 className="mt-5 text-sm font-semibold text-[#101318]">What do you need to report to?</h3>
           <div className="mt-3 flex flex-wrap gap-2">
             {FRAMEWORKS.map((f) => {
               const on = picked.has(f.k);
@@ -79,7 +79,7 @@ export function PlanConfigurator() {
             })}
           </div>
 
-          <h3 className="mt-7 text-sm font-semibold text-white">How many legal entities?</h3>
+          <h3 className="mt-7 text-sm font-semibold text-[#101318]">How many legal entities?</h3>
           <div className="mt-3 flex gap-1 rounded-xl border border-border bg-canvas p-1">
             {SIZES.map((s, i) => (
               <button key={s} onClick={() => setSize(i)} aria-pressed={size === i}
@@ -92,7 +92,7 @@ export function PlanConfigurator() {
           </div>
 
           <label className="mt-7 flex cursor-pointer items-center justify-between rounded-xl border border-border bg-canvas px-4 py-3.5">
-            <span className="text-sm font-semibold text-white">I want hands-on advisory support</span>
+            <span className="text-sm font-semibold text-[#101318]">I want hands-on advisory support</span>
             <button role="switch" aria-checked={advisory} onClick={() => setAdvisory(!advisory)} aria-label="Advisory support"
               className="relative h-6 w-11 rounded-full transition-colors" style={{ background: advisory ? ACCENT : "var(--color-border)" }}>
               <motion.span className="absolute top-0.5 h-5 w-5 rounded-full bg-white shadow" animate={{ left: advisory ? 22 : 2 }} transition={{ type: "spring", stiffness: 500, damping: 34 }} />
@@ -105,8 +105,8 @@ export function PlanConfigurator() {
           <p className="font-mono text-[0.68rem] uppercase tracking-[0.16em] text-text-muted">Recommended plan</p>
           <motion.div key={recommended} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.24 }} className="mt-3">
             <div className="flex items-center gap-3">
-              <span className="font-display text-3xl font-bold text-white">{PLANS[recommended].k}</span>
-              <span className="rounded-full px-2.5 py-0.5 text-[0.62rem] font-bold" style={{ background: "rgba(77,139,245,0.16)", color: "#8fbaff" }}>{PLANS[recommended].tag}</span>
+              <span className="font-display text-3xl font-bold text-[#101318]">{PLANS[recommended].k}</span>
+              <span className="rounded-full px-2.5 py-0.5 text-[0.62rem] font-bold" style={{ background: "rgba(47,111,224,0.12)", color: "#1f56b8" }}>{PLANS[recommended].tag}</span>
             </div>
             <p className="mt-2 text-sm leading-relaxed text-text-muted">{PLANS[recommended].blurb}</p>
           </motion.div>
@@ -115,7 +115,7 @@ export function PlanConfigurator() {
             <p className="text-[0.72rem] font-semibold uppercase tracking-wide text-text-muted">Modules included</p>
             <ul className="mt-3 space-y-1.5">
               {modules.map((m, i) => (
-                <motion.li key={m} className="flex items-center gap-2.5 text-[0.86rem] text-white"
+                <motion.li key={m} className="flex items-center gap-2.5 text-[0.86rem] text-[#101318]"
                   initial={{ opacity: 0, x: -6 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.04 }}>
                   <span className="grid h-4 w-4 shrink-0 place-items-center rounded-full" style={{ background: "rgba(67,198,183,0.16)", color: "var(--color-teal)" }}>
                     <svg viewBox="0 0 24 24" className="h-2.5 w-2.5" fill="none" stroke="currentColor" strokeWidth="3.4" strokeLinecap="round"><path d="M5 13l4 4L19 7" /></svg>
@@ -170,7 +170,7 @@ export function CompareMatrix() {
             <button key={p.k} onMouseEnter={() => setCol(i)} onFocus={() => setCol(i)} aria-pressed={col === i}
               className="rounded-xl px-3 py-3 text-center transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
               style={{ background: col === i ? "rgba(77,139,245,0.1)" : "transparent" }}>
-              <div className="font-display text-lg font-bold" style={{ color: col === i ? "#8fbaff" : "var(--color-text)" }}>{p.k}</div>
+              <div className="font-display text-lg font-bold" style={{ color: col === i ? "#1f56b8" : "var(--color-text)" }}>{p.k}</div>
               <div className="mt-0.5 text-[0.62rem] uppercase tracking-wide text-text-muted">{p.tag}</div>
             </button>
           ))}
@@ -180,12 +180,12 @@ export function CompareMatrix() {
             <div className="border-t border-border py-2.5 font-mono text-[0.64rem] uppercase tracking-[0.14em] text-text-muted">{sec.section}</div>
             {sec.items.map(([label, vals]) => (
               <div key={label} className="grid grid-cols-[1.4fr_repeat(3,1fr)] items-center gap-4 border-t border-border/50 py-3">
-                <span className="text-[0.86rem] text-white">{label}</span>
+                <span className="text-[0.86rem] text-[#101318]">{label}</span>
                 {vals.map((v, i) => (
                   <span key={i} onMouseEnter={() => setCol(i)} className="flex items-center justify-center rounded py-1 transition-colors" style={{ background: col === i ? "rgba(77,139,245,0.08)" : "transparent" }}>
                     {v === true && <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke={ACCENT} strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"><path d="M5 13l4 4L19 7" /></svg>}
                     {v === false && <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="#3a4152" strokeWidth="2.2" strokeLinecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg>}
-                    {typeof v === "string" && <span className="text-[0.76rem] font-semibold text-white">{v}</span>}
+                    {typeof v === "string" && <span className="text-[0.76rem] font-semibold text-[#101318]">{v}</span>}
                   </span>
                 ))}
               </div>

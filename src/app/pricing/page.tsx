@@ -38,7 +38,7 @@ export default function PricingPage() {
         <div className="relative mx-auto max-w-6xl px-5 sm:px-6">
           <Breadcrumb trail={[{ label: "Home", href: "/" }, { label: "Pricing" }]} />
           <div className="max-w-2xl">
-            <h1 className="text-balance text-4xl font-semibold leading-[1.05] sm:text-5xl">Priced around your reporting, not a rate card</h1>
+            <h1 className="text-balance font-display text-4xl font-bold leading-[1.05] tracking-tight sm:text-5xl">Priced around your reporting, not a rate card</h1>
             <p className="mt-5 max-w-xl text-lg text-text-muted">Tell us what you report to and how you are structured. We will build a setup around it and quote for that, rather than sell you a tier you half-use.</p>
           </div>
         </div>
@@ -83,7 +83,7 @@ export default function PricingPage() {
           <div className="divide-y divide-border border-y border-border">
             {FAQS.map(([q, a]) => (
               <details key={q} className="group py-4">
-                <summary className="flex cursor-pointer items-center justify-between gap-4 font-display text-base font-semibold text-white">
+                <summary className="flex cursor-pointer items-center justify-between gap-4 font-display text-base font-semibold text-[#101318]">
                   {q}
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" className="h-4 w-4 shrink-0 text-accent-3 transition-transform group-open:rotate-45"><path d="M12 5v14M5 12h14" /></svg>
                 </summary>

@@ -3,8 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 import { useAuth } from "@/components/tool/AuthProvider";
-import { Button } from "@/components/ui/Button";
 import { Field, isEmail } from "@/components/forms/fields";
 import { workspaceHomePath } from "@/lib/tool/workspaceDest";
 
@@ -60,17 +60,17 @@ export default function ToolLoginPage() {
   if (mode === "sent") {
     return (
       <div className="text-center">
-        <div className="mx-auto grid h-12 w-12 place-items-center rounded-full bg-teal/10 text-teal">
+        <div className="mx-auto grid h-12 w-12 place-items-center rounded-full bg-[#f2f4f7] text-[#101318]">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-6 w-6">
             <path d="M4 6l8 6 8-6M4 6v12h16V6" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </div>
-        <h1 className="mt-5 text-xl font-semibold">Check your email</h1>
-        <p className="mt-2 text-sm text-text-muted">
-          If an account exists for <span className="text-text">{v.email}</span>, a password-reset link is
+        <h1 className="mt-5 font-display text-xl font-bold tracking-tight text-[#101318]">Check your email</h1>
+        <p className="mt-2 text-sm text-[#565d68]">
+          If an account exists for <span className="font-semibold text-[#101318]">{v.email}</span>, a password-reset link is
           on its way. The link opens a page where you set a new password.
         </p>
-        <button onClick={() => setMode("signin")} className="mt-5 text-sm font-medium text-teal hover:underline">
+        <button onClick={() => setMode("signin")} className="mt-5 text-sm font-semibold text-[#101318] hover:underline">
           Back to sign in
         </button>
       </div>
@@ -80,22 +80,22 @@ export default function ToolLoginPage() {
   if (mode === "forgot") {
     return (
       <div>
-        <h1 className="text-2xl font-semibold">Reset your password</h1>
-        <p className="mt-1.5 text-sm text-text-muted">We&apos;ll email you a link to set a new one.</p>
+        <h1 className="font-display text-2xl font-bold tracking-tight text-[#101318]">Reset your password</h1>
+        <p className="mt-1.5 text-sm text-[#565d68]">We&apos;ll email you a link to set a new one.</p>
 
         <form onSubmit={sendReset} noValidate aria-label="Reset password" className="mt-6 space-y-5">
           <Field id="email" label="Email" type="email" inputMode="email" required autoComplete="email" value={v.email} onChange={set("email")} error={errors.email} />
           {formError && (
             <p className="rounded-xl border border-[#e5484d]/30 bg-[#e5484d]/8 p-3 text-sm text-[#b42318]" role="alert">{formError}</p>
           )}
-          <Button type="submit" size="lg" className="w-full" disabled={busy}>
+          <button type="submit" disabled={busy} className="w-full rounded-xl bg-[#101318] px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-[#2a2c33] disabled:opacity-60">
             {busy ? "Sending..." : "Send reset link"}
-          </Button>
+          </button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-text-muted">
+        <p className="mt-6 text-center text-sm text-[#565d68]">
           Remembered it?{" "}
-          <button onClick={() => { setMode("signin"); setFormError(null); }} className="text-teal hover:underline">Sign in</button>.
+          <button onClick={() => { setMode("signin"); setFormError(null); }} className="font-semibold text-[#101318] hover:underline">Sign in</button>.
         </p>
       </div>
     );
@@ -103,19 +103,37 @@ export default function ToolLoginPage() {
 
   return (
     <div>
-      {/* Workspace selector: company ESG reporting vs the events-industry toolkit */}
-      <div className="mb-5 grid grid-cols-2 gap-1 rounded-full bg-surface-2 p-1">
-        <button type="button" onClick={() => pickDest("esg")} aria-pressed={dest === "esg"} className={dest === "esg" ? "rounded-full bg-white px-3 py-1.5 text-sm font-semibold shadow-sm" : "rounded-full px-3 py-1.5 text-sm font-medium text-text-muted hover:text-text"}>
-          Manufacturing industry
-        </button>
-        <button type="button" onClick={() => pickDest("events")} aria-pressed={dest === "events"} className={dest === "events" ? "rounded-full bg-white px-3 py-1.5 text-sm font-semibold shadow-sm" : "rounded-full px-3 py-1.5 text-sm font-medium text-text-muted hover:text-text"}>
-          Events industry
-        </button>
+      {/* Workspace selector. The active pill is a single shared element, so it
+          slides between the two tabs instead of blinking on and off. */}
+      <div className="relative mb-5 grid grid-cols-2 gap-1 rounded-full border border-[#e6e8ec] bg-[#f2f4f7] p-1">
+        {([["esg", "Manufacturing"], ["events", "Events"]] as const).map(([key, label]) => {
+          const active = dest === key;
+          return (
+            <button
+              key={key}
+              type="button"
+              onClick={() => pickDest(key)}
+              aria-pressed={active}
+              className="relative rounded-full px-3 py-2 text-sm transition-colors"
+              style={{ color: active ? "#ffffff" : "#565d68" }}
+            >
+              {active && (
+                <motion.span
+                  aria-hidden
+                  layoutId="authTabGlass"
+                  className="glass-pill absolute inset-0 z-0 rounded-full"
+                  transition={{ type: "spring", stiffness: 420, damping: 34 }}
+                />
+              )}
+              <span className={`relative z-10 ${active ? "font-semibold" : "font-medium"}`}>{label}</span>
+            </button>
+          );
+        })}
       </div>
-      <h1 className="text-2xl font-semibold">Welcome back</h1>
-      <p className="mt-1.5 text-sm text-text-muted">
+      <h1 className="font-display text-2xl font-bold tracking-tight text-[#101318]">Welcome back</h1>
+      <p className="mt-1.5 text-sm text-[#565d68]">
         {dest === "events"
-          ? "Sign in to the events-industry ESG toolkit (ISO 20121-aligned)."
+          ? "Sign in to the events ESG toolkit (ISO 20121-aligned)."
           : "Sign in to your manufacturing ESG workspace."}
       </p>
 
@@ -123,7 +141,7 @@ export default function ToolLoginPage() {
         <Field id="email" label="Email" type="email" inputMode="email" required autoComplete="email" value={v.email} onChange={set("email")} error={errors.email} />
         <Field id="password" label="Password" type="password" required autoComplete="current-password" value={v.password} onChange={set("password")} error={errors.password} />
         <div className="flex justify-end">
-          <button type="button" onClick={() => { setMode("forgot"); setFormError(null); }} className="text-xs font-medium text-text-muted transition-colors hover:text-text">
+          <button type="button" onClick={() => { setMode("forgot"); setFormError(null); }} className="text-xs font-medium text-[#565d68] transition-colors hover:text-[#101318]">
             Forgot password?
           </button>
         </div>
@@ -132,13 +150,13 @@ export default function ToolLoginPage() {
             {formError}
           </p>
         )}
-        <Button type="submit" size="lg" className="w-full" disabled={busy}>
+        <button type="submit" disabled={busy} className="w-full rounded-xl bg-[#101318] px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-[#2a2c33] disabled:opacity-60">
           {busy ? "Signing in..." : "Sign in"}
-        </Button>
+        </button>
       </form>
 
-      <p className="mt-6 text-center text-sm text-text-muted">
-        New to the workspace? <Link href="/app/signup" className="text-accent-3 hover:underline">Create an account</Link>.
+      <p className="mt-6 text-center text-sm text-[#565d68]">
+        New to the workspace? <Link href="/app/signup" className="font-semibold text-[#101318] hover:underline">Create an account</Link>.
       </p>
     </div>
   );

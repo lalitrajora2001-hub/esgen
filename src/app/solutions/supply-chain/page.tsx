@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Reveal } from "@/components/ui/Reveal";
-import { SupplyChainNetwork, SuppliersBoard, SupplierDetail } from "@/components/supplychain/SupplyChainVisuals";
+import { SupplierHierarchy, SuppliersBoard, SupplierDetail } from "@/components/supplychain/SupplyChainVisuals";
 
 export const metadata: Metadata = {
   title: "Supply Chain Decarbonisation",
@@ -41,7 +41,7 @@ export default function SupplyChainPage() {
         <div aria-hidden className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(55% 55% at 78% 45%, rgba(16,19,24,0.05), transparent 60%), linear-gradient(180deg, #fffdf7, #ffffff 45%)" }} />
         <div className="relative mx-auto flex min-h-[560px] max-w-6xl items-center px-5 pb-16 pt-28 sm:min-h-[660px] sm:px-6">
           <div aria-hidden className="pointer-events-none absolute right-5 top-1/2 hidden w-[48%] -translate-y-1/2 sm:right-6 lg:block" style={{ WebkitMaskImage: "linear-gradient(90deg, transparent, #000 42%)", maskImage: "linear-gradient(90deg, transparent, #000 42%)" }}>
-            <SupplyChainNetwork />
+            <SupplierHierarchy />
           </div>
           <div className="relative max-w-xl">
             <Eyebrow>ESGen Supply Chain</Eyebrow>

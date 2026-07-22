@@ -1,19 +1,19 @@
 @import "tailwindcss";
 
 /* ============================================================
-   ESGen design system — premium dark, near-black + blue accent
+   ESGen design system: white canvas, near-black ink, blue accent
    ============================================================ */
 @theme {
-  --color-canvas: #06070b;       /* pitch near-black, faint blue tint */
-  --color-surface: #0d0f16;      /* dark charcoal cards / panels */
-  --color-surface-2: #13161f;    /* nested panels */
-  --color-border: #212533;       /* fine borders */
-  --color-text: #eef1f7;         /* near-white text */
-  --color-text-muted: #94a0b5;   /* muted secondary text */
-  --color-accent: #4d8bf5;       /* ESGen brand blue */
+  --color-canvas: #ffffff;       /* white page canvas */
+  --color-surface: #f6f7f9;      /* cards / panels */
+  --color-surface-2: #f2f4f7;    /* nested panels */
+  --color-border: #e6e8ec;       /* fine borders */
+  --color-text: #101318;         /* near-black text */
+  --color-text-muted: #565d68;   /* muted secondary text */
+  --color-accent: #2f6fe0;       /* ESGen brand blue, darkened for white bg */
   --color-accent-2: #2f6fe0;     /* deeper blue for gradients */
-  --color-accent-3: #8fbaff;     /* light blue highlight */
-  --color-teal: #43c6b7;         /* rare secondary accent (success ticks) */
+  --color-accent-3: #1f56b8;     /* blue that stays legible on white */
+  --color-teal: #0f766e;         /* rare secondary accent (success ticks) */
 
   --font-sans: var(--font-inter);
   --font-display: var(--font-sora);
@@ -23,9 +23,9 @@
   --radius-xl: 16px;
   --radius-2xl: 22px;
 
-  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 20px 44px -22px rgba(0, 0, 0, 0.8);
-  --shadow-float: 0 32px 70px -28px rgba(0, 0, 0, 0.85);
-  --glow-blue: 0 0 0 1px rgba(77, 139, 245, 0.22), 0 22px 60px -22px rgba(77, 139, 245, 0.5);
+  --shadow-card: 0 1px 2px rgba(15, 23, 42, 0.05), 0 18px 40px -26px rgba(15, 23, 42, 0.4);
+  --shadow-float: 0 30px 70px -40px rgba(15, 23, 42, 0.45);
+  --glow-blue: 0 0 0 1px rgba(47, 111, 224, 0.18), 0 20px 50px -26px rgba(47, 111, 224, 0.35);
 
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -50,7 +50,7 @@
     color: var(--color-text);
   }
   a { color: inherit; text-decoration: none; }
-  ::selection { background: rgba(77, 139, 245, 0.32); color: #fff; }
+  ::selection { background: rgba(47, 111, 224, 0.22); color: #101318; }
 
   :where(a, button, input, textarea, select, [tabindex]):focus-visible {
     outline: 2px solid var(--color-accent-3);
@@ -60,7 +60,7 @@
 
   ::-webkit-scrollbar { width: 11px; height: 11px; }
   ::-webkit-scrollbar-track { background: var(--color-canvas); }
-  ::-webkit-scrollbar-thumb { background: #232838; border-radius: 99px; border: 3px solid var(--color-canvas); }
+  ::-webkit-scrollbar-thumb { background: #c8ccd2; border-radius: 99px; border: 3px solid var(--color-canvas); }
   ::-webkit-scrollbar-thumb:hover { background: #303650; }
 
   /* Lenis smooth scroll */
@@ -87,22 +87,22 @@
 .eyebrow--plain::before { display: none; }
 
 .text-gradient {
-  background: linear-gradient(100deg, #ffffff 10%, var(--color-accent-3) 60%, var(--color-accent) 100%);
+  background: linear-gradient(100deg, #101318 10%, var(--color-accent-3) 60%, var(--color-accent) 100%);
   -webkit-background-clip: text; background-clip: text; color: transparent;
 }
 
 /* Card surface */
 .card {
-  background: linear-gradient(180deg, var(--color-surface), rgba(13, 15, 22, 0.6));
+  background: #ffffff;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-xl);
   transition: transform 0.4s var(--ease-out), border-color 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out), background 0.4s var(--ease-out);
 }
 .card-hover:hover {
   transform: translateY(-4px);
-  border-color: rgba(77, 139, 245, 0.4);
+  border-color: rgba(47, 111, 224, 0.35);
   box-shadow: var(--glow-blue);
-  background: var(--color-surface-2);
+  background: var(--color-surface);
 }
 
 /* Product mockup window chrome (dark) */
@@ -113,8 +113,8 @@
   box-shadow: var(--shadow-card);
   overflow: hidden;
 }
-.window__bar { display: flex; align-items: center; gap: 6px; padding: 11px 14px; background: rgba(255,255,255,0.02); border-bottom: 1px solid var(--color-border); }
-.window__dot { width: 9px; height: 9px; border-radius: 50%; background: #2b3040; }
+.window__bar { display: flex; align-items: center; gap: 6px; padding: 11px 14px; background: #f6f7f9; border-bottom: 1px solid var(--color-border); }
+.window__dot { width: 9px; height: 9px; border-radius: 50%; background: #d5d9e0; }
 .panel { background: var(--color-surface-2); border: 1px solid var(--color-border); border-radius: var(--radius-lg); }
 
 /* Large soft blue glow used behind heroes / CTAs */
@@ -122,10 +122,62 @@
 
 .section-blend { background: radial-gradient(60% 40% at 50% 0%, rgba(255,255,255,0.045), transparent 70%); }
 
+/* ---- Liquid glass: translucent, blurred surface with a specular edge, and a
+   springy press response. Used on interactive chrome (tabs, buttons). ---- */
+.glass-tab {
+  position: relative;
+  isolation: isolate;
+  transition: color 0.25s ease;
+}
+.glass-tab::before {
+  content: "";
+  position: absolute;
+  inset: -2px -2px;
+  z-index: -1;
+  border-radius: 9999px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.85), rgba(255,255,255,0.5));
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  backdrop-filter: blur(16px) saturate(180%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.95),
+    inset 0 -1px 0 rgba(16,19,24,0.06),
+    0 10px 24px -14px rgba(16,19,24,0.45);
+  opacity: 0;
+  transform: scale(0.84);
+  transition: opacity 0.26s cubic-bezier(0.16,1,0.3,1), transform 0.42s cubic-bezier(0.34,1.56,0.64,1);
+}
+.glass-tab:hover::before,
+.glass-tab:focus-visible::before,
+.glass-tab[aria-expanded="true"]::before { opacity: 1; transform: scale(1); }
+.glass-tab:active::before { transform: scale(0.95); transition-duration: 0.12s; }
+
+/* Liquid-glass pill that marks the selected item in a segmented control. Unlike
+   .glass-tab this is always visible (it IS the selection) and deliberately sets
+   no `position`, so the element's own absolute/inset utilities still apply. */
+.glass-pill {
+  background: linear-gradient(180deg, #31343d 0%, #14171d 55%, #101318 100%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  backdrop-filter: blur(16px) saturate(180%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.45),
+    0 8px 20px -8px rgba(16, 19, 24, 0.55);
+}
+
+/* Springy press for solid buttons */
+.glass-press { transition: transform 0.34s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease, filter 0.3s ease; }
+.glass-press:hover { transform: translateY(-1px); }
+.glass-press:active { transform: scale(0.96); transition-duration: 0.12s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .glass-tab::before, .glass-press { transition: none; }
+  .glass-press:hover, .glass-press:active { transform: none; }
+}
+
 .grid-texture {
   background-image:
-    linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+    linear-gradient(rgba(16,19,24,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(16,19,24,0.05) 1px, transparent 1px);
   background-size: 58px 58px;
   -webkit-mask-image: radial-gradient(70% 60% at 50% 30%, #000, transparent 78%);
   mask-image: radial-gradient(70% 60% at 50% 30%, #000, transparent 78%);

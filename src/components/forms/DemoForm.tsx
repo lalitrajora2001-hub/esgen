@@ -30,7 +30,7 @@ export function DemoForm() {
   if (sent) {
     return (
       <div className="rounded-2xl border border-teal/40 bg-[rgba(67,198,183,0.1)] p-8" role="status" aria-live="polite">
-        <p className="font-display text-lg font-semibold text-white">Thank you. Your request has been received.</p>
+        <p className="font-display text-lg font-semibold text-[#101318]">Thank you. Your request has been received.</p>
         <p className="mt-2 text-text-muted">A member of the ESGen team will be in touch to arrange your demo. You can also reach us at <a href={`mailto:${site.email}`} className="text-accent-3">{site.email}</a>.</p>
       </div>
     );

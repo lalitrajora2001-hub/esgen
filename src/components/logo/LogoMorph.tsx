@@ -104,7 +104,7 @@ export function LogoMorph({ className, threshold = 60 }: { className?: string; t
       ref={boxRef}
       role="img"
       aria-label="ESGen"
-      className={cn("inline-block overflow-hidden align-middle leading-none text-white", className)}
+      className={cn("inline-block overflow-hidden align-middle leading-none", className)}
     >
       <svg ref={svgRef} viewBox={WORDMARK_VIEWBOX} aria-hidden="true" className="block h-full w-auto" style={{ overflow: "visible" }}>
         {ids.map((id) => (

@@ -27,7 +27,7 @@ export default function ContactPage() {
         <div className="relative mx-auto max-w-6xl px-5 sm:px-6">
           <Breadcrumb trail={[{ label: "Home", href: "/" }, { label: "Contact" }]} />
           <div className="max-w-2xl">
-            <h1 className="text-balance text-4xl font-semibold leading-[1.05] sm:text-5xl">Let's find the right way to help</h1>
+            <h1 className="text-balance font-display text-4xl font-bold leading-[1.05] tracking-tight sm:text-5xl">Let's find the right way to help</h1>
             <p className="mt-5 max-w-xl text-lg text-text-muted">Pick what brings you here and we will point you to the right next step and the right person, no phone tree, no gatekeeping.</p>
           </div>
         </div>
@@ -50,11 +50,11 @@ export default function ContactPage() {
             {cards.map((c) => (
               <div key={c.email} className="rounded-2xl border border-border bg-surface p-5">
                 <p className="text-sm text-text-muted">{c.label}</p>
-                <a href={`mailto:${c.email}`} className="mt-1 block font-display font-medium text-white hover:text-accent-3">{c.email}</a>
+                <a href={`mailto:${c.email}`} className="mt-1 block font-display font-medium text-[#101318] hover:text-accent">{c.email}</a>
               </div>
             ))}
             <div className="rounded-2xl border border-border p-5" style={{ background: "linear-gradient(160deg, #101827, #06070b)" }}>
-              <p className="font-display font-semibold text-white">Prefer a walkthrough?</p>
+              <p className="font-display font-semibold text-[#101318]">Prefer a walkthrough?</p>
               <p className="mt-1 text-sm text-text-muted">Book a short demo and we will tailor it to your reporting needs.</p>
               <a href="/demo" className="mt-3 inline-flex items-center gap-2 text-sm font-medium text-accent-3">Book a demo →</a>
             </div>

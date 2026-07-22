@@ -145,6 +145,20 @@ const TILES: Tile[] = [
   { k: "pcaf", node: <span className="flex items-center gap-1"><CheckMark /><Word text="PCAF" color="#3f4a57" className="text-xl" /></span> },
 ];
 
+/** Compact row of selected framework marks, for use inside feature cards. */
+export function FrameworkRow({ keys }: { keys: string[] }) {
+  const picked = keys.map((k) => TILES.find((t) => t.k === k)).filter(Boolean) as Tile[];
+  return (
+    <div className="flex flex-wrap items-center justify-center gap-3">
+      {picked.map((t) => (
+        <div key={t.k} className="flex h-[74px] min-w-[104px] items-center justify-center rounded-2xl border border-[#e6e8ec] bg-white px-4 shadow-[0_10px_24px_-18px_rgba(15,23,42,0.45)]">
+          {t.node}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export function FrameworkLogos() {
   return (
     <div className="rounded-3xl border border-white/10 bg-[#eef1f5] p-3 sm:p-5">
