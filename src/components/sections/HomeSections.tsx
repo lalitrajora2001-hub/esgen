@@ -33,8 +33,62 @@ function FeatureCard({ href, title, desc, cta = "Explore", icon }: { href: strin
 const SupplyChainIcon =<><path d="M3 7h10v8H3zM13 10h4l3 3v2h-7z" /><circle cx="7" cy="18" r="1.6" /><circle cx="17" cy="18" r="1.6" /></>;
 const ProductFootprintIcon = <><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z" /><path d="M4 7.5l8 4.5 8-4.5M12 12v9" /></>;
 const ReportingIcon = <><rect x="5" y="3" width="14" height="18" rx="2" /><path d="M9 8h6M9 12h6M9 16h4" /></>;
-const ManufacturingIcon = <><path d="M3 20V10l5.5 3.2V10l5.5 3.2V7h6.5v13z" /><path d="M7 16.5h1.5M11.5 16.5H13M16 16.5h1.5" /></>;
-const EventsIcon = <><rect x="3.5" y="5" width="17" height="16" rx="2.5" /><path d="M3.5 9.5h17M8 3.5v3.5M16 3.5v3.5" /><path d="M12 12.5l1 2 2.2.3-1.6 1.5.4 2.2-2-1-2 1 .4-2.2L9 14.8l2.2-.3z" /></>;
+
+/* ---------- Photo cards: premium image-led cards, neutral (no blue tint) ---------- */
+function PhotoCard({ img, alt, title, desc, href, cta }: { img: string; alt: string; title: string; desc: string; href?: string; cta?: string }) {
+  const body = (
+    <>
+      <div className="relative overflow-hidden">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={img} alt={alt} className="aspect-[16/10] w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]" />
+        <div aria-hidden className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(6,7,11,0) 45%, rgba(6,7,11,0.55) 100%)" }} />
+      </div>
+      <div className="flex flex-1 flex-col p-7">
+        <h3 className="font-display text-lg font-semibold">{title}</h3>
+        <p className="mt-2 flex-1 text-sm leading-relaxed text-text-muted">{desc}</p>
+        {href && cta && (
+          <span className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-white/90">
+            {cta} <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+          </span>
+        )}
+      </div>
+    </>
+  );
+
+  const shell = "group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-surface transition-all duration-300 hover:-translate-y-1 hover:border-white/25";
+
+  return (
+    <Reveal className="h-full">
+      {href ? <Link href={href} className={shell}>{body}</Link> : <div className={shell}>{body}</div>}
+    </Reveal>
+  );
+}
+
+/* What ESGen helps you do, image-led (no CTA by design). */
+export function ValueCards() {
+  return (
+    <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <PhotoCard
+        img="/images/home-reporting.jpg"
+        alt="Team reviewing performance data and charts around a desk"
+        title="Collect once, report many times"
+        desc="Bring activity data, supplier responses, and evidence into one workspace, then reuse the same figures across every framework you report to."
+      />
+      <PhotoCard
+        img="/images/home-supplychain.jpg"
+        alt="Warehouse aisle with racking and a forklift"
+        title="Strengthen your supply chain"
+        desc="Invite suppliers, collect primary data, and close the estimate-heavy gaps that weaken Scope 3 across your value chain."
+      />
+      <PhotoCard
+        img="/images/home-trust.jpg"
+        alt="Colleagues in a meeting reviewing documents in a modern office"
+        title="Answer customers and tenders"
+        desc="Respond to buyer questionnaires and tender requirements with figures you can trace back to their source, method, and owner."
+      />
+    </div>
+  );
+}
 
 /* Finance card hidden with its page (src/app/_hidden/solutions-finance). */
 export function ServiceCards() {
@@ -50,8 +104,22 @@ export function ServiceCards() {
 export function IndustryCards() {
   return (
     <div className="grid gap-5 sm:grid-cols-2">
-      <FeatureCard href="/industries/manufacturing" title="Manufacturing" cta="For manufacturers" desc="Energy, process emissions, materials, logistics, and supplier data, mapped to Scope 1, 2, and 3 for industrial operations." icon={ManufacturingIcon} />
-      <FeatureCard href="/industries/events" title="Events" cta="For event organisers" desc="Venue energy, travel, catering, freight, and waste captured across a whole event to build a credible footprint." icon={EventsIcon} />
+      <PhotoCard
+        href="/industries/manufacturing"
+        img="/images/manufacturing-welder.jpg"
+        alt="Welder working on a steel fabrication bench"
+        title="Manufacturing"
+        cta="For manufacturers"
+        desc="Energy, process emissions, materials, logistics, and supplier data, mapped to Scope 1, 2, and 3 for industrial operations."
+      />
+      <PhotoCard
+        href="/industries/events"
+        img="/images/events-festival.jpg"
+        alt="Festival crowd under falling confetti and stage lights"
+        title="Events"
+        cta="For event organisers"
+        desc="Venue energy, travel, catering, freight, and waste captured across a whole event to build a credible footprint."
+      />
     </div>
   );
 }

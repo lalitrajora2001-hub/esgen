@@ -36,7 +36,7 @@ export function PageHero({
 }) {
   return (
     <section className="relative overflow-hidden pt-28 pb-14 sm:pt-36 sm:pb-20">
-      <div aria-hidden className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(900px 480px at 78% -10%, rgba(77,139,245,0.16), transparent 60%)" }} />
+      <div aria-hidden className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(900px 480px at 78% -10%, rgba(255,255,255,0.07), transparent 60%)" }} />
       <div className="grid-texture pointer-events-none absolute inset-0 opacity-60" aria-hidden />
       <div className={cn("relative mx-auto max-w-6xl px-5 sm:px-6", visual ? "grid items-center gap-12 lg:grid-cols-[1.05fr_1fr]" : "")}>
         <div>

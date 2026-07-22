@@ -2,8 +2,7 @@ import { Section, SectionHead } from "@/components/ui/Section";
 import { ScrollStat } from "@/components/ui/ScrollStat";
 import { CTASection } from "@/components/sections/blocks";
 import { ProductTabs } from "@/components/sections/ProductTabs";
-import { SolutionCards } from "@/components/sections/SolutionCards";
-import { ServiceCards, IndustryCards } from "@/components/sections/HomeSections";
+import { ValueCards, ServiceCards, IndustryCards } from "@/components/sections/HomeSections";
 import { ProcessFlow } from "@/components/sections/ProcessFlow";
 import { HomeHero } from "@/components/sections/HomeHero";
 
@@ -13,10 +12,10 @@ export default function Home() {
       {/* 1. Full-viewport hero */}
       <HomeHero />
 
-      {/* 2. What it is, the platform at a glance */}
+      {/* 2. What ESGen helps you do, image-led */}
       <Section>
-        <SectionHead title="One platform for carbon and ESG intelligence" intro="Measure your footprint, engage your value chain, and prepare audit-ready disclosure, all in one connected workspace." center />
-        <div className="mt-12"><SolutionCards /></div>
+        <SectionHead title="What ESGen helps you do" intro="Turn scattered activity data into reporting you can stand behind, and reuse it everywhere it is asked for." center />
+        <div className="mt-12"><ValueCards /></div>
       </Section>
 
       {/* 3. Scale, the impact band */}

@@ -5,7 +5,7 @@ import { Logo } from "@/components/logo/Logo";
 export function Footer() {
   return (
     <footer className="relative border-t border-border bg-[#05060a]">
-      <div className="glow" style={{ width: 520, height: 300, top: -120, left: "50%", transform: "translateX(-50%)", background: "rgba(77,139,245,0.08)" }} aria-hidden />
+      <div className="glow" style={{ width: 520, height: 300, top: -120, left: "50%", transform: "translateX(-50%)", background: "rgba(255,255,255,0.06)" }} aria-hidden />
       <div className="relative mx-auto max-w-[1400px] px-5 py-16 sm:px-6">
         <div className="grid gap-10 lg:grid-cols-[1.4fr_repeat(5,1fr)]">
           <div className="lg:pr-8">

@@ -19,7 +19,7 @@ export default function DemoPage() {
     <>
       {/* Hero */}
       <section className="relative overflow-hidden pt-28 pb-6 sm:pt-36">
-        <div aria-hidden className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(900px 460px at 30% -10%, rgba(77,139,245,0.16), transparent 60%)" }} />
+        <div aria-hidden className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(900px 460px at 30% -10%, rgba(255,255,255,0.07), transparent 60%)" }} />
         <div className="grid-texture pointer-events-none absolute inset-0 opacity-60" aria-hidden />
         <div className="relative mx-auto max-w-6xl px-5 sm:px-6">
           <Breadcrumb trail={[{ label: "Home", href: "/" }, { label: "Book a demo" }]} />

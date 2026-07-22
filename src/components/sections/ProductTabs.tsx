@@ -57,7 +57,7 @@ export function ProductTabs() {
             aria-controls={`panel-${t.key}`}
             tabIndex={active === i ? 0 : -1}
             onClick={() => setActive(i)}
-            className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${active === i ? "bg-accent/12 text-white" : "text-text-muted hover:text-white"}`}
+            className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${active === i ? "bg-white/10 text-white" : "text-text-muted hover:text-white"}`}
           >
             {t.label}
           </button>

@@ -25,7 +25,7 @@ export default function ProductFootprintPage() {
     <div className="bg-white" style={{ color: WBODY }}>
       {/* Hero */}
       <section className="relative overflow-hidden pt-28 pb-16 sm:pt-32 sm:pb-20">
-        <div aria-hidden className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(55% 55% at 82% 40%, rgba(120,160,240,0.10), transparent 60%), linear-gradient(180deg, #fffdf7, #ffffff 45%)" }} />
+        <div aria-hidden className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(55% 55% at 82% 40%, rgba(16,19,24,0.05), transparent 60%), linear-gradient(180deg, #fffdf7, #ffffff 45%)" }} />
         <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-5 sm:px-6 lg:grid-cols-[1.02fr_1.15fr]">
           <div>
             <Eyebrow>ESGen Product Footprint</Eyebrow>

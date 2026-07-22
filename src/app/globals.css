@@ -120,7 +120,7 @@
 /* Large soft blue glow used behind heroes / CTAs */
 .glow { position: absolute; border-radius: 9999px; filter: blur(90px); pointer-events: none; z-index: 0; }
 
-.section-blend { background: radial-gradient(60% 40% at 50% 0%, rgba(77,139,245,0.05), transparent 70%); }
+.section-blend { background: radial-gradient(60% 40% at 50% 0%, rgba(255,255,255,0.045), transparent 70%); }
 
 .grid-texture {
   background-image:
