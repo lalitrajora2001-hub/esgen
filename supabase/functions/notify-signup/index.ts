@@ -12,7 +12,7 @@
 //      to send from a proper @esgen.co.uk address.
 //   2. Dashboard -> Edge Functions -> Create a new function -> name it
 //      "notify-signup" -> paste this file's contents -> Deploy.
-//   3. Dashboard -> Edge Functions -> notify-signup -> Settings -> add a
+//   3. Dashboard -> Edge Functions -> notify-signup -> Secrets -> add a
 //      secret: RESEND_API_KEY = <the key from step 1>.
 //   4. Dashboard -> Database -> Webhooks -> Create a new webhook:
 //        Table: user_approvals   Events: Insert
@@ -24,34 +24,22 @@
 
 Deno.serve(async (req) => {
   try {
-    const payload = await req.json();
-    const row = payload.record ?? payload.new ?? {};
-    const email = row.email ?? "unknown";
-    const requestedAt = row.requested_at ?? new Date().toISOString();
-
-    const apiKey = Deno.env.get("RESEND_API_KEY");
+    var payload = await req.json();
+    var row = payload.record || payload.new || {};
+    var email = row.email || "unknown";
+    var requestedAt = row.requested_at || new Date().toISOString();
+    var apiKey = Deno.env.get("RESEND_API_KEY");
     if (!apiKey) {
       return new Response(JSON.stringify({ ok: false, error: "RESEND_API_KEY not set" }), { status: 500 });
     }
-
-    const res = await fetch("https://api.resend.com/emails", {
+    var subject = "New sign-up awaiting approval: " + email;
+    var html = "<p>A new account has signed up and is waiting for approval.</p>" + "<p><b>Email:</b> " + email + "<br/><b>Requested:</b> " + requestedAt + "</p>" + "<p>Sign in at esgen.co.uk with an admin account, then go to Settings -> Sign-up approvals to approve or reject.</p>";
+    var res = await fetch("https://api.resend.com/emails", {
       method: "POST",
-      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        from: "ESGEN <onboarding@resend.dev>",
-        to: ["contactus@esgen.co.uk"],
-        subject: `New sign-up awaiting approval: ${email}`,
-        html: `
-          <p>A new account has signed up and is waiting for approval.</p>
-          <p><b>Email:</b> ${email}<br/>
-             <b>Requested:</b> ${new Date(requestedAt).toLocaleString("en-GB")}</p>
-          <p>Sign in at esgen.co.uk with an admin account, then go to
-             <b>Settings &rarr; Sign-up approvals</b> to approve or reject.</p>
-        `,
-      }),
+      headers: { "Authorization": "Bearer " + apiKey, "Content-Type": "application/json" },
+      body: JSON.stringify({ from: "ESGEN <onboarding@resend.dev>", to: ["contactus@esgen.co.uk"], subject: subject, html: html })
     });
-
-    const body = await res.text();
+    var body = await res.text();
     return new Response(JSON.stringify({ ok: res.ok, resend: body }), { status: res.ok ? 200 : 502 });
   } catch (e) {
     return new Response(JSON.stringify({ ok: false, error: String(e) }), { status: 500 });
