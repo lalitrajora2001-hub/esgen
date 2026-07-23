@@ -182,6 +182,53 @@ export async function fetchIsAdmin(): Promise<boolean> {
   }
 }
 
+// ---- signup approval gate --------------------------------------------------
+
+export type ApprovalStatus = "pending" | "approved" | "rejected";
+
+export interface UserApproval {
+  user_id: string;
+  email: string;
+  status: ApprovalStatus;
+  requested_at: string;
+  decided_by: string | null;
+  decided_at: string | null;
+  note: string | null;
+}
+
+/** The signed-in user's own approval status. Fails closed: missing row or
+ *  missing table both read as "pending" so nobody slips through by accident. */
+export async function fetchMyApprovalStatus(): Promise<ApprovalStatus> {
+  const supabase = getSupabase();
+  if (!supabase) return "pending";
+  try {
+    const { data: userRes } = await supabase.auth.getUser();
+    const uid = userRes.user?.id;
+    if (!uid) return "pending";
+    const { data, error } = await supabase.from("user_approvals").select("status").eq("user_id", uid).maybeSingle();
+    if (error || !data) return "pending";
+    return data.status as ApprovalStatus;
+  } catch {
+    return "pending";
+  }
+}
+
+/** Every approval row (admin only; RLS enforces this). */
+export async function fetchApprovals(): Promise<UserApproval[]> {
+  const supabase = getSupabase();
+  if (!supabase) return [];
+  const { data, error } = await supabase.from("user_approvals").select("*").order("requested_at", { ascending: false });
+  if (error) throw error;
+  return (data as UserApproval[]) ?? [];
+}
+
+export async function decideApproval(userId: string, status: "approved" | "rejected", decidedBy: string | null): Promise<void> {
+  const supabase = getSupabase();
+  if (!supabase) return;
+  const { error } = await supabase.from("user_approvals").update({ status, decided_by: decidedBy, decided_at: new Date().toISOString() }).eq("user_id", userId);
+  if (error) throw error;
+}
+
 /** After sign-in, link any membership invitations addressed to this email. */
 export async function claimMemberships(email: string): Promise<void> {
   const supabase = getSupabase();

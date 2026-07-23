@@ -543,7 +543,7 @@ function ReportEditor({
           ) : activeKey === FRAMEWORKS ? (
             <FrameworksHub report={report} company={company} responses={responses} onNavigate={setActiveKey} />
           ) : activeKey === SETTINGS ? (
-            <SettingsView />
+            <SettingsView isAdmin={isAdmin} />
           ) : activeKey === OVERVIEW ? (
             <BrsrOverview report={report} responses={responses} kpis={kpis} onNavigate={setActiveKey} onStatusChange={onStatusChange} onUpdateFinancials={onUpdateFinancials} isAdmin={isAdmin} />
           ) : activeKey === CALC ? (

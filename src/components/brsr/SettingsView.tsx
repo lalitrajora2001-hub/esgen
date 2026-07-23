@@ -4,6 +4,7 @@ import { useState } from "react";
 import { CompanyProfile } from "@/components/brsr/CompanyProfile";
 import { FactorSettings } from "@/components/brsr/FactorSettings";
 import { OrgUnitSettings } from "@/components/brsr/OrgUnitSettings";
+import { ApprovalQueue } from "@/components/brsr/ApprovalQueue";
 import { cn } from "@/lib/cn";
 
 /**
@@ -13,11 +14,12 @@ import { cn } from "@/lib/cn";
 
 type TabDef = { key: string; label: string; render: () => React.ReactNode };
 
-export function SettingsView() {
+export function SettingsView({ isAdmin = false }: { isAdmin?: boolean }) {
   const tabs: TabDef[] = [
     { key: "company", label: "Company settings", render: () => <CompanyProfile /> },
     { key: "factors", label: "Emission factors", render: () => <FactorSettings /> },
     { key: "units", label: "Organisation units", render: () => <OrgUnitSettings /> },
+    ...(isAdmin ? [{ key: "approvals", label: "Sign-up approvals", render: () => <ApprovalQueue /> } as TabDef] : []),
   ];
   const [active, setActive] = useState(tabs[0].key);
   const tab = tabs.find((t) => t.key === active) ?? tabs[0];
