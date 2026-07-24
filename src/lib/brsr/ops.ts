@@ -136,6 +136,17 @@ export async function listTasks(companyId: string): Promise<CollectionTask[]> {
   return (data as CollectionTask[]) ?? [];
 }
 
+/** Every open/overdue task across every company (admin only; RLS enforces this). */
+export async function fetchAllOpenTasks(): Promise<CollectionTask[]> {
+  const { data, error } = await db()
+    .from("collection_tasks")
+    .select("*")
+    .neq("status", "done")
+    .order("due_date", { ascending: true, nullsFirst: false });
+  if (error) throw error;
+  return (data as CollectionTask[]) ?? [];
+}
+
 export async function addTask(input: Omit<CollectionTask, "id" | "created_at" | "status" | "value"> & { status?: TaskStatus }): Promise<CollectionTask> {
   const { data, error } = await db().from("collection_tasks").insert(input).select("*").single();
   if (error) throw error;

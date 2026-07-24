@@ -3,8 +3,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCompany } from "@/components/tool/CompanyProvider";
-import { fetchAllReports, type BrsrReport } from "@/lib/brsr/db";
-import { fetchApprovals, type UserApproval } from "@/lib/brsr/pro";
+import { fetchAllReports, fetchAllEvidenceMeta, type BrsrReport, type EvidenceFile } from "@/lib/brsr/db";
+import { fetchApprovals, fetchAllAudit, type UserApproval, type AuditEntry } from "@/lib/brsr/pro";
+import { fetchAllOpenTasks, type CollectionTask } from "@/lib/brsr/ops";
+import { downloadText } from "@/lib/brsr/exporters";
 import type { Company } from "@/lib/tool/types";
 
 const STATUS_LABEL: Record<string, string> = {
@@ -12,6 +14,16 @@ const STATUS_LABEL: Record<string, string> = {
   in_review: "In review",
   final: "Released",
 };
+
+function csvCell(s: string): string {
+  return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+}
+
+function fmtBytes(n: number): string {
+  if (n < 1024) return `${n} B`;
+  if (n < 1024 * 1024) return `${(n / 1024).toFixed(1)} KB`;
+  return `${(n / (1024 * 1024)).toFixed(1)} MB`;
+}
 
 /**
  * ESGEN-staff-only screen: every company on the platform in one place, with
@@ -24,6 +36,9 @@ export function AdminPortal() {
   const { companies, switchCompany } = useCompany();
   const [reports, setReports] = useState<BrsrReport[]>([]);
   const [approvals, setApprovals] = useState<UserApproval[]>([]);
+  const [tasks, setTasks] = useState<CollectionTask[]>([]);
+  const [audit, setAudit] = useState<AuditEntry[]>([]);
+  const [evidenceMeta, setEvidenceMeta] = useState<Pick<EvidenceFile, "report_id" | "size">[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [query, setQuery] = useState("");
@@ -34,10 +49,19 @@ export function AdminPortal() {
       setLoading(true);
       setError(null);
       try {
-        const [r, a] = await Promise.all([fetchAllReports(), fetchApprovals()]);
+        const [r, a, t, ad, ev] = await Promise.all([
+          fetchAllReports(),
+          fetchApprovals(),
+          fetchAllOpenTasks().catch(() => [] as CollectionTask[]), // tolerate the admin policy not being applied yet
+          fetchAllAudit(50),
+          fetchAllEvidenceMeta(),
+        ]);
         if (cancelled) return;
         setReports(r);
         setApprovals(a);
+        setTasks(t);
+        setAudit(ad);
+        setEvidenceMeta(ev);
       } catch (e) {
         if (!cancelled) setError(e instanceof Error ? e.message : "Could not load admin data.");
       } finally {
@@ -46,6 +70,10 @@ export function AdminPortal() {
     })();
     return () => { cancelled = true; };
   }, []);
+
+  const companyById = useMemo(() => new Map(companies.map((c) => [c.id, c])), [companies]);
+
+  const reportById = useMemo(() => new Map(reports.map((r) => [r.id, r])), [reports]);
 
   const latestReportByCompany = useMemo(() => {
     const map = new Map<string, BrsrReport>();
@@ -64,6 +92,24 @@ export function AdminPortal() {
 
   const pendingApprovals = approvals.filter((a) => a.status === "pending").length;
 
+  const evidenceByCompany = useMemo(() => {
+    const map = new Map<string, { count: number; bytes: number }>();
+    for (const ev of evidenceMeta) {
+      const report = reportById.get(ev.report_id);
+      if (!report) continue;
+      const cur = map.get(report.company_id) ?? { count: 0, bytes: 0 };
+      cur.count += 1;
+      cur.bytes += ev.size ?? 0;
+      map.set(report.company_id, cur);
+    }
+    return map;
+  }, [evidenceMeta, reportById]);
+
+  const totalStorage = useMemo(
+    () => evidenceMeta.reduce((sum, e) => sum + (e.size ?? 0), 0),
+    [evidenceMeta],
+  );
+
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return companies;
@@ -75,6 +121,30 @@ export function AdminPortal() {
     const isEvents = report?.framework_version.startsWith("EVENTS") ?? false;
     switchCompany(company.id);
     router.push(isEvents ? "/app/events" : "/app/brsr");
+  };
+
+  const exportDirectory = () => {
+    const header = ["Company", "Sector", "Size", "Employees", "Country", "Framework", "Report status", "Last updated", "Files", "Storage"];
+    const rows: string[][] = [header];
+    for (const c of companies) {
+      const report = latestReportByCompany.get(c.id);
+      const isEvents = report?.framework_version.startsWith("EVENTS") ?? false;
+      const ev = evidenceByCompany.get(c.id);
+      rows.push([
+        c.name,
+        c.sector || "",
+        c.size_band || "",
+        c.employees != null ? String(c.employees) : "",
+        c.country || "",
+        report ? (isEvents ? "Events" : "BRSR") : "",
+        report ? (STATUS_LABEL[report.status] ?? report.status) : "No report yet",
+        report ? new Date(report.updated_at).toLocaleDateString("en-GB") : "",
+        ev ? String(ev.count) : "0",
+        ev ? fmtBytes(ev.bytes) : "0 B",
+      ]);
+    }
+    const csv = rows.map((r) => r.map(csvCell).join(",")).join("\n");
+    downloadText(`esgen-company-directory-${new Date().toISOString().slice(0, 10)}.csv`, csv, "text/csv");
   };
 
   return (
@@ -114,12 +184,20 @@ export function AdminPortal() {
       <div className="mt-8 card p-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h2 className="font-display text-base font-semibold">Companies</h2>
-          <input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search by name or sector..."
-            className="h-9 w-full max-w-xs rounded-lg border border-border bg-surface-2 px-3 text-xs"
-          />
+          <div className="flex items-center gap-2">
+            <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search by name or sector..."
+              className="h-9 w-full max-w-xs rounded-lg border border-border bg-surface-2 px-3 text-xs"
+            />
+            <button
+              onClick={exportDirectory}
+              className="h-9 whitespace-nowrap rounded-lg border border-[#f0a020]/40 px-3 text-xs font-semibold text-[#f0a020] transition hover:bg-[#f0a020]/10"
+            >
+              Export directory (CSV)
+            </button>
+          </div>
         </div>
 
         {loading ? (
@@ -128,7 +206,7 @@ export function AdminPortal() {
           <p className="mt-4 text-sm text-text-muted">{companies.length === 0 ? "No companies yet." : "No companies match your search."}</p>
         ) : (
           <div className="mt-4 overflow-x-auto">
-            <table className="w-full min-w-[720px] text-left text-sm">
+            <table className="w-full min-w-[820px] text-left text-sm">
               <thead>
                 <tr className="border-b border-border text-xs uppercase tracking-wide text-text-muted">
                   <th className="py-2 pr-3">Company</th>
@@ -137,6 +215,7 @@ export function AdminPortal() {
                   <th className="py-2 pr-3">Framework</th>
                   <th className="py-2 pr-3">Status</th>
                   <th className="py-2 pr-3">Last updated</th>
+                  <th className="py-2 pr-3">Files</th>
                   <th className="py-2" />
                 </tr>
               </thead>
@@ -144,6 +223,7 @@ export function AdminPortal() {
                 {filtered.map((c) => {
                   const report = latestReportByCompany.get(c.id);
                   const isEvents = report?.framework_version.startsWith("EVENTS") ?? false;
+                  const ev = evidenceByCompany.get(c.id);
                   return (
                     <tr key={c.id} className="border-b border-border/60">
                       <td className="py-2.5 pr-3 font-medium">{c.name}</td>
@@ -162,6 +242,9 @@ export function AdminPortal() {
                       <td className="py-2.5 pr-3 text-text-muted">
                         {report ? new Date(report.updated_at).toLocaleDateString("en-GB") : "—"}
                       </td>
+                      <td className="py-2.5 pr-3 text-text-muted">
+                        {ev ? `${ev.count} · ${fmtBytes(ev.bytes)}` : "—"}
+                      </td>
                       <td className="py-2.5 text-right">
                         <button
                           onClick={() => openWorkspace(c)}
@@ -177,6 +260,68 @@ export function AdminPortal() {
             </table>
           </div>
         )}
+      </div>
+
+      <div className="mt-6 grid gap-6 lg:grid-cols-2">
+        <div className="card p-6">
+          <h2 className="font-display text-base font-semibold">Deadlines across companies</h2>
+          <p className="mt-1 text-xs text-text-muted">Open collection tasks, soonest due date first.</p>
+          {tasks.length === 0 ? (
+            <p className="mt-4 text-sm text-text-muted">Nothing outstanding.</p>
+          ) : (
+            <ul className="mt-4 space-y-2">
+              {tasks.slice(0, 12).map((t) => {
+                const company = companyById.get(t.company_id);
+                const overdue = t.due_date ? new Date(t.due_date) < new Date() : false;
+                return (
+                  <li key={t.id} className="flex items-center justify-between gap-3 rounded-lg border border-border/60 bg-surface-2/40 px-3 py-2 text-sm">
+                    <div className="min-w-0">
+                      <p className="truncate font-medium">{t.title}</p>
+                      <p className="truncate text-xs text-text-muted">{company?.name ?? "Unknown company"}{t.assignee_email ? ` · ${t.assignee_email}` : ""}</p>
+                    </div>
+                    <span className={`shrink-0 whitespace-nowrap text-xs ${overdue ? "font-semibold text-red-400" : "text-text-muted"}`}>
+                      {t.due_date ? new Date(t.due_date).toLocaleDateString("en-GB") : "No due date"}
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </div>
+
+        <div className="card p-6">
+          <h2 className="font-display text-base font-semibold">Recent activity</h2>
+          <p className="mt-1 text-xs text-text-muted">Latest answer changes across every company.</p>
+          {audit.length === 0 ? (
+            <p className="mt-4 text-sm text-text-muted">No activity yet.</p>
+          ) : (
+            <ul className="mt-4 space-y-2">
+              {audit.slice(0, 12).map((a) => {
+                const report = reportById.get(a.report_id);
+                const company = report ? companyById.get(report.company_id) : undefined;
+                return (
+                  <li key={a.id} className="rounded-lg border border-border/60 bg-surface-2/40 px-3 py-2 text-sm">
+                    <p className="truncate">
+                      <span className="font-medium">{a.actor_email ?? "Unknown"}</span>{" "}
+                      <span className="text-text-muted">edited {a.question_key}</span>
+                    </p>
+                    <p className="mt-0.5 flex items-center justify-between text-xs text-text-muted">
+                      <span className="truncate">{company?.name ?? "Unknown company"}</span>
+                      <span className="shrink-0">{new Date(a.created_at).toLocaleString("en-GB")}</span>
+                    </p>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </div>
+      </div>
+
+      <div className="mt-6 card p-6">
+        <h2 className="font-display text-base font-semibold">Storage</h2>
+        <p className="mt-1 text-sm text-text-muted">
+          {evidenceMeta.length} file{evidenceMeta.length === 1 ? "" : "s"} uploaded across every company, {fmtBytes(totalStorage)} total.
+        </p>
       </div>
     </div>
   );

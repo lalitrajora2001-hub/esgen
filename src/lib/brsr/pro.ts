@@ -71,6 +71,13 @@ export async function fetchAudit(reportId: string, questionKey?: string, limit =
   return (data as AuditEntry[]) ?? [];
 }
 
+/** Most recent audit entries across every report (admin only; RLS enforces this). */
+export async function fetchAllAudit(limit = 50): Promise<AuditEntry[]> {
+  const { data, error } = await db().from("brsr_audit").select("*").order("created_at", { ascending: false }).limit(limit);
+  if (error) throw error;
+  return (data as AuditEntry[]) ?? [];
+}
+
 // ---- section status -------------------------------------------------------
 
 export async function fetchSectionStatuses(reportId: string): Promise<Record<string, SectionStatus>> {

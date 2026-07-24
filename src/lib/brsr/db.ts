@@ -132,6 +132,13 @@ export async function listEvidence(reportId: string): Promise<EvidenceFile[]> {
   return (data as EvidenceFile[]) ?? [];
 }
 
+/** Every evidence file's report_id and size, platform-wide (admin only; RLS enforces this). */
+export async function fetchAllEvidenceMeta(): Promise<Pick<EvidenceFile, "report_id" | "size">[]> {
+  const { data, error } = await db().from("brsr_evidence").select("report_id,size");
+  if (error) throw error;
+  return (data as Pick<EvidenceFile, "report_id" | "size">[]) ?? [];
+}
+
 export async function uploadEvidence(
   reportId: string,
   questionKey: string,
