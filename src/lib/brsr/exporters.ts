@@ -1,4 +1,4 @@
-import { BRSR, allQuestions, moduleForQuestion } from "@/lib/brsr/framework";
+import { BRSR, allQuestions, moduleForQuestion, moduleQuestions } from "@/lib/brsr/framework";
 import type { QuestionDef, TableDef } from "@/lib/brsr/types";
 import type { BrsrReport, ResponseMap } from "@/lib/brsr/db";
 import type { Company } from "@/lib/tool/types";
@@ -278,6 +278,21 @@ export function buildFlatCsv(responses: ResponseMap): string {
   return rows.map((r) => r.map(csvCell).join(",")).join("\n");
 }
 
+/** Same data as buildFlatCsv, split one CSV per module (admin structured export). */
+export function buildSectionCsvs(responses: ResponseMap): { label: string; filename: string; csv: string }[] {
+  const header = ["Question code", "Question", "Period", "Row", "Column", "Value", "Unit"];
+  return BRSR.modules.map((m) => {
+    const rows: string[][] = [header];
+    for (const q of moduleQuestions(m)) {
+      flatForQuestion(q, responses[q.key], (r) => {
+        rows.push([q.code ?? q.key, q.title, r.period, r.row, r.column, r.value, r.unit]);
+      });
+    }
+    const safeName = m.navLabel.replace(/[^a-zA-Z0-9 _-]/g, "").trim();
+    return { label: m.navLabel, filename: `${safeName}.csv`, csv: rows.map((r) => r.map(csvCell).join(",")).join("\n") };
+  });
+}
+
 // ---- prior-year carry-forward ---------------------------------------------
 
 /**
@@ -301,7 +316,10 @@ export function carryCurrentToPrevious(responses: ResponseMap, overwrite = false
 // ---- download helper ------------------------------------------------------
 
 export function downloadText(filename: string, text: string, mime: string): void {
-  const blob = new Blob([text], { type: mime });
+  downloadBlob(filename, new Blob([text], { type: mime }));
+}
+
+export function downloadBlob(filename: string, blob: Blob): void {
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;

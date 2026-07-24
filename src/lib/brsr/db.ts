@@ -54,6 +54,16 @@ export async function listReports(companyId: string, framework: "BRSR" | "EVENTS
   return (data as BrsrReport[]) ?? [];
 }
 
+/** Every report on the platform, newest-updated first (admin only; RLS enforces this). */
+export async function fetchAllReports(): Promise<BrsrReport[]> {
+  const { data, error } = await db()
+    .from("brsr_reports")
+    .select("*")
+    .order("updated_at", { ascending: false });
+  if (error) throw error;
+  return (data as BrsrReport[]) ?? [];
+}
+
 export async function createReport(input: {
   company_id: string;
   financial_year: string;

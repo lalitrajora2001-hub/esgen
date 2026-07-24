@@ -575,7 +575,7 @@ function ReportEditor({
                     <span className="rounded-lg bg-surface-2 px-3 py-2 text-xs font-medium text-text-muted">Locked · pending review</span>
                   )}
                 </div>
-                <BrsrTools report={report} company={company} responses={responses} onApplyUpdates={onApplyUpdates} />
+                <BrsrTools report={report} company={company} responses={responses} onApplyUpdates={onApplyUpdates} isAdmin={isAdmin} />
               </div>
             )
           ) : activeModule ? (

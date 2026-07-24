@@ -2,25 +2,28 @@
 
 import { useRef, useState } from "react";
 import type { Company } from "@/lib/tool/types";
-import type { BrsrReport, ResponseMap } from "@/lib/brsr/db";
+import { listEvidence, type BrsrReport, type ResponseMap } from "@/lib/brsr/db";
 import {
-  buildJson, parseJson, buildXml, buildCsvTemplate, buildFlatCsv, carryCurrentToPrevious, downloadText,
+  buildJson, parseJson, buildXml, buildCsvTemplate, buildFlatCsv, carryCurrentToPrevious, downloadText, downloadBlob,
 } from "@/lib/brsr/exporters";
 import { buildXbrlInstance, buildMappingCsv } from "@/lib/brsr/xbrl";
 import { buildIntensityUpdates } from "@/lib/brsr/intensity";
+import { buildStructuredZip } from "@/lib/brsr/adminExport";
 
 /**
  * Data portability: export the report (JSON backup, XBRL-style XML, CSV
  * dictionary), import a JSON snapshot, and carry current-year figures into the
- * previous-year columns.
+ * previous-year columns. Raw data exports are ESGEN-staff-only; clients keep
+ * only the released report document (BrsrExport) and the utility actions here.
  */
 export function BrsrTools({
-  report, company, responses, onApplyUpdates,
+  report, company, responses, onApplyUpdates, isAdmin,
 }: {
   report: BrsrReport;
   company: Company;
   responses: ResponseMap;
   onApplyUpdates: (updates: Record<string, unknown>) => Promise<void>;
+  isAdmin: boolean;
 }) {
   const fileRef = useRef<HTMLInputElement>(null);
   const [note, setNote] = useState<string | null>(null);
@@ -79,6 +82,21 @@ export function BrsrTools({
     }
   };
 
+  const onZipAll = async () => {
+    setBusy(true);
+    setNote("Building archive (fetching every uploaded file, this can take a moment)...");
+    try {
+      const evidence = await listEvidence(report.id);
+      const blob = await buildStructuredZip(company, report, responses, evidence);
+      downloadBlob(`brsr-${fy}-full-export.zip`, blob);
+      setNote(`Downloaded everything: all answers by section, plus ${evidence.length} uploaded file${evidence.length === 1 ? "" : "s"}.`);
+    } catch (err) {
+      setNote(err instanceof Error ? err.message : "Could not build the archive.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
   const onCarry = async () => {
     setBusy(true);
     setNote(null);
@@ -101,14 +119,23 @@ export function BrsrTools({
   return (
     <div className="card p-6">
       <h3 className="font-display text-base font-semibold">Data &amp; export</h3>
-      <p className="mt-1 text-xs text-text-muted">Back up, move, and format the report. The XBRL instance is a structured XBRL 2.1 document of your BRSR Core figures (CY/PY contexts, typed units); validate it with the BSE/NSE XBRL utility before filing.</p>
+      <p className="mt-1 text-xs text-text-muted">
+        {isAdmin
+          ? "Back up, move, and format the report. The XBRL instance is a structured XBRL 2.1 document of your BRSR Core figures (CY/PY contexts, typed units); validate it with the BSE/NSE XBRL utility before filing."
+          : "Move data in, or roll figures forward into a new year. Raw data exports are handled by ESGEN; your released report document is available once it's reviewed."}
+      </p>
       <div className="mt-4 flex flex-wrap gap-2">
-        <ToolButton onClick={() => downloadText(`brsr-${fy}-data.csv`, buildFlatCsv(responses), "text/csv")}>Export all data (CSV)</ToolButton>
-        <ToolButton onClick={() => downloadText(`brsr-${fy}.json`, buildJson(report, responses), "application/json")}>Export JSON (backup)</ToolButton>
-        <ToolButton onClick={onXbrl}>Export XBRL instance</ToolButton>
-        <ToolButton onClick={() => downloadText(`brsr-xbrl-mapping.csv`, buildMappingCsv(), "text/csv")}>XBRL mapping report</ToolButton>
-        <ToolButton onClick={() => downloadText(`brsr-${fy}.xml`, buildXml(company, report, responses), "application/xml")}>Export XBRL-style XML</ToolButton>
-        <ToolButton onClick={() => downloadText(`brsr-data-dictionary.csv`, buildCsvTemplate(), "text/csv")}>Export CSV template</ToolButton>
+        {isAdmin && (
+          <>
+            <ToolButton onClick={() => downloadText(`brsr-${fy}-data.csv`, buildFlatCsv(responses), "text/csv")}>Export all data (CSV)</ToolButton>
+            <ToolButton onClick={() => downloadText(`brsr-${fy}.json`, buildJson(report, responses), "application/json")}>Export JSON (backup)</ToolButton>
+            <ToolButton onClick={onXbrl}>Export XBRL instance</ToolButton>
+            <ToolButton onClick={() => downloadText(`brsr-xbrl-mapping.csv`, buildMappingCsv(), "text/csv")}>XBRL mapping report</ToolButton>
+            <ToolButton onClick={() => downloadText(`brsr-${fy}.xml`, buildXml(company, report, responses), "application/xml")}>Export XBRL-style XML</ToolButton>
+            <ToolButton onClick={() => downloadText(`brsr-data-dictionary.csv`, buildCsvTemplate(), "text/csv")}>Export CSV template</ToolButton>
+            <ToolButton onClick={onZipAll} disabled={busy}>Download everything (ZIP, incl. files)</ToolButton>
+          </>
+        )}
         <ToolButton onClick={() => fileRef.current?.click()} disabled={busy}>Import JSON</ToolButton>
         <ToolButton onClick={onCarry} disabled={busy}>Carry forward to previous year</ToolButton>
         <ToolButton onClick={onIntensities} disabled={busy}>Auto-compute intensity rows</ToolButton>
